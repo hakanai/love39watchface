@@ -100,23 +100,13 @@ class DozenalWatchFace extends Drawable {
 
         canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
 
-        float turnFraction = dozenalTime.getDayFraction();
-
-        float hourAngleDegrees = turnFraction * 360;
-        turnFraction *= DozenalTime.MINUTES_PER_HOUR;
-        float minuteAngleDegrees = turnFraction * 360;
-        turnFraction *= DozenalTime.SECONDS_PER_MINUTE;
-        float secondAngleDegrees = turnFraction * 360;
-        turnFraction *= DozenalTime.THIRDS_PER_SECOND;
-        float thirdAngleDegrees = turnFraction * 360;
-
         if (!ambient) {
-            thirdHand.draw(canvas, thirdAngleDegrees);
-            secondHand.draw(canvas, secondAngleDegrees);
+            thirdHand.draw(canvas, dozenalTime.getThirdTurns() * 360);
+            secondHand.draw(canvas, dozenalTime.getSecondTurns() * 360);
         }
 
-        minuteHand.draw(canvas, minuteAngleDegrees);
-        hourHand.draw(canvas, hourAngleDegrees);
+        minuteHand.draw(canvas, dozenalTime.getMinuteTurns() * 360);
+        hourHand.draw(canvas, dozenalTime.getHourTurns() * 360);
 
         canvas.drawCircle(centerX, centerY, centreRadius, centreFill);
 

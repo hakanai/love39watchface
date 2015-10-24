@@ -11,22 +11,38 @@ import java.util.TimeZone;
 class DozenalTime {
     private static final int GREGORIAN_MILLIS_PER_DAY = 1000 * 60 * 60 * 24;
 
-    static final int HOURS_PER_DAY = 12;
-    static final int MINUTES_PER_HOUR = 12;
-    static final int SECONDS_PER_MINUTE = 12;
-    static final int THIRDS_PER_SECOND = 12;
+    private static final int HOURS_PER_DAY = 12;
+    private static final int MINUTES_PER_HOUR = 12;
+    private static final int SECONDS_PER_MINUTE = 12;
+    private static final int THIRDS_PER_SECOND = 12;
 
     private final GregorianCalendar calculator = new GregorianCalendar();
 
-    private float dayFraction;
+    private float hourTurns;
+    private float minuteTurns;
+    private float secondTurns;
+    private float thirdTurns;
 
     // TODO: 18/10/15 Fill these in when we want them.
 //    int getDayOfMonth() {
 //        return calculator.get(Calendar.DAY_OF_MONTH);
 //    }
 
-    float getDayFraction() {
-        return dayFraction;
+
+    float getHourTurns() {
+        return hourTurns;
+    }
+
+    float getMinuteTurns() {
+        return minuteTurns;
+    }
+
+    float getSecondTurns() {
+        return secondTurns;
+    }
+
+    float getThirdTurns() {
+        return thirdTurns;
     }
 
     void setToNow() {
@@ -47,6 +63,9 @@ class DozenalTime {
                 calculator.get(Calendar.SECOND) * 1000 +
                 calculator.get(Calendar.MILLISECOND);
 
-        dayFraction = dayMillis / (float) GREGORIAN_MILLIS_PER_DAY;
+        hourTurns = dayMillis / (float) GREGORIAN_MILLIS_PER_DAY;
+        minuteTurns = hourTurns * DozenalTime.MINUTES_PER_HOUR;
+        secondTurns = minuteTurns * DozenalTime.SECONDS_PER_MINUTE;
+        thirdTurns = secondTurns * DozenalTime.THIRDS_PER_SECOND;
     }
 }
