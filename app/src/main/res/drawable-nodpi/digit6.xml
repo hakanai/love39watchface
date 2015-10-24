@@ -1,0 +1,29 @@
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="@dimen/analog_primary_tick_digit_size"
+    android:width="@dimen/analog_primary_tick_digit_size"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+
+    <path
+        android:fillColor="@color/analog_primary_tick_digit_stroke"
+        android:pathData="M 8,20
+                          L 8,24
+                          L 24,24
+                          L 24,20
+                          L 8,20
+                          z
+                          M 4,0
+                          L 24,0
+                          L 24,8
+                          L 8,8
+                          L 8,12
+                          L 28,12
+                          A 4,4 0 0,1 32,16
+                          L 32,28
+                          A 4,4 0 0,1 28,32
+                          L 4,32
+                          A 4,4 0 0,1 0,28
+                          L 0,4
+                          A 4,4 0 0,1 4,0"/>
+</vector>
