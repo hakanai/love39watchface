@@ -2,6 +2,8 @@
 <resources>
     <color name="analog_background">#202222</color>
 
+    <color name="date_fill">#66ffffff</color>
+
     <color name="analog_centre_fill">#22faba</color>
     <color name="analog_hands_fill">#22faba</color>
     <color name="analog_second_hand_fill">#aaaaaa</color>

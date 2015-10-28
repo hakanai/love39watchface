@@ -9,6 +9,14 @@ import java.util.TimeZone;
  * Encapsulates dozenal time calculation.
  */
 class DozenalTime {
+    private static final int[] YEAR_OFFSETS = { -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    private static final int[] DAY_OFFSETS = {
+            306, 337,   0,  31,  61,  92,
+            122, 153, 184, 214, 245, 275,
+            };
+    private static final int DAYS_PER_MONTH = 30;
+    private static final int DAYS_PER_WEEK = 6;
+
     private static final int GREGORIAN_MILLIS_PER_DAY = 1000 * 60 * 60 * 24;
 
     private static final int HOURS_PER_DAY = 12;
@@ -18,16 +26,33 @@ class DozenalTime {
 
     private final GregorianCalendar calculator = new GregorianCalendar();
 
+    private int year;
+    private int month;
+    private int dayOfMonth;
+    private int dayOfWeek;
     private float hourTurns;
     private float minuteTurns;
     private float secondTurns;
     private float thirdTurns;
 
-    // TODO: 18/10/15 Fill these in when we want them.
-//    int getDayOfMonth() {
-//        return calculator.get(Calendar.DAY_OF_MONTH);
-//    }
+    public int getYear() {
+        return year;
+    }
 
+    //0..12
+    public int getMonth() {
+        return month;
+    }
+
+    //0..29
+    public int getDayOfMonth() {
+        return dayOfMonth;
+    }
+
+    //0..5
+    public int getDayOfWeek() {
+        return dayOfWeek;
+    }
 
     float getHourTurns() {
         return hourTurns;
@@ -56,6 +81,16 @@ class DozenalTime {
     }
 
     private void recompute() {
+        int gregorianYear = calculator.get(Calendar.YEAR);
+        int gregorianMonthOfYear = calculator.get(Calendar.MONTH);
+        int gregorianDayOfMonth = calculator.get(Calendar.DAY_OF_MONTH);
+
+        year = gregorianYear + YEAR_OFFSETS[gregorianMonthOfYear];
+        int dayOfYear = DAY_OFFSETS[gregorianMonthOfYear] + gregorianDayOfMonth;
+        month = dayOfYear / DAYS_PER_MONTH;
+        dayOfMonth = dayOfYear % DAYS_PER_MONTH;
+        dayOfWeek = dayOfYear % DAYS_PER_WEEK;
+
         // We do recompute this from the calendar, because sometimes an hour in the day
         // is missing. So this gives us the effect of getting free daylight savings support.
         int dayMillis = calculator.get(Calendar.HOUR_OF_DAY) * 60 * 60 * 1000 +

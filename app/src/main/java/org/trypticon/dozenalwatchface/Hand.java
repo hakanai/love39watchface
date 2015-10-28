@@ -1,6 +1,6 @@
 package org.trypticon.dozenalwatchface;
 
-import android.content.res.Resources;
+import android.content.Context;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -21,7 +21,7 @@ class Hand {
 
     private boolean highQuality = true;
 
-    Hand(Resources resources,
+    Hand(Context context,
          int widthId, int fillColorId, int strokeWidthId, int shadowWidthId,
          float centerX, float centerY, float handLength) {
 
@@ -29,19 +29,19 @@ class Hand {
         this.centerY = centerY;
         this.handLength = handLength;
 
-        halfHandWidth = resources.getDimension(widthId) / 2;
+        halfHandWidth = context.getResources().getDimension(widthId) / 2;
 
-        int fillColor = Workarounds.getColor(resources, fillColorId);
+        int fillColor = Workarounds.getColor(context, fillColorId);
 
         fillPaint = new Paint();
         fillPaint.setColor(fillColor);
-        fillPaint.setStrokeWidth(resources.getDimension(strokeWidthId));
+        fillPaint.setStrokeWidth(context.getResources().getDimension(strokeWidthId));
         fillPaint.setStrokeCap(Paint.Cap.ROUND);
         fillPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         fillPaint.setAntiAlias(true);
 
         // I found Paint#setShadowLayer to be a bit crap. :(
-        float shadowWidth = resources.getDimension(shadowWidthId);
+        float shadowWidth = context.getResources().getDimension(shadowWidthId);
         shadowPaint = new Paint(fillPaint);
         shadowPaint.setColor((fillColor & 0xFFFFFF) | 0x40000000);
         shadowPaint.setStrokeWidth(shadowWidth);

@@ -1,6 +1,6 @@
 package org.trypticon.dozenalwatchface;
 
-import android.content.res.Resources;
+import android.content.Context;
 
 /**
  * Collection of Android SDK workarounds.
@@ -14,16 +14,16 @@ class Workarounds {
     }
 
     /**
-     * Looks up a colour in the resources.
+     * Looks up a colour in the context.
      * Method exists solely as an Android SDK workaround for deprecation warnings.
      *
-     * @param resources the resources.
+     * @param context the context.
      * @param id the ID of the resource.
      * @return the colour.
      */
     @SuppressWarnings("deprecation")
-    static int getColor(Resources resources, int id) {
-        return resources.getColor(id);
+    static int getColor(Context context, int id) {
+        return context.getResources().getColor(id);
     }
 
 }

@@ -13,8 +13,10 @@ import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.view.Gravity;
 import android.view.SurfaceHolder;
+import android.view.WindowInsets;
 
 import java.lang.ref.WeakReference;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -37,13 +39,21 @@ public class DozenalWatchFaceService extends CanvasWatchFaceService {
 
         private final Handler updateTimeHandler = new HandlerImpl(this);
 
-        private final BroadcastReceiver timeZoneReceiver = new BroadcastReceiver() {
+        private final BroadcastReceiver intentReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                watchFace.updateTimeZone(TimeZone.getTimeZone(intent.getStringExtra("time-zone")));
+                switch (intent.getAction()) {
+                    case Intent.ACTION_LOCALE_CHANGED:
+                        watchFace.updateLocale(Locale.forLanguageTag(intent.getStringExtra("locale")));
+                        break;
+
+                    case Intent.ACTION_TIMEZONE_CHANGED:
+                        watchFace.updateTimeZone(TimeZone.getTimeZone(intent.getStringExtra("time-zone")));
+                        break;
+                }
             }
         };
-        private boolean registeredTimeZoneReceiver = false;
+        private boolean registeredIntentReceiver = false;
 
         private boolean lowBitAmbient;
 
@@ -59,9 +69,15 @@ public class DozenalWatchFaceService extends CanvasWatchFaceService {
                     .setHotwordIndicatorGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL)
                     .build());
 
-            watchFace = new DozenalWatchFace(
-                    DozenalWatchFaceService.this.getResources(),
-                    getTheme());
+            watchFace = new DozenalWatchFace(DozenalWatchFaceService.this);
+        }
+
+        @Override
+        public void onApplyWindowInsets(WindowInsets insets) {
+            super.onApplyWindowInsets(insets);
+
+            //TODO: chin - insets.getSystemWindowInsetBottom()
+            watchFace.updateShape(insets.isRound());
         }
 
         @Override
@@ -115,22 +131,20 @@ public class DozenalWatchFaceService extends CanvasWatchFaceService {
         }
 
         private void registerReceiver() {
-            if (registeredTimeZoneReceiver) {
-                return;
+            if (!registeredIntentReceiver) {
+                IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
+                intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+                DozenalWatchFaceService.this.registerReceiver(intentReceiver, intentFilter);
+                registeredIntentReceiver = true;
             }
-
-            IntentFilter filter = new IntentFilter(Intent.ACTION_TIMEZONE_CHANGED);
-            DozenalWatchFaceService.this.registerReceiver(timeZoneReceiver, filter);
-            registeredTimeZoneReceiver = true;
         }
 
         private void unregisterReceiver() {
-            if (!registeredTimeZoneReceiver) {
-                return;
+            if (registeredIntentReceiver) {
+                DozenalWatchFaceService.this.unregisterReceiver(intentReceiver);
+                registeredIntentReceiver = false;
             }
-
-            DozenalWatchFaceService.this.unregisterReceiver(timeZoneReceiver);
-            registeredTimeZoneReceiver = false;
         }
 
         /**

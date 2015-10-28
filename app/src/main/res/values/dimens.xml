@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="date_size">20dp</dimen>
+
     <dimen name="analog_hand_width">5dp</dimen>
     <dimen name="analog_hand_stroke_width">1dp</dimen>
     <dimen name="analog_hand_shadow_width">12dp</dimen>
