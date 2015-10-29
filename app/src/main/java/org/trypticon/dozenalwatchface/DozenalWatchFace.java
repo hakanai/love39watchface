@@ -33,10 +33,7 @@ class DozenalWatchFace extends Drawable {
     private final Paint centreFill;
     private final float centreRadius;
 
-    private boolean round;
-    private Drawable[] digits;
-    private Paint primaryTickStroke;
-    private Paint secondaryTickStroke;
+    private final Ticks ticks;
 
     private final Paint datePaint;
 
@@ -66,34 +63,7 @@ class DozenalWatchFace extends Drawable {
 
         centreRadius = context.getResources().getDimension(R.dimen.analog_centre_radius);
 
-        digits = new Drawable[] {
-                context.getDrawable(R.drawable.digit0),
-                context.getDrawable(R.drawable.digit1),
-                context.getDrawable(R.drawable.digit2),
-                context.getDrawable(R.drawable.digit3),
-                context.getDrawable(R.drawable.digit4),
-                context.getDrawable(R.drawable.digit5),
-                context.getDrawable(R.drawable.digit6),
-                context.getDrawable(R.drawable.digit7),
-                context.getDrawable(R.drawable.digit8),
-                context.getDrawable(R.drawable.digit9),
-                context.getDrawable(R.drawable.digitdec),
-                context.getDrawable(R.drawable.digitel),
-        };
-
-        primaryTickStroke = new Paint();
-        primaryTickStroke.setColor(Workarounds.getColor(context, R.color.analog_primary_tick_stroke));
-        primaryTickStroke.setStrokeWidth(context.getResources().getDimension(R.dimen.analog_primary_tick_stroke));
-        primaryTickStroke.setAntiAlias(true);
-        primaryTickStroke.setStrokeCap(Paint.Cap.SQUARE);
-        primaryTickStroke.setStyle(Paint.Style.FILL_AND_STROKE);
-
-        secondaryTickStroke = new Paint();
-        secondaryTickStroke.setColor(Workarounds.getColor(context, R.color.analog_secondary_tick_stroke));
-        secondaryTickStroke.setStrokeWidth(context.getResources().getDimension(R.dimen.analog_secondary_tick_stroke));
-        secondaryTickStroke.setAntiAlias(true);
-        secondaryTickStroke.setStrokeCap(Paint.Cap.SQUARE);
-        secondaryTickStroke.setStyle(Paint.Style.FILL_AND_STROKE);
+        ticks = new Ticks(context);
 
         Typeface roboto = Typeface.createFromAsset(context.getAssets(), "fonts/RobotoCondensed-Regular.ttf");
         datePaint = new Paint();
@@ -123,56 +93,11 @@ class DozenalWatchFace extends Drawable {
 
         canvas.drawCircle(centerX, centerY, centreRadius, centreFill);
 
-        // primary ticks
-        float baseTickDistance = centerX;
-        for (int digit = 0, degrees = 0; digit < 12; digit++, degrees += 360 / 12) {
-
-            float tickDistance = computeTickDistance(baseTickDistance, degrees);
-
-            Drawable digitDrawable = digits[digit];
-            float digitDistance = tickDistance - digits[0].getIntrinsicHeight();
-            float digitX = (centerX - (float) (digitDistance * Math.sin(Math.toRadians(degrees))));
-            float digitY = (centerX + (float) (digitDistance * Math.cos(Math.toRadians(degrees))));
-
-            digitDrawable.setBounds(
-                    (int) (digitX - digitDrawable.getIntrinsicWidth() / 2.0f),
-                    (int) (digitY - digitDrawable.getIntrinsicHeight() / 2.0f),
-                    (int) (digitX + digitDrawable.getIntrinsicWidth() / 2.0f),
-                    (int) (digitY + digitDrawable.getIntrinsicHeight() / 2.0f));
-            digitDrawable.draw(canvas);
-
-            canvas.save();
-            canvas.translate(centerX, centerY);
-            canvas.rotate(degrees);
-
-            canvas.drawLine(0, tickDistance + 2, 0, tickDistance * 2, primaryTickStroke);
-
-            // secondary ticks
-            for (int i = 1; i < 6; i++) {
-                tickDistance = computeTickDistance(baseTickDistance, degrees + i * 6);
-                canvas.rotate(360/12/6);
-                canvas.drawLine(0, tickDistance - 8, 0, tickDistance * 2, secondaryTickStroke);
-            }
-
-            canvas.restore();
-        }
-    }
-
-    float computeTickDistance(float baseTickDistance, int degrees) {
-        if (round) {
-            return baseTickDistance;
-        } else {
-            double radians = Math.toRadians(degrees % 90);
-            double factor = 2.5;
-            return (float) (baseTickDistance / (
-                    Math.pow((Math.pow(Math.cos(radians), factor) +
-                              Math.pow(Math.sin(radians), factor)),
-                             1.0f/factor)));
-        }
+        ticks.draw(canvas);
     }
 
     void updateShape(boolean round) {
-        this.round = round;
+        ticks.updateShape(round);
     }
 
     void updateLocale(Locale locale) {
@@ -201,14 +126,15 @@ class DozenalWatchFace extends Drawable {
         secondHand.updateHighQuality(highQuality);
         thirdHand.updateHighQuality(highQuality);
         centreFill.setAntiAlias(highQuality);
-        primaryTickStroke.setAntiAlias(highQuality);
-        secondaryTickStroke.setAntiAlias(highQuality);
+        ticks.updateHighQuality(highQuality);
         datePaint.setAntiAlias(highQuality);
     }
 
     @Override
     protected void onBoundsChange(Rect bounds) {
         super.onBoundsChange(bounds);
+
+        ticks.setBounds(bounds);
 
         int width = bounds.width();
         int height = bounds.height();
