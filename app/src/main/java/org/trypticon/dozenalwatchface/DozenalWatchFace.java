@@ -1,6 +1,7 @@
 package org.trypticon.dozenalwatchface;
 
 import android.content.Context;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -30,7 +31,8 @@ class DozenalWatchFace extends Drawable {
     private Hand secondHand;
     private Hand thirdHand;
 
-    private final Paint centreFill;
+    private final Paint centrePaint;
+    private final Paint centreShadowPaint;
     private final float centreRadius;
 
     private final Ticks ticks;
@@ -51,15 +53,22 @@ class DozenalWatchFace extends Drawable {
         realBackgroundPaint = new Paint();
         realBackgroundPaint.setColor(Workarounds.getColor(context, R.color.analog_background));
 
-        centreFill = new Paint();
-        centreFill.setColor(Workarounds.getColor(context, R.color.analog_centre_fill));
-        centreFill.setAntiAlias(true);
-        centreFill.setStrokeWidth(context.getResources().getDimension(R.dimen.analog_centre_stroke));
-        centreFill.setStrokeCap(Paint.Cap.ROUND);
-        centreFill.setStyle(Paint.Style.FILL_AND_STROKE);
-        centreFill.setShadowLayer(
+        centrePaint = new Paint();
+        centrePaint.setColor(Workarounds.getColor(context, R.color.analog_centre_fill));
+        centrePaint.setAntiAlias(true);
+        centrePaint.setStrokeWidth(context.getResources().getDimension(R.dimen.analog_centre_stroke));
+        centrePaint.setStrokeCap(Paint.Cap.ROUND);
+        centrePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        centrePaint.setShadowLayer(
                 context.getResources().getDimension(R.dimen.analog_hand_shadow_width),
                 0, 0, Workarounds.getColor(context, R.color.analog_centre_fill));
+
+        // I found Paint#setShadowLayer to be a bit crap. :(
+        float shadowWidth = context.getResources().getDimension(R.dimen.analog_hand_shadow_width);
+        centreShadowPaint = new Paint(centrePaint);
+        centreShadowPaint.setColor((centrePaint.getColor() & 0xFFFFFF) | 0x40000000);
+        centreShadowPaint.setStrokeWidth(shadowWidth);
+        centreShadowPaint.setMaskFilter(new BlurMaskFilter(shadowWidth, BlurMaskFilter.Blur.NORMAL));
 
         centreRadius = context.getResources().getDimension(R.dimen.analog_centre_radius);
 
@@ -91,7 +100,7 @@ class DozenalWatchFace extends Drawable {
         minuteHand.draw(canvas, dozenalTime.getMinuteTurns() * 360);
         hourHand.draw(canvas, dozenalTime.getHourTurns() * 360);
 
-        canvas.drawCircle(centerX, centerY, centreRadius, centreFill);
+        canvas.drawCircle(centerX, centerY, centreRadius, centrePaint);
 
         ticks.draw(canvas);
     }
@@ -125,7 +134,7 @@ class DozenalWatchFace extends Drawable {
         minuteHand.updateHighQuality(highQuality);
         secondHand.updateHighQuality(highQuality);
         thirdHand.updateHighQuality(highQuality);
-        centreFill.setAntiAlias(highQuality);
+        centrePaint.setAntiAlias(highQuality);
         ticks.updateHighQuality(highQuality);
         datePaint.setAntiAlias(highQuality);
     }
