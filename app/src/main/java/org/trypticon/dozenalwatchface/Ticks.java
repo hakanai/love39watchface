@@ -14,16 +14,18 @@ import android.graphics.drawable.shapes.PathShape;
 /**
  * Draws the ticks on the watch face.
  */
-public class Ticks extends Drawable {
+class Ticks extends Drawable {
     private static final int SUBDIVISIONS = 6;
+    private static final int COUNT = 12 * SUBDIVISIONS;
 
-    private boolean round;
     private final Drawable[] digits;
     private final Drawable[] ticks;
     private final Paint primaryTickStroke;
     private final Paint secondaryTickStroke;
 
-    public Ticks(Context context) {
+    private boolean round;
+
+    Ticks(Context context) {
         digits = new Drawable[] {
                 context.getDrawable(R.drawable.digit0),
                 context.getDrawable(R.drawable.digit1),
@@ -38,7 +40,7 @@ public class Ticks extends Drawable {
                 context.getDrawable(R.drawable.digitdec),
                 context.getDrawable(R.drawable.digitel),
         };
-        ticks = new Drawable[12 * SUBDIVISIONS];
+        ticks = new Drawable[COUNT];
 
         primaryTickStroke = new Paint();
         primaryTickStroke.setColor(Workarounds.getColor(context, R.color.analog_primary_tick_stroke));
@@ -71,19 +73,6 @@ public class Ticks extends Drawable {
         secondaryTickStroke.setAntiAlias(highQuality);
     }
 
-    float computeTickDistance(float baseTickDistance, int degrees) {
-        if (round) {
-            return baseTickDistance;
-        } else {
-            double radians = Math.toRadians(degrees % 90);
-            double factor = 2.5;
-            return (float) (baseTickDistance / (
-                    Math.pow((Math.pow(Math.cos(radians), factor) +
-                                    Math.pow(Math.sin(radians), factor)),
-                            1.0f/factor)));
-        }
-    }
-
     /**
      * Updates all the geometry so that we don't have to do all the maths at drawing-time.
      */
@@ -94,7 +83,7 @@ public class Ticks extends Drawable {
         float centerY = getBounds().centerY();
         float baseTickDistance = getBounds().centerX();
 
-        for (int i = 0, degrees = 0; i < 12 * SUBDIVISIONS; i++, degrees += 360 / (12 * SUBDIVISIONS)) {
+        for (int i = 0, degrees = 0; i < COUNT; i++, degrees += 360 / COUNT) {
             float tickDistance = computeTickDistance(baseTickDistance, degrees);
             double radians = Math.toRadians(degrees);
             float directionX = - (float) Math.sin(radians);
@@ -139,6 +128,26 @@ public class Ticks extends Drawable {
                 tick.setBounds(getBounds());
                 ticks[i] = tick;
             }
+        }
+    }
+
+    /**
+     * Computes the distance of a tick from the centre.
+     *
+     * @param baseTickDistance the distance the tick would be if the watch face were circular.
+     * @param degrees the number of degrees for the current rotation.
+     * @return the tick distance.
+     */
+    private float computeTickDistance(float baseTickDistance, float degrees) {
+        if (round) {
+            return baseTickDistance;
+        } else {
+            double radians = Math.toRadians(degrees % 90);
+            double factor = 2.5;
+            return (float) (baseTickDistance / (
+                    Math.pow((Math.pow(Math.cos(radians), factor) +
+                                    Math.pow(Math.sin(radians), factor)),
+                            1.0f/factor)));
         }
     }
 
