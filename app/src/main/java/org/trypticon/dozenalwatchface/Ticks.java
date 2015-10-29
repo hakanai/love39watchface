@@ -81,7 +81,7 @@ class Ticks extends Drawable {
         float height = getBounds().height();
         float centerX = getBounds().centerX();
         float centerY = getBounds().centerY();
-        float baseTickDistance = getBounds().centerX();
+        float baseTickDistance = getBounds().centerX() - 3;
 
         for (int i = 0, degrees = 0; i < COUNT; i++, degrees += 360 / COUNT) {
             float tickDistance = computeTickDistance(baseTickDistance, degrees);
