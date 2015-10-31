@@ -24,8 +24,6 @@ class DozenalWatchFace extends Drawable {
     private final Paint realBackgroundPaint;
     private Paint backgroundPaint;
 
-    private float centerX;
-    private float centerY;
     private Hand hourHand;
     private Hand minuteHand;
     private Hand secondHand;
@@ -88,18 +86,24 @@ class DozenalWatchFace extends Drawable {
 
         canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
 
+        float width = getBounds().width();
+        float height = getBounds().height();
+        float centerX = getBounds().centerX();
+        float centerY = getBounds().centerY();
+
         canvas.drawText(
                 dozenalDateFormat.formatDate(dozenalTime),
                 centerX, centerY * 1 / 2, datePaint);
 
+        hourHand.draw(canvas, dozenalTime.getHourTurns() * 360);
+        minuteHand.draw(canvas, dozenalTime.getMinuteTurns() * 360);
+
         if (!ambient) {
-            thirdHand.draw(canvas, dozenalTime.getThirdTurns() * 360);
             secondHand.draw(canvas, dozenalTime.getSecondTurns() * 360);
+            thirdHand.draw(canvas, dozenalTime.getThirdTurns() * 360);
         }
 
-        minuteHand.draw(canvas, dozenalTime.getMinuteTurns() * 360);
-        hourHand.draw(canvas, dozenalTime.getHourTurns() * 360);
-
+        canvas.drawCircle(centerX, centerY, centreRadius, centreShadowPaint);
         canvas.drawCircle(centerX, centerY, centreRadius, centrePaint);
 
         ticks.draw(canvas);
@@ -145,15 +149,13 @@ class DozenalWatchFace extends Drawable {
 
         ticks.setBounds(bounds);
 
-        int width = bounds.width();
-        int height = bounds.height();
+        float centerX = bounds.centerX();
+        float centerY = bounds.centerY();
 
-        centerX = width / 2f;
-        centerY = height / 2f;
         float thirdLength = centerX - 30;
-        float secondLength = centerX - 45;
-        float minuteLength = centerX - 60;
-        float hourLength = centerX - 80;
+        float secondLength = centerX - 35;
+        float minuteLength = centerX - 40;
+        float hourLength = centerX - 60;
 
         hourHand = new Hand(
                 context,
@@ -161,28 +163,28 @@ class DozenalWatchFace extends Drawable {
                 R.color.analog_hands_fill,
                 R.dimen.analog_hand_stroke_width,
                 R.dimen.analog_hand_shadow_width,
-                centerX, centerY, hourLength);
+                centerX, centerY, hourLength, true, false);
         minuteHand = new Hand(
                 context,
                 R.dimen.analog_hand_width,
                 R.color.analog_hands_fill,
                 R.dimen.analog_hand_stroke_width,
                 R.dimen.analog_hand_shadow_width,
-                centerX, centerY, minuteLength);
+                centerX, centerY, minuteLength, true, true);
         secondHand = new Hand(
                 context,
                 R.dimen.analog_second_hand_width,
                 R.color.analog_second_hand_fill,
                 R.dimen.analog_second_hand_stroke_width,
                 R.dimen.analog_second_hand_shadow_width,
-                centerX, centerY, secondLength);
+                centerX, centerY, secondLength, false, false);
         thirdHand = new Hand(
                 context,
                 R.dimen.analog_third_hand_width,
                 R.color.analog_third_hand_fill,
                 R.dimen.analog_third_hand_stroke_width,
                 R.dimen.analog_third_hand_shadow_width,
-                centerX, centerY, thirdLength);
+                centerX, centerY, thirdLength, false, false);
 
         updateRenderingProperties();
     }

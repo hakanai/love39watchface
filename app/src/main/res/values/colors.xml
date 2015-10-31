@@ -4,10 +4,11 @@
 
     <color name="date_fill">#66ffffff</color>
 
-    <color name="analog_centre_fill">#22faba</color>
     <color name="analog_hands_fill">#22faba</color>
     <color name="analog_second_hand_fill">#aaaaaa</color>
     <color name="analog_third_hand_fill">#c80067</color>
+
+    <color name="analog_centre_fill">#22faba</color>
 
     <color name="analog_primary_tick_digit_stroke">#66ffffff</color>
     <color name="analog_primary_tick_stroke">#44ffffff</color>
