@@ -11,8 +11,6 @@ import android.graphics.Path;
  * Encapsulation of information about a single hand.
  */
 class Hand {
-    private static final float startOffset = 12;
-
     private final float centerX;
     private final float centerY;
     private final float halfHandWidth;
@@ -62,32 +60,26 @@ class Hand {
 
         path = new Path();
 
-        float centreRadius =
-                (float) Math.sqrt(halfHandWidth * halfHandWidth + startOffset * startOffset);
-        float centreDegrees = (float) Math.toDegrees(Math.atan(halfHandWidth / startOffset));
+        float centreRadius = context.getResources().getDimension(R.dimen.analog_centre_hand_start_radius);
+        float centreDegrees = (float) Math.toDegrees(Math.asin(halfHandWidth / centreRadius));
+        float startOffset = (float) Math.sqrt(centreRadius * centreRadius - halfHandWidth * halfHandWidth);
         float centreStartDegrees = 90.0f - centreDegrees;
         float centreSweepDegrees = 2.0f * centreDegrees;
 
+        path.moveTo(-halfHandWidth, startOffset);
         if (pointy) {
-            path.moveTo(-halfHandWidth, startOffset);
             path.lineTo(-halfHandWidth, handLength - halfHandWidth);
             path.lineTo(0, handLength);
             path.lineTo(halfHandWidth, handLength - halfHandWidth);
-            path.lineTo(halfHandWidth, startOffset);
-            path.arcTo(
-                    -centreRadius, -centreRadius, centreRadius, centreRadius,
-                    centreStartDegrees, centreSweepDegrees, false);
-            path.close();
         } else {
-            path.moveTo(-halfHandWidth, startOffset);
             path.lineTo(-halfHandWidth, handLength);
             path.lineTo(halfHandWidth, handLength);
-            path.lineTo(halfHandWidth, startOffset);
-            path.arcTo(
-                    -centreRadius, -centreRadius, centreRadius, centreRadius,
-                    centreStartDegrees, centreSweepDegrees, false);
-            path.close();
         }
+        path.lineTo(halfHandWidth, startOffset);
+        path.arcTo(
+                -centreRadius, -centreRadius, centreRadius, centreRadius,
+                centreStartDegrees, centreSweepDegrees, false);
+        path.close();
 
         if (clip) {
             clipPath = new Path();

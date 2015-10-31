@@ -16,6 +16,7 @@
 
     <dimen name="analog_centre_radius">4.5dp</dimen>
     <dimen name="analog_centre_stroke">1dp</dimen>
+    <dimen name="analog_centre_hand_start_radius">9dp</dimen>
 
     <dimen name="analog_primary_tick_digit_stroke">0.5dp</dimen>
     <dimen name="analog_primary_tick_digit_size">8sp</dimen>
