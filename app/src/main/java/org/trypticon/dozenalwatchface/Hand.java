@@ -1,9 +1,9 @@
 package org.trypticon.dozenalwatchface;
 
 import android.content.Context;
-import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 
@@ -13,27 +13,23 @@ import android.graphics.Path;
 class Hand {
     private final float centerX;
     private final float centerY;
-    private final float halfHandWidth;
-    private final float handLength;
 
-    private final Path path;
+    private final Path untransformedPath;
+    private final Path path = new Path();
+    private final Path untransformedClipPath;
     private final Path clipPath;
 
     private final Paint fillPaint;
-    private final Paint shadowPaint;
     private final Paint clipPaint;
 
-    private boolean highQuality = true;
-
     Hand(Context context,
-         int widthId, int fillColorId, int strokeWidthId, int shadowWidthId,
+         int widthId, int fillColorId, int strokeWidthId,
          float centerX, float centerY, float handLength, boolean pointy, boolean clip) {
 
         this.centerX = centerX;
         this.centerY = centerY;
-        this.handLength = handLength;
 
-        halfHandWidth = context.getResources().getDimension(widthId) / 2;
+        float halfHandWidth = context.getResources().getDimension(widthId) / 2;
 
         int fillColor = Workarounds.getColor(context, fillColorId);
 
@@ -44,13 +40,6 @@ class Hand {
         fillPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         fillPaint.setAntiAlias(true);
 
-        // I found Paint#setShadowLayer to be a bit crap. :(
-        float shadowWidth = context.getResources().getDimension(shadowWidthId);
-        shadowPaint = new Paint(fillPaint);
-        shadowPaint.setColor((fillColor & 0xFFFFFF) | 0x40000000);
-        shadowPaint.setStrokeWidth(shadowWidth);
-        shadowPaint.setMaskFilter(new BlurMaskFilter(shadowWidth, BlurMaskFilter.Blur.NORMAL));
-
         clipPaint = new Paint();
         clipPaint.setColor(Color.BLACK);
         clipPaint.setStrokeWidth(2.0f);
@@ -58,7 +47,7 @@ class Hand {
         clipPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         clipPaint.setAntiAlias(true);
 
-        path = new Path();
+        untransformedPath = new Path();
 
         float centreRadius = context.getResources().getDimension(R.dimen.analog_centre_hand_start_radius);
         float centreDegrees = (float) Math.toDegrees(Math.asin(halfHandWidth / centreRadius));
@@ -66,56 +55,66 @@ class Hand {
         float centreStartDegrees = 90.0f - centreDegrees;
         float centreSweepDegrees = 2.0f * centreDegrees;
 
-        path.moveTo(-halfHandWidth, startOffset);
+        untransformedPath.moveTo(-halfHandWidth, startOffset);
         if (pointy) {
-            path.lineTo(-halfHandWidth, handLength - halfHandWidth);
-            path.lineTo(0, handLength);
-            path.lineTo(halfHandWidth, handLength - halfHandWidth);
+            untransformedPath.lineTo(-halfHandWidth, handLength - halfHandWidth);
+            untransformedPath.lineTo(0, handLength);
+            untransformedPath.lineTo(halfHandWidth, handLength - halfHandWidth);
         } else {
-            path.lineTo(-halfHandWidth, handLength);
-            path.lineTo(halfHandWidth, handLength);
+            untransformedPath.lineTo(-halfHandWidth, handLength);
+            untransformedPath.lineTo(halfHandWidth, handLength);
         }
-        path.lineTo(halfHandWidth, startOffset);
-        path.arcTo(
+        untransformedPath.lineTo(halfHandWidth, startOffset);
+        untransformedPath.arcTo(
                 -centreRadius, -centreRadius, centreRadius, centreRadius,
                 centreStartDegrees, centreSweepDegrees, false);
-        path.close();
+        untransformedPath.close();
 
         if (clip) {
+            untransformedClipPath = new Path();
             clipPath = new Path();
 
-            clipPath.moveTo(-halfHandWidth, handLength - halfHandWidth * 4);
-            clipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 4);
-            clipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 4 + halfHandWidth / 4);
-            clipPath.lineTo(-halfHandWidth, handLength - halfHandWidth * 4 + halfHandWidth / 4);
-            clipPath.close();
+            untransformedClipPath.moveTo(-halfHandWidth, handLength - halfHandWidth * 4);
+            untransformedClipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 4);
+            untransformedClipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 4 + halfHandWidth / 4);
+            untransformedClipPath.lineTo(-halfHandWidth, handLength - halfHandWidth * 4 + halfHandWidth / 4);
+            untransformedClipPath.close();
 
-            clipPath.moveTo(-halfHandWidth, handLength - halfHandWidth * 3);
-            clipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 3);
-            clipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 3 + halfHandWidth / 4);
-            clipPath.lineTo(-halfHandWidth, handLength - halfHandWidth * 3 + halfHandWidth / 4);
-            clipPath.close();
+            untransformedClipPath.moveTo(-halfHandWidth, handLength - halfHandWidth * 3);
+            untransformedClipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 3);
+            untransformedClipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 3 + halfHandWidth / 4);
+            untransformedClipPath.lineTo(-halfHandWidth, handLength - halfHandWidth * 3 + halfHandWidth / 4);
+            untransformedClipPath.close();
         } else {
+            untransformedClipPath = null;
             clipPath = null;
         }
     }
 
-    void draw(Canvas canvas, float angleDegrees) {
-        canvas.save();
-        canvas.translate(centerX, centerY);
-        canvas.rotate(angleDegrees);
-        if (highQuality) {
-            canvas.drawPath(path, shadowPaint);
+    void updateAngle(float angleDegrees) {
+        Matrix matrix = new Matrix();
+        matrix.setRotate(angleDegrees, 0, 0);
+        matrix.postTranslate(centerX, centerY);
+
+        untransformedPath.transform(matrix, path);
+        if (untransformedClipPath != null) {
+            untransformedClipPath.transform(matrix, clipPath);
         }
+    }
+
+    Path getPath() {
+        return path;
+    }
+
+    void draw(Canvas canvas) {
         canvas.drawPath(path, fillPaint);
+
         if (clipPath != null) {
             canvas.drawPath(clipPath, clipPaint);
         }
-        canvas.restore();
     }
 
     void updateHighQuality(boolean highQuality) {
-        this.highQuality = highQuality;
         fillPaint.setAntiAlias(highQuality);
         clipPaint.setAntiAlias(highQuality);
     }

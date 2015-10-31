@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -30,8 +31,8 @@ class DozenalWatchFace extends Drawable {
     private Hand thirdHand;
 
     private final Paint centrePaint;
-    private final Paint centreShadowPaint;
     private final float centreRadius;
+    private final Paint blurPaint;
 
     private final Ticks ticks;
 
@@ -57,16 +58,12 @@ class DozenalWatchFace extends Drawable {
         centrePaint.setStrokeWidth(context.getResources().getDimension(R.dimen.analog_centre_stroke));
         centrePaint.setStrokeCap(Paint.Cap.ROUND);
         centrePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        centrePaint.setShadowLayer(
-                context.getResources().getDimension(R.dimen.analog_hand_shadow_width),
-                0, 0, Workarounds.getColor(context, R.color.analog_centre_fill));
 
-        // I found Paint#setShadowLayer to be a bit crap. :(
-        float shadowWidth = context.getResources().getDimension(R.dimen.analog_hand_shadow_width);
-        centreShadowPaint = new Paint(centrePaint);
-        centreShadowPaint.setColor((centrePaint.getColor() & 0xFFFFFF) | 0x40000000);
-        centreShadowPaint.setStrokeWidth(shadowWidth);
-        centreShadowPaint.setMaskFilter(new BlurMaskFilter(shadowWidth, BlurMaskFilter.Blur.NORMAL));
+        float shadowWidth = context.getResources().getDimension(R.dimen.analog_blur_width);
+        blurPaint = new Paint(centrePaint);
+        blurPaint.setColor((centrePaint.getColor() & 0xFFFFFF) | 0x40000000);
+        blurPaint.setStrokeWidth(shadowWidth);
+        blurPaint.setMaskFilter(new BlurMaskFilter(shadowWidth, BlurMaskFilter.Blur.NORMAL));
 
         centreRadius = context.getResources().getDimension(R.dimen.analog_centre_radius);
 
@@ -86,27 +83,38 @@ class DozenalWatchFace extends Drawable {
 
         canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
 
-        float width = getBounds().width();
-        float height = getBounds().height();
-        float centerX = getBounds().centerX();
-        float centerY = getBounds().centerY();
+        Rect bounds = getBounds();
+        float centerX = bounds.centerX();
+        float centerY = bounds.centerY();
 
         canvas.drawText(
                 dozenalDateFormat.formatDate(dozenalTime),
                 centerX, centerY * 1 / 2, datePaint);
 
-        hourHand.draw(canvas, dozenalTime.getHourTurns() * 360);
-        minuteHand.draw(canvas, dozenalTime.getMinuteTurns() * 360);
+        ticks.draw(canvas);
+
+        hourHand.updateAngle(dozenalTime.getHourTurns() * 360);
+        minuteHand.updateAngle(dozenalTime.getMinuteTurns() * 360);
 
         if (!ambient) {
-            secondHand.draw(canvas, dozenalTime.getSecondTurns() * 360);
-            thirdHand.draw(canvas, dozenalTime.getThirdTurns() * 360);
+            Path path = new Path();
+            path.addPath(hourHand.getPath());
+            path.addPath(minuteHand.getPath());
+            path.addCircle(centerX, centerY, centreRadius, Path.Direction.CCW);
+            canvas.drawPath(path, blurPaint);
         }
 
-        canvas.drawCircle(centerX, centerY, centreRadius, centreShadowPaint);
-        canvas.drawCircle(centerX, centerY, centreRadius, centrePaint);
+        hourHand.draw(canvas);
+        minuteHand.draw(canvas);
 
-        ticks.draw(canvas);
+        if (!ambient) {
+            secondHand.updateAngle(dozenalTime.getSecondTurns() * 360);
+            secondHand.draw(canvas);
+            thirdHand.updateAngle(dozenalTime.getThirdTurns() * 360);
+            thirdHand.draw(canvas);
+        }
+
+        canvas.drawCircle(centerX, centerY, centreRadius, centrePaint);
     }
 
     void updateShape(boolean round) {
@@ -162,28 +170,24 @@ class DozenalWatchFace extends Drawable {
                 R.dimen.analog_hand_width,
                 R.color.analog_hands_fill,
                 R.dimen.analog_hand_stroke_width,
-                R.dimen.analog_hand_shadow_width,
                 centerX, centerY, hourLength, true, false);
         minuteHand = new Hand(
                 context,
                 R.dimen.analog_hand_width,
                 R.color.analog_hands_fill,
                 R.dimen.analog_hand_stroke_width,
-                R.dimen.analog_hand_shadow_width,
                 centerX, centerY, minuteLength, true, true);
         secondHand = new Hand(
                 context,
                 R.dimen.analog_second_hand_width,
                 R.color.analog_second_hand_fill,
                 R.dimen.analog_second_hand_stroke_width,
-                R.dimen.analog_second_hand_shadow_width,
                 centerX, centerY, secondLength, false, false);
         thirdHand = new Hand(
                 context,
                 R.dimen.analog_third_hand_width,
                 R.color.analog_third_hand_fill,
                 R.dimen.analog_third_hand_stroke_width,
-                R.dimen.analog_third_hand_shadow_width,
                 centerX, centerY, thirdLength, false, false);
 
         updateRenderingProperties();

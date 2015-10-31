@@ -2,17 +2,16 @@
 <resources>
     <dimen name="date_size">20dp</dimen>
 
+    <dimen name="analog_blur_width">12dp</dimen>
+
     <dimen name="analog_hand_width">9dp</dimen>
     <dimen name="analog_hand_stroke_width">1dp</dimen>
-    <dimen name="analog_hand_shadow_width">12dp</dimen>
 
     <dimen name="analog_second_hand_width">2dp</dimen>
     <dimen name="analog_second_hand_stroke_width">1dp</dimen>
-    <dimen name="analog_second_hand_shadow_width">3dp</dimen>
 
     <dimen name="analog_third_hand_width">2dp</dimen>
     <dimen name="analog_third_hand_stroke_width">1dp</dimen>
-    <dimen name="analog_third_hand_shadow_width">3dp</dimen>
 
     <dimen name="analog_centre_radius">4.5dp</dimen>
     <dimen name="analog_centre_stroke">1dp</dimen>
