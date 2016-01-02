@@ -29,7 +29,14 @@ class DozenalDateFormat {
         builder.append(dayOfMonthFormat.format(time.getDayOfMonth()));
         builder.append(' ');
 
-        builder.append(symbols.getShortMonths()[time.getMonth()]);
+        int month = time.getMonth();
+        String monthString;
+        if (month == 12) {
+            monthString = "Int"; //TODO: Localise this
+        } else {
+            monthString = symbols.getShortMonths()[(month + 2) % 12];
+        }
+        builder.append(monthString);
 
         return builder.toString();
     }
