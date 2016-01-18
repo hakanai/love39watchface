@@ -76,14 +76,14 @@ class Hand {
 
             untransformedClipPath.moveTo(-halfHandWidth, handLength - halfHandWidth * 4);
             untransformedClipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 4);
-            untransformedClipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 4 + halfHandWidth / 4);
-            untransformedClipPath.lineTo(-halfHandWidth, handLength - halfHandWidth * 4 + halfHandWidth / 4);
+            untransformedClipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 4 + halfHandWidth / 2);
+            untransformedClipPath.lineTo(-halfHandWidth, handLength - halfHandWidth * 4 + halfHandWidth / 2);
             untransformedClipPath.close();
 
             untransformedClipPath.moveTo(-halfHandWidth, handLength - halfHandWidth * 3);
             untransformedClipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 3);
-            untransformedClipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 3 + halfHandWidth / 4);
-            untransformedClipPath.lineTo(-halfHandWidth, handLength - halfHandWidth * 3 + halfHandWidth / 4);
+            untransformedClipPath.lineTo(halfHandWidth / 2, handLength - halfHandWidth * 3 + halfHandWidth / 2);
+            untransformedClipPath.lineTo(-halfHandWidth, handLength - halfHandWidth * 3 + halfHandWidth / 2);
             untransformedClipPath.close();
         } else {
             untransformedClipPath = null;
