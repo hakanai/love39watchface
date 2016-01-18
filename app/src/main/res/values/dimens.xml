@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="date_size">20dp</dimen>
+    <dimen name="date_size">8pt</dimen>
 
-    <dimen name="analog_blur_width">12dp</dimen>
+    <dimen name="analog_blur_width">5.5pt</dimen>
 
-    <dimen name="analog_hand_width">9dp</dimen>
-    <dimen name="analog_hand_stroke_width">1dp</dimen>
+    <dimen name="analog_hand_width">6pt</dimen>
+    <dimen name="analog_hand_stroke_width">0.5pt</dimen>
 
-    <dimen name="analog_second_hand_width">2dp</dimen>
-    <dimen name="analog_second_hand_stroke_width">1dp</dimen>
+    <dimen name="analog_second_hand_width">1pt</dimen>
+    <dimen name="analog_second_hand_stroke_width">0.5pt</dimen>
 
-    <dimen name="analog_third_hand_width">2dp</dimen>
-    <dimen name="analog_third_hand_stroke_width">1dp</dimen>
+    <dimen name="analog_third_hand_width">1pt</dimen>
+    <dimen name="analog_third_hand_stroke_width">0.5pt</dimen>
 
-    <dimen name="analog_centre_radius">4.5dp</dimen>
-    <dimen name="analog_centre_stroke">1dp</dimen>
-    <dimen name="analog_centre_hand_start_radius">9dp</dimen>
+    <dimen name="analog_centre_radius">2pt</dimen>
+    <dimen name="analog_centre_stroke">0.5pt</dimen>
+    <dimen name="analog_centre_hand_start_radius">4pt</dimen>
 
-    <dimen name="analog_primary_tick_digit_stroke">0.5dp</dimen>
-    <dimen name="analog_primary_tick_digit_size">8sp</dimen>
-    <dimen name="analog_primary_tick_stroke">2dp</dimen>
-    <dimen name="analog_secondary_tick_stroke">1dp</dimen>
+    <dimen name="analog_primary_tick_digit_stroke">0.25pt</dimen>
+    <dimen name="analog_primary_tick_digit_size">6pt</dimen>
+    <dimen name="analog_primary_tick_stroke">1pt</dimen>
+    <dimen name="analog_secondary_tick_stroke">0.5pt</dimen>
 </resources>
