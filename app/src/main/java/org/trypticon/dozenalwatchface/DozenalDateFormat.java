@@ -23,7 +23,7 @@ class DozenalDateFormat {
         if (dayOfWeek > 0) {
             dayOfWeek++; // skip Monday
         }
-        builder.append(symbols.getShortWeekdays()[dayOfWeek]);
+        builder.append(symbols.getShortWeekdays()[dayOfWeek + 1]);
         builder.append(' ');
 
         builder.append(dayOfMonthFormat.format(time.getDayOfMonth()));
@@ -31,10 +31,10 @@ class DozenalDateFormat {
 
         int month = time.getMonth();
         String monthString;
-        if (month == 12) {
+        if (month == 13) {
             monthString = "Int"; //TODO: Localise this
         } else {
-            monthString = symbols.getShortMonths()[(month + 2) % 12];
+            monthString = symbols.getShortMonths()[(month + 1) % 12];
         }
         builder.append(monthString);
 
