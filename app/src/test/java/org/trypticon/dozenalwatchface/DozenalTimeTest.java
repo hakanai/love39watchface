@@ -57,4 +57,26 @@ public class DozenalTimeTest {
         assertThat(time.getSecondOfMinute(), is(0));
         assertThat(time.getThirdOfSecond(), is(0));
     }
+
+    @Test
+    public void testMidday() {
+        DozenalTime time = new DozenalTime();
+        time.updateTimeZone(TimeZone.getTimeZone("UTC"));
+        time.setToDateTime(new DateTime(2015, 3, 1, 12, 0));
+        assertThat(time.getHourOfDay(), is(6));
+        assertThat(time.getMinuteOfHour(), is(0));
+        assertThat(time.getSecondOfMinute(), is(0));
+        assertThat(time.getThirdOfSecond(), is(0));
+    }
+
+    @Test
+    public void testHalfMorning() {
+        DozenalTime time = new DozenalTime();
+        time.updateTimeZone(TimeZone.getTimeZone("UTC"));
+        time.setToDateTime(new DateTime(2015, 3, 1, 6, 0));
+        assertThat(time.getHourOfDay(), is(3));
+        assertThat(time.getMinuteOfHour(), is(0));
+        assertThat(time.getSecondOfMinute(), is(0));
+        assertThat(time.getThirdOfSecond(), is(0));
+    }
 }

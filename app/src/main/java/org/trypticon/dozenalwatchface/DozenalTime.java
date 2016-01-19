@@ -21,6 +21,11 @@ class DozenalTime {
 
     private static final int GREGORIAN_MILLIS_PER_DAY = 1000 * 60 * 60 * 24;
 
+    private static final int GREGORIAN_MILLIS_PER_DOZENAL_HOUR = GREGORIAN_MILLIS_PER_DAY / 12;
+    private static final int GREGORIAN_MILLIS_PER_DOZENAL_MINUTE = GREGORIAN_MILLIS_PER_DOZENAL_HOUR / 12;
+    private static final int GREGORIAN_MILLIS_PER_DOZENAL_SECOND = GREGORIAN_MILLIS_PER_DOZENAL_MINUTE / 12;
+    private static final float GREGORIAN_MILLIS_PER_DOZENAL_THIRD = (float) GREGORIAN_MILLIS_PER_DOZENAL_SECOND / 12;
+
     private static final int HOURS_PER_DAY = 12;
     private static final int MINUTES_PER_HOUR = 12;
     private static final int SECONDS_PER_MINUTE = 12;
@@ -129,14 +134,13 @@ class DozenalTime {
         // is missing. So this gives us the effect of getting free daylight savings support.
         int dayMillis = dateTime.getMillisOfDay();
 
-        int tmp = dayMillis / (GREGORIAN_MILLIS_PER_DAY / (12 * 12 * 12 * 12));
-        thirdOfSecond = tmp % 12;
-        tmp /= 12;
-        secondOfMinute = tmp % 12;
-        tmp /= 12;
-        minuteOfHour = tmp % 12;
-        tmp /= 12;
-        hourOfDay = tmp;
+        hourOfDay = dayMillis / GREGORIAN_MILLIS_PER_DOZENAL_HOUR;
+        int tmp = dayMillis % GREGORIAN_MILLIS_PER_DOZENAL_HOUR;
+        minuteOfHour = tmp / GREGORIAN_MILLIS_PER_DOZENAL_MINUTE;
+        tmp %= GREGORIAN_MILLIS_PER_DOZENAL_MINUTE;
+        secondOfMinute = tmp / GREGORIAN_MILLIS_PER_DOZENAL_SECOND;
+        tmp %= GREGORIAN_MILLIS_PER_DOZENAL_SECOND;
+        thirdOfSecond = (int) (tmp / GREGORIAN_MILLIS_PER_DOZENAL_THIRD);
 
         hourTurns = dayMillis / (float) GREGORIAN_MILLIS_PER_DAY;
         minuteTurns = hourTurns * DozenalTime.MINUTES_PER_HOUR;
