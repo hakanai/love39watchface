@@ -13,9 +13,9 @@
     <dimen name="analog_third_hand_width">1pt</dimen>
     <dimen name="analog_third_hand_stroke_width">0.5pt</dimen>
 
-    <dimen name="analog_centre_radius">2pt</dimen>
+    <dimen name="analog_centre_radius">3pt</dimen>
     <dimen name="analog_centre_stroke">0.5pt</dimen>
-    <dimen name="analog_centre_hand_start_radius">4pt</dimen>
+    <dimen name="analog_centre_hand_start_radius">5pt</dimen>
 
     <dimen name="analog_primary_tick_digit_stroke">0.25pt</dimen>
     <dimen name="analog_primary_tick_digit_size">6pt</dimen>
