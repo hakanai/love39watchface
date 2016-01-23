@@ -5,7 +5,7 @@ import com.ustwo.clockwise.WatchFaceTime;
 /**
  * Encapsulates dozenal time calculation.
  */
-class DozenalTime {
+class DozenalTime extends Time {
     private static final int[] YEAR_OFFSETS = {
             42, // never used
             -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -24,10 +24,9 @@ class DozenalTime {
     private static final int GREGORIAN_MILLIS_PER_DOZENAL_SECOND = GREGORIAN_MILLIS_PER_DOZENAL_MINUTE / 12;
     private static final float GREGORIAN_MILLIS_PER_DOZENAL_THIRD = (float) GREGORIAN_MILLIS_PER_DOZENAL_SECOND / 12;
 
-    private static final int HOURS_PER_DAY = 12;
-    private static final int MINUTES_PER_HOUR = 12;
-    private static final int SECONDS_PER_MINUTE = 12;
-    private static final int THIRDS_PER_SECOND = 12;
+    private static final int MINUTE_TURNS_PER_HOUR_TURN = 12;
+    private static final int SECOND_TURNS_PER_MINUTE_TURN = 12;
+    private static final int THIRD_TURNS_PER_SECOND_TURN = 12;
 
     private GregorianTime time = new GregorianTime();
 
@@ -44,22 +43,26 @@ class DozenalTime {
     private float secondTurns;
     private float thirdTurns;
 
-    public int getYear() {
+    @Override
+    int getYear() {
         return year;
     }
 
     //1..13
-    public int getMonth() {
+    @Override
+    int getMonth() {
         return month;
     }
 
     //1..30
-    public int getDayOfMonth() {
+    @Override
+    int getDayOfMonth() {
         return dayOfMonth;
     }
 
     //0..5
-    public int getDayOfWeek() {
+    @Override
+    int getDayOfWeek() {
         return dayOfWeek;
     }
 
@@ -83,22 +86,37 @@ class DozenalTime {
         return thirdOfSecond;
     }
 
+    @Override
     float getHourTurns() {
         return hourTurns;
     }
 
+    @Override
     float getMinuteTurns() {
         return minuteTurns;
     }
 
+    @Override
     float getSecondTurns() {
         return secondTurns;
     }
 
+    @Override
     float getThirdTurns() {
         return thirdTurns;
     }
 
+    @Override
+    boolean hasThirds() {
+        return true;
+    }
+
+    @Override
+    long getEpochMillis() {
+        return time.getEpochMillis();
+    }
+
+    @Override
     void setTo(WatchFaceTime time) {
         this.time.setTo(time);
         recompute();
@@ -133,8 +151,8 @@ class DozenalTime {
         thirdOfSecond = (int) (tmp / GREGORIAN_MILLIS_PER_DOZENAL_THIRD);
 
         hourTurns = dayMillis / (float) GREGORIAN_MILLIS_PER_DAY;
-        minuteTurns = hourTurns * DozenalTime.MINUTES_PER_HOUR;
-        secondTurns = minuteTurns * DozenalTime.SECONDS_PER_MINUTE;
-        thirdTurns = secondTurns * DozenalTime.THIRDS_PER_SECOND;
+        minuteTurns = hourTurns * MINUTE_TURNS_PER_HOUR_TURN;
+        secondTurns = minuteTurns * SECOND_TURNS_PER_MINUTE_TURN;
+        thirdTurns = secondTurns * THIRD_TURNS_PER_SECOND_TURN;
     }
 }

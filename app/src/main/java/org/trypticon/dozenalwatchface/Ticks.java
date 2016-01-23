@@ -14,9 +14,9 @@ import android.graphics.drawable.shapes.PathShape;
 /**
  * Draws the ticks on the watch face.
  */
-class Ticks extends Drawable {
-    private static final int SUBDIVISIONS = 6;
-    private static final int COUNT = 12 * SUBDIVISIONS;
+abstract class Ticks extends Drawable {
+    private final int subdivisions;
+    private final int count;
 
     private final Drawable[] digits;
     private final Drawable[] ticks;
@@ -25,22 +25,12 @@ class Ticks extends Drawable {
 
     private boolean round;
 
-    Ticks(Context context) {
-        digits = new Drawable[] {
-                context.getDrawable(R.drawable.digit0),
-                context.getDrawable(R.drawable.digit1),
-                context.getDrawable(R.drawable.digit2),
-                context.getDrawable(R.drawable.digit3),
-                context.getDrawable(R.drawable.digit4),
-                context.getDrawable(R.drawable.digit5),
-                context.getDrawable(R.drawable.digit6),
-                context.getDrawable(R.drawable.digit7),
-                context.getDrawable(R.drawable.digit8),
-                context.getDrawable(R.drawable.digit9),
-                context.getDrawable(R.drawable.digitdec),
-                context.getDrawable(R.drawable.digitel),
-        };
-        ticks = new Drawable[COUNT];
+    Ticks(Context context, int subdivisions) {
+        this.subdivisions = subdivisions;
+        count = 12 * subdivisions;
+
+        digits = getDigits(context);
+        ticks = new Drawable[count];
 
         primaryTickStroke = new Paint();
         primaryTickStroke.setColor(Workarounds.getColor(context, R.color.analog_primary_tick_stroke));
@@ -56,6 +46,10 @@ class Ticks extends Drawable {
         secondaryTickStroke.setStrokeCap(Paint.Cap.SQUARE);
         secondaryTickStroke.setStyle(Paint.Style.FILL_AND_STROKE);
     }
+
+    abstract boolean isZeroAtTop();
+
+    abstract Drawable[] getDigits(Context context);
 
     @Override
     protected void onBoundsChange(Rect bounds) {
@@ -83,13 +77,14 @@ class Ticks extends Drawable {
         float centerY = getBounds().centerY();
         float baseTickDistance = getBounds().centerX() - 3;
 
-        for (int i = 0, degrees = 0; i < COUNT; i++, degrees += 360 / COUNT) {
+        int angleShift = isZeroAtTop() ? 180 : 0;
+        for (int i = 0, degrees = 0; i < count; i++, degrees += 360 / count) {
             float tickDistance = computeTickDistance(baseTickDistance, degrees);
-            double radians = Math.toRadians(degrees);
+            double radians = Math.toRadians(degrees + angleShift);
             float directionX = - (float) Math.sin(radians);
             float directionY = + (float) Math.cos(radians);
 
-            if (i % SUBDIVISIONS == 0) {
+            if (i % subdivisions == 0) {
                 // primary tick
                 Path path = new Path();
                 path.moveTo(
@@ -107,7 +102,7 @@ class Ticks extends Drawable {
                 float digitX = centerX + digitDistance * directionX;
                 float digitY = centerY + digitDistance * directionY;
 
-                Drawable digitDrawable = digits[i / SUBDIVISIONS];
+                Drawable digitDrawable = digits[i / subdivisions];
                 digitDrawable.setBounds(
                         (int) (digitX - digitDrawable.getIntrinsicWidth() / 2.0f),
                         (int) (digitY - digitDrawable.getIntrinsicHeight() / 2.0f),

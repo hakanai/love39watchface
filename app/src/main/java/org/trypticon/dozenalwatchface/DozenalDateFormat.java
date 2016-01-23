@@ -6,7 +6,7 @@ import java.util.Locale;
 /**
  * Formatter for dozenal dates.
  */
-class DozenalDateFormat {
+class DozenalDateFormat extends DateFormat {
     private final DozenalNumberFormat dayOfMonthFormat = new DozenalNumberFormat(2);
     private DateFormatSymbols symbols;
 
@@ -14,7 +14,8 @@ class DozenalDateFormat {
         symbols = DateFormatSymbols.getInstance(locale);
     }
 
-    String formatDate(DozenalTime time) {
+    @Override
+    String formatDate(Time time) {
         StringBuilder builder = new StringBuilder(16);
 
         //TODO: Can we use DateFormat directly somehow? I think we'd have to make a custom Calendar?

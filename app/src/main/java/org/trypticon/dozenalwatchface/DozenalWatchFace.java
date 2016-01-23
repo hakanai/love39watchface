@@ -14,8 +14,6 @@ import com.ustwo.clockwise.WatchFaceTime;
 import com.ustwo.clockwise.WatchMode;
 import com.ustwo.clockwise.WatchShape;
 
-import java.util.Locale;
-
 /**
  * The main watch face.
  */
@@ -40,19 +38,14 @@ public class DozenalWatchFace extends WatchFace {
     private Path blurPath;
     private Paint blurPaint;
 
-    private Ticks ticks;
-
     private Paint datePaint;
 
-    private DozenalTime dozenalTime;
-    private DozenalDateFormat dozenalDateFormat;
+    private WatchStyle watchStyle;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        dozenalTime = new DozenalTime();
-        dozenalDateFormat = new DozenalDateFormat(Locale.getDefault());
 
         clearPaint = new Paint();
         clearPaint.setColor(Color.BLACK);
@@ -76,7 +69,8 @@ public class DozenalWatchFace extends WatchFace {
 
         centreRadius = getResources().getDimension(R.dimen.analog_centre_radius);
 
-        ticks = new Ticks(this);
+        watchStyle = new DozenalWatchStyle(this);
+//        watchStyle = new GregorianWatchStyle(this);
 
         Typeface roboto = Typeface.createFromAsset(getAssets(), "fonts/RobotoCondensed-Regular.ttf");
         datePaint = new Paint();
@@ -95,8 +89,8 @@ public class DozenalWatchFace extends WatchFace {
     protected void onLayout(WatchShape shape, Rect screenBounds, WindowInsets screenInsets) {
         super.onLayout(shape, screenBounds, screenInsets);
 
+        Ticks ticks = watchStyle.getTicks();
         ticks.updateShape(shape == WatchShape.CIRCLE);
-
         ticks.setBounds(screenBounds);
 
         float centerX = screenBounds.centerX();
@@ -122,7 +116,8 @@ public class DozenalWatchFace extends WatchFace {
         secondHand = new Hand(
                 this,
                 R.dimen.analog_second_hand_width,
-                R.color.analog_second_hand_fill,
+                watchStyle.getTime().hasThirds() ? R.color.analog_second_hand_fill
+                        : R.color.analog_third_hand_fill,
                 R.dimen.analog_second_hand_stroke_width,
                 centerX, centerY, secondLength, false, false);
         thirdHand = new Hand(
@@ -156,7 +151,7 @@ public class DozenalWatchFace extends WatchFace {
         secondHand.updateHighQuality(highQuality);
         thirdHand.updateHighQuality(highQuality);
         centrePaint.setAntiAlias(highQuality);
-        ticks.updateHighQuality(highQuality);
+        watchStyle.getTicks().updateHighQuality(highQuality);
         datePaint.setAntiAlias(highQuality);
     }
 
@@ -164,7 +159,7 @@ public class DozenalWatchFace extends WatchFace {
     protected void onTimeChanged(WatchFaceTime oldTime, WatchFaceTime newTime) {
         super.onTimeChanged(oldTime, newTime);
 
-        dozenalTime.setTo(newTime);
+        watchStyle.getTime().setTo(newTime);
     }
 
     @Override
@@ -174,14 +169,17 @@ public class DozenalWatchFace extends WatchFace {
         float centerX = canvas.getWidth() / 2;
         float centerY = canvas.getHeight() / 2;
 
+        Time time = watchStyle.getTime();
         canvas.drawText(
-                dozenalDateFormat.formatDate(dozenalTime),
+                watchStyle.getDateFormat().formatDate(time),
                 centerX, centerY * 1 / 2, datePaint);
 
+        Ticks ticks = watchStyle.getTicks();
         ticks.draw(canvas);
 
-        hourHand.updateAngle(dozenalTime.getHourTurns() * 360);
-        minuteHand.updateAngle(dozenalTime.getMinuteTurns() * 360);
+        int angleShift = ticks.isZeroAtTop() ? 180 : 0;
+        hourHand.updateAngle(time.getHourTurns() * 360 + angleShift);
+        minuteHand.updateAngle(time.getMinuteTurns() * 360 + angleShift);
 
         WatchMode watchMode = getCurrentWatchMode();
         if (watchMode == WatchMode.INTERACTIVE) {
@@ -196,10 +194,12 @@ public class DozenalWatchFace extends WatchFace {
         minuteHand.draw(canvas);
 
         if (watchMode == WatchMode.INTERACTIVE) {
-            secondHand.updateAngle(dozenalTime.getSecondTurns() * 360);
+            secondHand.updateAngle(time.getSecondTurns() * 360 + angleShift);
             secondHand.draw(canvas);
-            thirdHand.updateAngle(dozenalTime.getThirdTurns() * 360);
-            thirdHand.draw(canvas);
+            if (time.hasThirds()) {
+                thirdHand.updateAngle(time.getThirdTurns() * 360 + angleShift);
+                thirdHand.draw(canvas);
+            }
         }
 
         canvas.drawCircle(centerX, centerY, centreRadius, centrePaint);
