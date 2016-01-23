@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault" >
         <service
-            android:name=".DozenalWatchFaceService"
+            android:name=".DozenalWatchFace"
             android:label="@string/analog_dozenal_name"
             android:permission="android.permission.BIND_WALLPAPER" >
             <meta-data
