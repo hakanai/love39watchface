@@ -1,14 +1,13 @@
 package org.trypticon.dozenalwatchface;
 
-import org.joda.time.DateTime;
 import org.junit.Test;
 
 import java.util.Locale;
-import java.util.TimeZone;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.trypticon.dozenalwatchface.GregorianTimeTestUtils.buildTime;
 
 /**
  * Tests for {@link DozenalDateFormat}.
@@ -19,8 +18,7 @@ public class DozenalDateFormatTest {
     public void testFirstDayOfYear() {
         DozenalDateFormat dateFormat = new DozenalDateFormat(Locale.ENGLISH);
         DozenalTime time = new DozenalTime();
-        time.updateTimeZone(TimeZone.getTimeZone("UTC"));
-        time.setTo(new DateTime(2015, 3, 1, 0, 0));
+        time.setTo(buildTime(2015, 3, 1, 0, 0));
         assertThat(dateFormat.formatDate(time), is(equalTo("Sun 01 Mar")));
     }
 
@@ -28,8 +26,7 @@ public class DozenalDateFormatTest {
     public void testSkipMonday() {
         DozenalDateFormat dateFormat = new DozenalDateFormat(Locale.ENGLISH);
         DozenalTime time = new DozenalTime();
-        time.updateTimeZone(TimeZone.getTimeZone("UTC"));
-        time.setTo(new DateTime(2015, 3, 2, 0, 0));
+        time.setTo(buildTime(2015, 3, 2, 0, 0));
         assertThat(dateFormat.formatDate(time), is(equalTo("Tue 02 Mar")));
     }
 
@@ -37,8 +34,7 @@ public class DozenalDateFormatTest {
     public void testLastDayOfYear() {
         DozenalDateFormat dateFormat = new DozenalDateFormat(Locale.ENGLISH);
         DozenalTime time = new DozenalTime();
-        time.updateTimeZone(TimeZone.getTimeZone("UTC"));
-        time.setTo(new DateTime(2015, 2, 28, 0, 0));
+        time.setTo(buildTime(2015, 2, 28, 0, 0));
         assertThat(dateFormat.formatDate(time), is(equalTo("Fri 05 Int")));
     }
 
@@ -46,8 +42,7 @@ public class DozenalDateFormatTest {
     public void testLastDayOfLeapYear() {
         DozenalDateFormat dateFormat = new DozenalDateFormat(Locale.ENGLISH);
         DozenalTime time = new DozenalTime();
-        time.updateTimeZone(TimeZone.getTimeZone("UTC"));
-        time.setTo(new DateTime(2016, 2, 29, 0, 0));
+        time.setTo(buildTime(2016, 2, 29, 0, 0));
         assertThat(dateFormat.formatDate(time), is(equalTo("Sat 06 Int")));
     }
 }

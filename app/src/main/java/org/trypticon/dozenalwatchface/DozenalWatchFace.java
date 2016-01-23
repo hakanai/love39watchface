@@ -14,8 +14,6 @@ import com.ustwo.clockwise.WatchFaceTime;
 import com.ustwo.clockwise.WatchMode;
 import com.ustwo.clockwise.WatchShape;
 
-import org.joda.time.DateTimeZone;
-
 import java.util.Locale;
 
 /**
@@ -165,10 +163,6 @@ public class DozenalWatchFace extends WatchFace {
     @Override
     protected void onTimeChanged(WatchFaceTime oldTime, WatchFaceTime newTime) {
         super.onTimeChanged(oldTime, newTime);
-
-        if (newTime.hasTimeZoneChanged(oldTime)) {
-            dozenalTime.updateTimeZone(DateTimeZone.forID(newTime.timezone));
-        }
 
         dozenalTime.setTo(newTime);
     }

@@ -2,19 +2,15 @@ package org.trypticon.dozenalwatchface;
 
 import com.ustwo.clockwise.WatchFaceTime;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
-import java.util.TimeZone;
-
 /**
  * Encapsulates dozenal time calculation.
  */
 class DozenalTime {
-    // First offset is never used.
-    private static final int[] YEAR_OFFSETS = { 42, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    private static final int[] YEAR_OFFSETS = {
+            42, // never used
+            -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     private static final int[] DAY_OFFSETS = {
-            42,
+            42, // never used
             306, 337,   0,  31,  61,  92,
             122, 153, 184, 214, 245, 275,
             };
@@ -33,7 +29,7 @@ class DozenalTime {
     private static final int SECONDS_PER_MINUTE = 12;
     private static final int THIRDS_PER_SECOND = 12;
 
-    private DateTime dateTime = new DateTime();
+    private GregorianTime time = new GregorianTime();
 
     private int year;
     private int month;
@@ -104,32 +100,19 @@ class DozenalTime {
     }
 
     void setTo(WatchFaceTime time) {
-        long millis = time.toMillis(false);
-
-        // Workaround for https://github.com/ustwo/clockwise/issues/29
-        millis = (millis / 1000) * 1000 + time.millis;
-
-        setTo(new DateTime(millis));
-    }
-
-    void setTo(DateTime dateTime) {
-        this.dateTime = dateTime;
+        this.time.setTo(time);
         recompute();
     }
 
-    void updateTimeZone(TimeZone timeZone) {
-        updateTimeZone(DateTimeZone.forTimeZone(timeZone));
-    }
-
-    void updateTimeZone(DateTimeZone timeZone) {
-        dateTime = dateTime.withZone(timeZone);
+    void setTo(GregorianTime time) {
+        this.time.setTo(time);
         recompute();
     }
 
     private void recompute() {
-        int gregorianYear = dateTime.getYear();
-        int gregorianMonthOfYear = dateTime.getMonthOfYear();
-        int gregorianDayOfMonth = dateTime.getDayOfMonth();
+        int gregorianYear = time.year;
+        int gregorianMonthOfYear = time.month;
+        int gregorianDayOfMonth = time.dayOfMonth;
 
         year = gregorianYear + YEAR_OFFSETS[gregorianMonthOfYear];
         int dayOfYear = DAY_OFFSETS[gregorianMonthOfYear] + gregorianDayOfMonth - 1;
@@ -139,7 +122,7 @@ class DozenalTime {
 
         // We do recompute this from the calendar, because sometimes an hour in the day
         // is missing. So this gives us the effect of getting free daylight savings support.
-        int dayMillis = dateTime.getMillisOfDay();
+        int dayMillis = time.computeDayMillis();
 
         hourOfDay = dayMillis / GREGORIAN_MILLIS_PER_DOZENAL_HOUR;
         int tmp = dayMillis % GREGORIAN_MILLIS_PER_DOZENAL_HOUR;
