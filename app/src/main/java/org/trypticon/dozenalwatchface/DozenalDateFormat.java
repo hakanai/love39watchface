@@ -10,8 +10,8 @@ class DozenalDateFormat {
     private final DozenalNumberFormat dayOfMonthFormat = new DozenalNumberFormat(2);
     private DateFormatSymbols symbols;
 
-    DozenalDateFormat() {
-        updateLocale(Locale.getDefault());
+    DozenalDateFormat(Locale locale) {
+        symbols = DateFormatSymbols.getInstance(locale);
     }
 
     String formatDate(DozenalTime time) {
@@ -39,9 +39,5 @@ class DozenalDateFormat {
         builder.append(monthString);
 
         return builder.toString();
-    }
-
-    void updateLocale(Locale locale) {
-        symbols = DateFormatSymbols.getInstance(locale);
     }
 }

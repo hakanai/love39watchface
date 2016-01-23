@@ -1,5 +1,7 @@
 package org.trypticon.dozenalwatchface;
 
+import com.ustwo.clockwise.WatchFaceTime;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -101,11 +103,16 @@ class DozenalTime {
         return thirdTurns;
     }
 
-    void setToNow() {
-        setToDateTime(new DateTime());
+    void setTo(WatchFaceTime time) {
+        long millis = time.toMillis(false);
+
+        // Workaround for https://github.com/ustwo/clockwise/issues/29
+        millis = (millis / 1000) * 1000 + time.millis;
+
+        setTo(new DateTime(millis));
     }
 
-    void setToDateTime(DateTime dateTime) {
+    void setTo(DateTime dateTime) {
         this.dateTime = dateTime;
         recompute();
     }
