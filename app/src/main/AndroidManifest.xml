@@ -35,10 +35,10 @@
                 android:resource="@xml/watch_face" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/preview_analog" />
+                android:resource="@drawable/preview_analog_rect"/>
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview_circular"
-                android:resource="@drawable/preview_analog" />
+                android:resource="@drawable/preview_analog_circle"/>
             <!--TODO If I get a device I can test a companion with.
             <meta-data
                 android:name="com.google.android.wearable.watchface.companionConfigurationAction"
