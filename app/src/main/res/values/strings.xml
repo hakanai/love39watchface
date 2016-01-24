@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Dozenal Watch Face</string>
-    <string name="analog_dozenal_name">Analog Dozenal</string>
+    <string name="app_name">Love39 Watch Face</string>
+    <string name="analog_dozenal_name">Love39</string>
 
     <string name="dozenal_config_title">Settings</string>
     <string name="dozenal_time_toggle_name">Dozenal Time</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.trypticon.dozenalwatchface" >
+    package="org.trypticon.android.love39watchface" >
 
     <uses-feature android:name="android.hardware.type.watch" />
 
@@ -17,7 +17,7 @@
 
         <!-- TODO: This would handle data and messages between wearable and another device, but when your other device is an iPhone...
         <service
-            android:name="org.trypticon.dozenalwatchface.config.CompanionConfigListenerService"
+            android:name="org.trypticon.android.love39watchface.config.CompanionConfigListenerService"
             android:exported="true"
             android:enabled="true">
             <intent-filter>
@@ -27,7 +27,7 @@
          -->
 
         <service
-            android:name=".DozenalWatchFace"
+            android:name="org.trypticon.android.love39watchface.Love39WatchFace"
             android:label="@string/analog_dozenal_name"
             android:permission="android.permission.BIND_WALLPAPER" >
             <meta-data
@@ -42,10 +42,10 @@
             <!--TODO If I get a device I can test a companion with.
             <meta-data
                 android:name="com.google.android.wearable.watchface.companionConfigurationAction"
-                android:value="org.trypticon.dozenalwatchface.config" /> -->
+                android:value="org.trypticon.android.love39watchface.config" /> -->
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
-                android:value="org.trypticon.dozenalwatchface.config" />
+                android:value="org.trypticon.android.love39watchface.config" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -55,10 +55,10 @@
         </service>
 
         <activity
-            android:name="org.trypticon.dozenalwatchface.framework.WearableConfigActivity"
+            android:name="org.trypticon.android.love39watchface.framework.WearableConfigActivity"
             android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
             <intent-filter>
-                <action android:name="org.trypticon.dozenalwatchface.config" />
+                <action android:name="org.trypticon.android.love39watchface.config" />
                 <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "org.trypticon.dozenalwatchface"
+        applicationId "org.trypticon.android.love39watchface"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
