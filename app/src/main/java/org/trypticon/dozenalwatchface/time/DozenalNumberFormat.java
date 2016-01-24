@@ -1,4 +1,4 @@
-package org.trypticon.dozenalwatchface;
+package org.trypticon.dozenalwatchface.time;
 
 /**
  * Formatter for dozenal numbers.

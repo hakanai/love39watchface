@@ -1,4 +1,4 @@
-package org.trypticon.dozenalwatchface;
+package org.trypticon.dozenalwatchface.time;
 
 import android.annotation.SuppressLint;
 
@@ -11,12 +11,13 @@ import java.util.Locale;
 /**
  * Formatter for dozenal dates.
  */
-class DozenalDateFormat extends DateFormat {
+public class DozenalDateFormat extends DateFormat {
     private final java.text.DateFormat delegate;
     private final CalendarAdapter calendar = new CalendarAdapter();
     private final Date dummyDate = new Date(0);
 
-    @SuppressLint("SimpleDateFormat") // We got the pattern in a localised way
+    @SuppressLint("SimpleDateFormat")
+    public // We got the pattern in a localised way
     DozenalDateFormat(Locale locale) {
         String pattern = android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEddMMM");
         if (pattern == null) { // when running tests. :(
@@ -28,7 +29,7 @@ class DozenalDateFormat extends DateFormat {
     }
 
     @Override
-    String formatDate(Time time) {
+    public String formatDate(Time time) {
         calendar.set(Calendar.DAY_OF_WEEK, time.getDayOfWeek());
         calendar.set(Calendar.DAY_OF_MONTH, time.getDayOfMonth());
         // Android hard-codes in a + 1 when formatting as a number.

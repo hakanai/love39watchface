@@ -21,21 +21,42 @@
             android:fontFamily="sans-serif-condensed-light"
             android:textSize="27dp"/>
 
-        <!-- Light/dark toggle -->
         <LinearLayout android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="12dp">
 
             <CheckBox
-                android:id="@+id/dozenal_config_checkbox"
-                android:layout_height="38dp"
-                android:layout_width="38dp"
+                android:id="@+id/dozenal_config_time_checkbox"
+                android:layout_height="32dp"
+                android:layout_width="40dp"
                 android:layout_marginStart="12dp"
                 android:button="@drawable/config_toggle_checkbox"/>
 
             <TextView
-                android:id="@+id/dozenal_config_checkboxname"
+                android:id="@+id/dozenal_config_time_checkboxname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:fontFamily="sans-serif-condensed-light"
+                android:lineSpacingExtra="-4sp"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <CheckBox
+                android:id="@+id/dozenal_config_calendar_checkbox"
+                android:layout_height="32dp"
+                android:layout_width="40dp"
+                android:layout_marginStart="12dp"
+                android:button="@drawable/config_toggle_checkbox"/>
+
+            <TextView
+                android:id="@+id/dozenal_config_calendar_checkboxname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"

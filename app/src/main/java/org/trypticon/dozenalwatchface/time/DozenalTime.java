@@ -1,11 +1,11 @@
-package org.trypticon.dozenalwatchface;
+package org.trypticon.dozenalwatchface.time;
 
 import com.ustwo.clockwise.WatchFaceTime;
 
 /**
  * Encapsulates dozenal time calculation.
  */
-class DozenalTime extends Time {
+public class DozenalTime extends Time {
     private static final int[] YEAR_OFFSETS = {
             42, // never used
             -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -28,7 +28,7 @@ class DozenalTime extends Time {
     private static final int SECOND_TURNS_PER_MINUTE_TURN = 12;
     private static final int THIRD_TURNS_PER_SECOND_TURN = 12;
 
-    private GregorianTime time = new GregorianTime();
+    private ClassicTime time = new ClassicTime();
 
     private int year;
     private int month;
@@ -87,27 +87,27 @@ class DozenalTime extends Time {
     }
 
     @Override
-    float getHourTurns() {
+    public float getHourTurns() {
         return hourTurns;
     }
 
     @Override
-    float getMinuteTurns() {
+    public float getMinuteTurns() {
         return minuteTurns;
     }
 
     @Override
-    float getSecondTurns() {
+    public float getSecondTurns() {
         return secondTurns;
     }
 
     @Override
-    float getThirdTurns() {
+    public float getThirdTurns() {
         return thirdTurns;
     }
 
     @Override
-    boolean hasThirds() {
+    public boolean hasThirds() {
         return true;
     }
 
@@ -117,12 +117,12 @@ class DozenalTime extends Time {
     }
 
     @Override
-    void setTo(WatchFaceTime time) {
+    public void setTo(WatchFaceTime time) {
         this.time.setTo(time);
         recompute();
     }
 
-    void setTo(GregorianTime time) {
+    void setTo(ClassicTime time) {
         this.time.setTo(time);
         recompute();
     }

@@ -15,14 +15,14 @@ import org.trypticon.dozenalwatchface.framework.WearableConfigListener;
  * Configuration screen.
  */
 public class DozenalConfigView extends LinearLayout {
-    private WearableConfigListener mListener;
+    private WearableConfigListener listener;
 
     public DozenalConfigView(Context context, AttributeSet attributes) {
         super(context, attributes);
         try {
-            mListener = (WearableConfigListener) context;
+            listener = (WearableConfigListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context + " must implement WatchFaceConfigListener");
+            // Ignore it, for design mode.
         }
     }
 
@@ -34,18 +34,29 @@ public class DozenalConfigView extends LinearLayout {
 
         ((TextView) findViewById(R.id.dozenal_config_textview_title)).setText(getContext().getString(R.string.dozenal_config_title));
 
-        CheckBox themeCheckBox = (CheckBox) findViewById(R.id.dozenal_config_checkbox);
-        TextView themeTextView = (TextView)findViewById(R.id.dozenal_config_checkboxname);
-        themeTextView.setText(context.getString(R.string.dozenal_toggle_name));
+        CheckBox dozenalTimeCheckBox = (CheckBox) findViewById(R.id.dozenal_config_time_checkbox);
+        ((TextView) findViewById(R.id.dozenal_config_time_checkboxname))
+                .setText(context.getString(R.string.dozenal_time_toggle_name));
 
-        boolean dozenalActive = PreferenceManager.getDefaultSharedPreferences(context)
-                .getBoolean(ConfigKeys.DOZENAL_KEY, false);
-        themeCheckBox.setChecked(dozenalActive);
+        CheckBox dozenalCalendarCheckBox = (CheckBox) findViewById(R.id.dozenal_config_calendar_checkbox);
+        ((TextView) findViewById(R.id.dozenal_config_calendar_checkboxname))
+                .setText(context.getString(R.string.dozenal_calendar_toggle_name));
 
-        themeCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        dozenalTimeCheckBox.setChecked(PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(ConfigKeys.DOZENAL_TIME_KEY, false));
+        dozenalCalendarCheckBox.setChecked(PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(ConfigKeys.DOZENAL_CALENDAR_KEY, false));
+
+        dozenalTimeCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean checked) {
-                mListener.onConfigCompleted(ConfigKeys.DOZENAL_KEY, checked, false);
+                listener.onConfigCompleted(ConfigKeys.DOZENAL_TIME_KEY, checked, false);
+            }
+        });
+        dozenalCalendarCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean checked) {
+                listener.onConfigCompleted(ConfigKeys.DOZENAL_CALENDAR_KEY, checked, false);
             }
         });
 

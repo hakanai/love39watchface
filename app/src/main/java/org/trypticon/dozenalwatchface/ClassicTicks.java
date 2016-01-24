@@ -6,10 +6,10 @@ import android.graphics.drawable.Drawable;
 /**
  * Ticks for a Gregorian clock.
  */
-class GregorianTicks extends Ticks {
+class ClassicTicks extends Ticks {
     private static final int SUBDIVISIONS = 5;
 
-    GregorianTicks(Context context) {
+    ClassicTicks(Context context) {
         super(context, SUBDIVISIONS);
     }
 

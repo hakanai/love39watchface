@@ -17,6 +17,7 @@ import com.ustwo.clockwise.WatchShape;
 
 import org.trypticon.dozenalwatchface.config.ConfigKeys;
 import org.trypticon.dozenalwatchface.framework.ConfigurableWatchFace;
+import org.trypticon.dozenalwatchface.time.Time;
 
 /**
  * The main watch face.
@@ -45,7 +46,8 @@ public class DozenalWatchFace extends ConfigurableWatchFace {
 
     private PaintHolder datePaint;
 
-    private WatchStyle watchStyle;
+    private TimeStyle timeStyle;
+    private DateStyle dateStyle;
 
     @Override
     public void onCreate() {
@@ -117,7 +119,7 @@ public class DozenalWatchFace extends ConfigurableWatchFace {
     private void onWatchStyleChanged() {
         Rect screenBounds = new Rect(0, 0, getWidth(), getHeight());
 
-        Ticks ticks = watchStyle.getTicks();
+        Ticks ticks = timeStyle.getTicks();
         ticks.updateShape(getWatchShape() == WatchShape.CIRCLE);
         ticks.setBounds(screenBounds);
         ticks.updateWatchMode(new WatchModeHelper(getCurrentWatchMode()));
@@ -145,7 +147,7 @@ public class DozenalWatchFace extends ConfigurableWatchFace {
         secondHand = new Hand(
                 this,
                 R.dimen.analog_second_hand_width,
-                watchStyle.getTime().hasThirds() ? R.color.analog_second_hand_fill
+                timeStyle.getTime().hasThirds() ? R.color.analog_second_hand_fill
                         : R.color.analog_third_hand_fill,
                 R.dimen.analog_second_hand_stroke_width,
                 centerX, centerY, secondLength, false, false);
@@ -188,14 +190,15 @@ public class DozenalWatchFace extends ConfigurableWatchFace {
         minuteHand.updateWatchMode(watchModeHelper);
         secondHand.updateWatchMode(watchModeHelper);
         thirdHand.updateWatchMode(watchModeHelper);
-        watchStyle.getTicks().updateWatchMode(watchModeHelper);
+        timeStyle.getTicks().updateWatchMode(watchModeHelper);
     }
 
     @Override
     protected void onTimeChanged(WatchFaceTime oldTime, WatchFaceTime newTime) {
         super.onTimeChanged(oldTime, newTime);
 
-        watchStyle.getTime().setTo(newTime);
+        timeStyle.getTime().setTo(newTime);
+        dateStyle.getTime().setTo(newTime);
     }
 
     @Override
@@ -204,12 +207,18 @@ public class DozenalWatchFace extends ConfigurableWatchFace {
     }
 
     private void updateConfiguration(SharedPreferences preferences) {
-        boolean dozenal = preferences.getBoolean(ConfigKeys.DOZENAL_KEY, false);
-        if (dozenal) {
-            watchStyle = new DozenalWatchStyle(this);
+        if (preferences.getBoolean(ConfigKeys.DOZENAL_TIME_KEY, false)) {
+            timeStyle = new DozenalTimeStyle(this);
         } else {
-            watchStyle = new GregorianWatchStyle(this);
+            timeStyle = new ClassicTimeStyle(this);
         }
+
+        if (preferences.getBoolean(ConfigKeys.DOZENAL_CALENDAR_KEY, false)) {
+            dateStyle = new DozenalDateStyle(this);
+        } else {
+            dateStyle = new ClassicDateStyle(this);
+        }
+
         onWatchStyleChanged();
     }
 
@@ -220,12 +229,12 @@ public class DozenalWatchFace extends ConfigurableWatchFace {
         float centerX = canvas.getWidth() / 2;
         float centerY = canvas.getHeight() / 2;
 
-        Time time = watchStyle.getTime();
+        Time time = dateStyle.getTime();
         canvas.drawText(
-                watchStyle.getDateFormat().formatDate(time),
+                dateStyle.getDateFormat().formatDate(time),
                 centerX, centerY * 9 / 16, datePaint.getPaint());
 
-        Ticks ticks = watchStyle.getTicks();
+        Ticks ticks = timeStyle.getTicks();
         ticks.draw(canvas);
 
         int angleShift = ticks.isZeroAtTop() ? 180 : 0;

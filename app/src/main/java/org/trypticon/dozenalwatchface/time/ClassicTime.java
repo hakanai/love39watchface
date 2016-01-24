@@ -1,11 +1,11 @@
-package org.trypticon.dozenalwatchface;
+package org.trypticon.dozenalwatchface.time;
 
 import com.ustwo.clockwise.WatchFaceTime;
 
 /**
  * Stand-in utility for holding a gregorian time to avoid using any of Java's built-in horrors.
  */
-class GregorianTime extends Time {
+public class ClassicTime extends Time {
     private static final int GREGORIAN_MILLIS_PER_HALF_DAY = 1000 * 60 * 60 * 12;
 
     private static final int MINUTE_TURNS_PER_HOUR_TURN = 12;
@@ -42,7 +42,7 @@ class GregorianTime extends Time {
     private float secondTurns;
 
     @Override
-    void setTo(WatchFaceTime time) {
+    public void setTo(WatchFaceTime time) {
         year = time.year;
         month = time.month + 1; // WatchFaceTime inherits this weirdness
         dayOfMonth = time.monthDay;
@@ -56,7 +56,7 @@ class GregorianTime extends Time {
         recompute();
     }
 
-    void setTo(GregorianTime time) {
+    void setTo(ClassicTime time) {
         year = time.year;
         month = time.month;
         dayOfMonth = time.dayOfMonth;
@@ -90,22 +90,22 @@ class GregorianTime extends Time {
     }
 
     @Override
-    float getHourTurns() {
+    public float getHourTurns() {
         return hourTurns;
     }
 
     @Override
-    float getMinuteTurns() {
+    public float getMinuteTurns() {
         return minuteTurns;
     }
 
     @Override
-    float getSecondTurns() {
+    public float getSecondTurns() {
         return secondTurns;
     }
 
     @Override
-    float getThirdTurns() {
+    public float getThirdTurns() {
         throw new UnsupportedOperationException();
     }
 
@@ -115,7 +115,7 @@ class GregorianTime extends Time {
     }
 
     @Override
-    boolean hasThirds() {
+    public boolean hasThirds() {
         return false;
     }
 

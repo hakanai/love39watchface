@@ -3,5 +3,6 @@
     <string name="analog_dozenal_name">Analog Dozenal</string>
 
     <string name="dozenal_config_title">Settings</string>
-    <string name="dozenal_toggle_name">Dozenal</string>
+    <string name="dozenal_time_toggle_name">Dozenal Time</string>
+    <string name="dozenal_calendar_toggle_name">Dozenal Calendar</string>
 </resources>
