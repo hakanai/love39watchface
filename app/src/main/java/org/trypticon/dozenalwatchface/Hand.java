@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DimenRes;
 
 /**
  * Encapsulation of information about a single hand.
@@ -19,13 +21,14 @@ class Hand {
     private final Path untransformedClipPath;
     private final Path clipPath;
 
+    private final Paint strokePaint;
     private final Paint fillPaint;
     private final Paint clipPaint;
 
     private final Matrix matrix = new Matrix();
 
     Hand(Context context,
-         int widthId, int fillColorId, int strokeWidthId,
+         @DimenRes int widthId, @ColorRes int fillColorId, @DimenRes int strokeWidthId,
          float centerX, float centerY, float handLength, boolean pointy, boolean clip) {
 
         this.centerX = centerX;
@@ -37,10 +40,15 @@ class Hand {
 
         fillPaint = new Paint();
         fillPaint.setColor(fillColor);
-        fillPaint.setStrokeWidth(context.getResources().getDimension(strokeWidthId));
-        fillPaint.setStrokeCap(Paint.Cap.BUTT);
-        fillPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        fillPaint.setAntiAlias(true);
+        fillPaint.setStyle(Paint.Style.FILL);
+        fillPaint.setAntiAlias(false);
+
+        strokePaint = new Paint();
+        strokePaint.setColor(fillColor);
+        strokePaint.setStrokeWidth(context.getResources().getDimension(strokeWidthId));
+        strokePaint.setStrokeCap(Paint.Cap.BUTT);
+        strokePaint.setStyle(Paint.Style.STROKE);
+        strokePaint.setAntiAlias(true);
 
         clipPaint = new Paint();
         clipPaint.setColor(Color.BLACK);
@@ -109,7 +117,10 @@ class Hand {
     }
 
     void draw(Canvas canvas) {
+        // Separately paints fill and stroke because it renders incorrectly otherwise due to some
+        // kind of bug I can't figure out.
         canvas.drawPath(path, fillPaint);
+        canvas.drawPath(path, strokePaint);
 
         if (clipPath != null) {
             canvas.drawPath(clipPath, clipPaint);
@@ -117,7 +128,7 @@ class Hand {
     }
 
     void updateHighQuality(boolean highQuality) {
-        fillPaint.setAntiAlias(highQuality);
+        strokePaint.setAntiAlias(highQuality);
         clipPaint.setAntiAlias(highQuality);
     }
 }

@@ -9,6 +9,7 @@
     <color name="analog_third_hand_fill">#c80067</color>
 
     <color name="analog_centre_fill">#22faba</color>
+    <color name="heart_fill">#117d5d</color>
 
     <color name="analog_primary_tick_digit_stroke">#66ffffff</color>
     <color name="analog_primary_tick_stroke">#44ffffff</color>

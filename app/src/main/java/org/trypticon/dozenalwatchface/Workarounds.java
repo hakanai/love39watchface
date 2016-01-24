@@ -1,6 +1,7 @@
 package org.trypticon.dozenalwatchface;
 
 import android.content.Context;
+import android.support.annotation.ColorRes;
 
 /**
  * Collection of Android SDK workarounds.
@@ -22,7 +23,7 @@ class Workarounds {
      * @return the colour.
      */
     @SuppressWarnings("deprecation")
-    static int getColor(Context context, int id) {
+    static int getColor(Context context, @ColorRes int id) {
         return context.getResources().getColor(id);
     }
 

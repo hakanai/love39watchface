@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="date_size">8pt</dimen>
+    <dimen name="date_size">10pt</dimen>
 
     <dimen name="analog_blur_width">5.5pt</dimen>
 
@@ -16,6 +16,9 @@
     <dimen name="analog_centre_radius">3pt</dimen>
     <dimen name="analog_centre_stroke">0.5pt</dimen>
     <dimen name="analog_centre_hand_start_radius">5pt</dimen>
+
+    <dimen name="analog_heart_width">48pt</dimen>
+    <dimen name="analog_heart_height">36pt</dimen>
 
     <dimen name="analog_primary_tick_digit_stroke">0.25pt</dimen>
     <dimen name="analog_primary_tick_digit_size">6pt</dimen>

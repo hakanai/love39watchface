@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.support.annotation.ColorRes;
 import android.view.WindowInsets;
 
 import com.ustwo.clockwise.WatchFace;
@@ -35,8 +36,11 @@ public class DozenalWatchFace extends WatchFace {
     private Paint centrePaint;
     private float centreRadius;
 
-    private Path blurPath;
-    private Paint blurPaint;
+    private Heart heart;
+    private Paint heartGlowPaint;
+
+    private Path handGlowPath;
+    private Paint handGlowPaint;
 
     private Paint datePaint;
 
@@ -45,7 +49,6 @@ public class DozenalWatchFace extends WatchFace {
     @Override
     public void onCreate() {
         super.onCreate();
-
 
         clearPaint = new Paint();
         clearPaint.setColor(Color.BLACK);
@@ -60,13 +63,10 @@ public class DozenalWatchFace extends WatchFace {
         centrePaint.setStrokeCap(Paint.Cap.ROUND);
         centrePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-        float shadowWidth = getResources().getDimension(R.dimen.analog_blur_width);
-        blurPaint = new Paint(centrePaint);
-        blurPaint.setColor((centrePaint.getColor() & 0xFFFFFF) | 0x40000000);
-        blurPaint.setStrokeWidth(shadowWidth);
-        blurPaint.setMaskFilter(new BlurMaskFilter(shadowWidth, BlurMaskFilter.Blur.NORMAL));
-        blurPath = new Path();
+        handGlowPaint = createGlowPaint(R.color.analog_centre_fill);
+        handGlowPath = new Path();
 
+        heartGlowPaint = createGlowPaint(R.color.heart_fill);
         centreRadius = getResources().getDimension(R.dimen.analog_centre_radius);
 
         watchStyle = new DozenalWatchStyle(this);
@@ -78,6 +78,17 @@ public class DozenalWatchFace extends WatchFace {
         datePaint.setColor(Workarounds.getColor(this, R.color.date_fill));
         datePaint.setTextAlign(Paint.Align.CENTER);
         datePaint.setTextSize(getResources().getDimension(R.dimen.date_size));
+    }
+
+    private Paint createGlowPaint(@ColorRes int baseColorKey) {
+        float glowWidth = getResources().getDimension(R.dimen.analog_blur_width);
+        Paint paint = new Paint();
+        paint.setColor((Workarounds.getColor(this, baseColorKey) & 0xFFFFFF) | 0x40000000);
+        paint.setMaskFilter(new BlurMaskFilter(glowWidth, BlurMaskFilter.Blur.NORMAL));
+        paint.setStrokeWidth(glowWidth);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        return paint;
     }
 
     @Override
@@ -93,8 +104,8 @@ public class DozenalWatchFace extends WatchFace {
         ticks.updateShape(shape == WatchShape.CIRCLE);
         ticks.setBounds(screenBounds);
 
-        float centerX = screenBounds.centerX();
-        float centerY = screenBounds.centerY();
+        int centerX = screenBounds.centerX();
+        int centerY = screenBounds.centerY();
 
         float thirdLength = centerX - 30;
         float secondLength = centerX - 35;
@@ -126,6 +137,16 @@ public class DozenalWatchFace extends WatchFace {
                 R.color.analog_third_hand_fill,
                 R.dimen.analog_third_hand_stroke_width,
                 centerX, centerY, thirdLength, false, false);
+
+        heart = new Heart(this);
+        int heartY = screenBounds.height() * 45 / 64;
+        float heartWidth = getResources().getDimension(R.dimen.analog_heart_width);
+        float heartHeight = getResources().getDimension(R.dimen.analog_heart_height);
+        heart.updateBounds(
+                centerX - heartWidth / 2,
+                heartY - heartHeight / 2,
+                centerX + heartWidth / 2,
+                heartY + heartHeight / 2);
 
         //TODO Insets, for the chin I guess.
 
@@ -172,7 +193,7 @@ public class DozenalWatchFace extends WatchFace {
         Time time = watchStyle.getTime();
         canvas.drawText(
                 watchStyle.getDateFormat().formatDate(time),
-                centerX, centerY * 1 / 2, datePaint);
+                centerX, centerY * 9 / 16, datePaint);
 
         Ticks ticks = watchStyle.getTicks();
         ticks.draw(canvas);
@@ -183,11 +204,14 @@ public class DozenalWatchFace extends WatchFace {
 
         WatchMode watchMode = getCurrentWatchMode();
         if (watchMode == WatchMode.INTERACTIVE) {
-            blurPath.reset();
-            blurPath.addPath(hourHand.getPath());
-            blurPath.addPath(minuteHand.getPath());
-            blurPath.addCircle(centerX, centerY, centreRadius, Path.Direction.CCW);
-            canvas.drawPath(blurPath, blurPaint);
+            canvas.drawPath(heart.getPath(), heartGlowPaint);
+            heart.draw(canvas);
+
+            handGlowPath.reset();
+            handGlowPath.addPath(hourHand.getPath());
+            handGlowPath.addPath(minuteHand.getPath());
+            handGlowPath.addCircle(centerX, centerY, centreRadius, Path.Direction.CCW);
+            canvas.drawPath(handGlowPath, handGlowPaint);
         }
 
         hourHand.draw(canvas);
