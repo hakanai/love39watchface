@@ -21,14 +21,15 @@ class Hand {
     private final Path untransformedClipPath;
     private final Path clipPath;
 
-    private final Paint strokePaint;
-    private final Paint fillPaint;
-    private final Paint clipPaint;
+    private final PaintHolder strokePaint;
+    private final PaintHolder fillPaint;
+    private final PaintHolder clipPaint;
 
     private final Matrix matrix = new Matrix();
 
-    Hand(Context context,
-         @DimenRes int widthId, @ColorRes int fillColorId, @DimenRes int strokeWidthId,
+    Hand(final Context context,
+         @DimenRes int widthId, @ColorRes int fillColorId,
+         @DimenRes final int strokeWidthId,
          float centerX, float centerY, float handLength, boolean pointy, boolean clip) {
 
         this.centerX = centerX;
@@ -36,26 +37,47 @@ class Hand {
 
         float halfHandWidth = context.getResources().getDimension(widthId) / 2;
 
-        int fillColor = Workarounds.getColor(context, fillColorId);
+        final int fillColor = Workarounds.getColor(context, fillColorId);
 
-        fillPaint = new Paint();
-        fillPaint.setColor(fillColor);
-        fillPaint.setStyle(Paint.Style.FILL);
-        fillPaint.setAntiAlias(false);
+        fillPaint = new PaintHolder(true) {
+            @Override
+            protected void configure(Paint paint) {
+                paint.setColor(fillColor);
+                paint.setStyle(Paint.Style.FILL);
+                paint.setAntiAlias(false);
+            }
+        };
 
-        strokePaint = new Paint();
-        strokePaint.setColor(fillColor);
-        strokePaint.setStrokeWidth(context.getResources().getDimension(strokeWidthId));
-        strokePaint.setStrokeCap(Paint.Cap.BUTT);
-        strokePaint.setStyle(Paint.Style.STROKE);
-        strokePaint.setAntiAlias(true);
+        strokePaint = new PaintHolder(false) {
+            @Override
+            protected void configure(Paint paint) {
+                paint.setColor(fillColor);
+                paint.setStrokeWidth(context.getResources().getDimension(strokeWidthId));
+                paint.setStrokeCap(Paint.Cap.BUTT);
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setAntiAlias(true);
+            }
+        };
 
-        clipPaint = new Paint();
-        clipPaint.setColor(Color.BLACK);
-        clipPaint.setStrokeWidth(2.0f);
-        clipPaint.setStrokeCap(Paint.Cap.SQUARE);
-        clipPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        clipPaint.setAntiAlias(true);
+        clipPaint = new PaintHolder(false) {
+            @Override
+            protected void configure(Paint paint) {
+                paint.setColor(Color.BLACK);
+                paint.setStrokeWidth(2.0f);
+                paint.setStrokeCap(Paint.Cap.SQUARE);
+                paint.setStyle(Paint.Style.FILL_AND_STROKE);
+                paint.setAntiAlias(true);
+            }
+
+            @Override
+            protected void configureForPaintingOnBlack(Paint paint) {
+                // Outline the same as the tie, otherwise it's black on black.
+                float[] hsv = new float[3];
+                Color.colorToHSV(fillColor, hsv);
+                hsv[1] = 0;
+                paint.setColor(Color.HSVToColor(Color.alpha(fillColor), hsv));
+            }
+        };
 
         untransformedPath = new Path();
 
@@ -101,6 +123,12 @@ class Hand {
         }
     }
 
+    void updateWatchMode(WatchModeHelper mode) {
+        fillPaint.updateWatchMode(mode);
+        strokePaint.updateWatchMode(mode);
+        clipPaint.updateWatchMode(mode);
+    }
+
     void updateAngle(float angleDegrees) {
         matrix.reset();
         matrix.setRotate(angleDegrees, 0, 0);
@@ -119,16 +147,11 @@ class Hand {
     void draw(Canvas canvas) {
         // Separately paints fill and stroke because it renders incorrectly otherwise due to some
         // kind of bug I can't figure out.
-        canvas.drawPath(path, fillPaint);
-        canvas.drawPath(path, strokePaint);
+        canvas.drawPath(path, fillPaint.getPaint());
+        canvas.drawPath(path, strokePaint.getPaint());
 
         if (clipPath != null) {
-            canvas.drawPath(clipPath, clipPaint);
+            canvas.drawPath(clipPath, clipPaint.getPaint());
         }
-    }
-
-    void updateHighQuality(boolean highQuality) {
-        strokePaint.setAntiAlias(highQuality);
-        clipPaint.setAntiAlias(highQuality);
     }
 }

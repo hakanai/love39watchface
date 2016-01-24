@@ -20,31 +20,39 @@ abstract class Ticks extends Drawable {
 
     private final Drawable[] digits;
     private final Drawable[] ticks;
-    private final Paint primaryTickStroke;
-    private final Paint secondaryTickStroke;
+    private final PaintHolder primaryTickPaint;
+    private final PaintHolder secondaryTickPaint;
 
     private boolean round;
 
-    Ticks(Context context, int subdivisions) {
+    Ticks(final Context context, int subdivisions) {
         this.subdivisions = subdivisions;
         count = 12 * subdivisions;
 
         digits = getDigits(context);
         ticks = new Drawable[count];
 
-        primaryTickStroke = new Paint();
-        primaryTickStroke.setColor(Workarounds.getColor(context, R.color.analog_primary_tick_stroke));
-        primaryTickStroke.setStrokeWidth(context.getResources().getDimension(R.dimen.analog_primary_tick_stroke));
-        primaryTickStroke.setAntiAlias(true);
-        primaryTickStroke.setStrokeCap(Paint.Cap.SQUARE);
-        primaryTickStroke.setStyle(Paint.Style.FILL_AND_STROKE);
+        primaryTickPaint = new PaintHolder(false) {
+            @Override
+            protected void configure(Paint paint) {
+                paint.setColor(Workarounds.getColor(context, R.color.analog_primary_tick_stroke));
+                paint.setStrokeWidth(context.getResources().getDimension(R.dimen.analog_primary_tick_stroke));
+                paint.setAntiAlias(true);
+                paint.setStrokeCap(Paint.Cap.SQUARE);
+                paint.setStyle(Paint.Style.STROKE);
+            }
+        };
 
-        secondaryTickStroke = new Paint();
-        secondaryTickStroke.setColor(Workarounds.getColor(context, R.color.analog_secondary_tick_stroke));
-        secondaryTickStroke.setStrokeWidth(context.getResources().getDimension(R.dimen.analog_secondary_tick_stroke));
-        secondaryTickStroke.setAntiAlias(true);
-        secondaryTickStroke.setStrokeCap(Paint.Cap.SQUARE);
-        secondaryTickStroke.setStyle(Paint.Style.FILL_AND_STROKE);
+        secondaryTickPaint = new PaintHolder(false) {
+            @Override
+            protected void configure(Paint paint) {
+                paint.setColor(Workarounds.getColor(context, R.color.analog_secondary_tick_stroke));
+                paint.setStrokeWidth(context.getResources().getDimension(R.dimen.analog_secondary_tick_stroke));
+                paint.setAntiAlias(true);
+                paint.setStrokeCap(Paint.Cap.SQUARE);
+                paint.setStyle(Paint.Style.STROKE);
+            }
+        };
     }
 
     abstract boolean isZeroAtTop();
@@ -62,9 +70,10 @@ abstract class Ticks extends Drawable {
         updateGeometry();
     }
 
-    void updateHighQuality(boolean highQuality) {
-        primaryTickStroke.setAntiAlias(highQuality);
-        secondaryTickStroke.setAntiAlias(highQuality);
+    void updateWatchMode(WatchModeHelper mode) {
+        primaryTickPaint.updateWatchMode(mode);
+        secondaryTickPaint.updateWatchMode(mode);
+        updateGeometry();
     }
 
     /**
@@ -94,7 +103,7 @@ abstract class Ticks extends Drawable {
                         centerX + directionX * (tickDistance * 2),
                         centerY + directionY * (tickDistance * 2));
                 ShapeDrawable tick = new ShapeDrawable(new PathShape(path, width, height));
-                tick.getPaint().set(primaryTickStroke);
+                tick.getPaint().set(primaryTickPaint.getPaint());
                 tick.setBounds(getBounds());
                 ticks[i] = tick;
 
@@ -119,7 +128,7 @@ abstract class Ticks extends Drawable {
                         centerX + directionX * (tickDistance * 2),
                         centerY + directionY * (tickDistance * 2));
                 ShapeDrawable tick = new ShapeDrawable(new PathShape(path, width, height));
-                tick.getPaint().set(secondaryTickStroke);
+                tick.getPaint().set(secondaryTickPaint.getPaint());
                 tick.setBounds(getBounds());
                 ticks[i] = tick;
             }

@@ -2,7 +2,6 @@ package org.trypticon.dozenalwatchface;
 
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
@@ -24,16 +23,14 @@ public class DozenalWatchFace extends WatchFace {
     // The correct value probably depends on screen resolution!
     private static final long INTERACTIVE_UPDATE_RATE_MS = 33;
 
-    private Paint clearPaint;
-    private Paint realBackgroundPaint;
-    private Paint backgroundPaint;
+    private PaintHolder backgroundPaint;
 
     private Hand hourHand;
     private Hand minuteHand;
     private Hand secondHand;
     private Hand thirdHand;
 
-    private Paint centrePaint;
+    private PaintHolder centrePaint;
     private float centreRadius;
 
     private Heart heart;
@@ -42,7 +39,7 @@ public class DozenalWatchFace extends WatchFace {
     private Path handGlowPath;
     private Paint handGlowPaint;
 
-    private Paint datePaint;
+    private PaintHolder datePaint;
 
     private WatchStyle watchStyle;
 
@@ -50,18 +47,23 @@ public class DozenalWatchFace extends WatchFace {
     public void onCreate() {
         super.onCreate();
 
-        clearPaint = new Paint();
-        clearPaint.setColor(Color.BLACK);
+        backgroundPaint = new PaintHolder(true) {
+            @Override
+            protected void configure(Paint paint) {
+                paint.setColor(Workarounds.getColor(DozenalWatchFace.this, R.color.analog_background));
+            }
+        };
 
-        realBackgroundPaint = new Paint();
-        realBackgroundPaint.setColor(Workarounds.getColor(this, R.color.analog_background));
-
-        centrePaint = new Paint();
-        centrePaint.setColor(Workarounds.getColor(this, R.color.analog_centre_fill));
-        centrePaint.setAntiAlias(true);
-        centrePaint.setStrokeWidth(getResources().getDimension(R.dimen.analog_centre_stroke));
-        centrePaint.setStrokeCap(Paint.Cap.ROUND);
-        centrePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        centrePaint = new PaintHolder(true) {
+            @Override
+            protected void configure(Paint paint) {
+                paint.setColor(Workarounds.getColor(DozenalWatchFace.this, R.color.analog_centre_fill));
+                paint.setAntiAlias(true);
+                paint.setStrokeWidth(getResources().getDimension(R.dimen.analog_centre_stroke));
+                paint.setStrokeCap(Paint.Cap.ROUND);
+                paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            }
+        };
 
         handGlowPaint = createGlowPaint(R.color.analog_centre_fill);
         handGlowPath = new Path();
@@ -72,12 +74,18 @@ public class DozenalWatchFace extends WatchFace {
         watchStyle = new DozenalWatchStyle(this);
 //        watchStyle = new GregorianWatchStyle(this);
 
-        Typeface roboto = Typeface.createFromAsset(getAssets(), "fonts/RobotoCondensed-Regular.ttf");
-        datePaint = new Paint();
-        datePaint.setTypeface(roboto);
-        datePaint.setColor(Workarounds.getColor(this, R.color.date_fill));
-        datePaint.setTextAlign(Paint.Align.CENTER);
-        datePaint.setTextSize(getResources().getDimension(R.dimen.date_size));
+        datePaint = new PaintHolder(false) {
+            @Override
+            protected void configure(Paint paint) {
+                Typeface roboto = Typeface.createFromAsset(getAssets(), "fonts/RobotoCondensed-Regular.ttf");
+                paint.setTypeface(roboto);
+                paint.setColor(Workarounds.getColor(DozenalWatchFace.this, R.color.date_fill));
+                paint.setTextAlign(Paint.Align.CENTER);
+                paint.setTextSize(getResources().getDimension(R.dimen.date_size));
+                paint.setAntiAlias(true);
+                paint.setStyle(Paint.Style.FILL_AND_STROKE);
+            }
+        };
     }
 
     private Paint createGlowPaint(@ColorRes int baseColorKey) {
@@ -161,19 +169,16 @@ public class DozenalWatchFace extends WatchFace {
     }
 
     private void updateRenderingProperties() {
-        WatchMode watchMode = getCurrentWatchMode();
+        WatchModeHelper watchModeHelper = new WatchModeHelper(getCurrentWatchMode());
 
-        backgroundPaint = watchMode == WatchMode.INTERACTIVE ? realBackgroundPaint : clearPaint;
-
-        boolean highQuality = watchMode != WatchMode.LOW_BIT &&
-                watchMode != WatchMode.LOW_BIT_BURN_IN;
-        hourHand.updateHighQuality(highQuality);
-        minuteHand.updateHighQuality(highQuality);
-        secondHand.updateHighQuality(highQuality);
-        thirdHand.updateHighQuality(highQuality);
-        centrePaint.setAntiAlias(highQuality);
-        watchStyle.getTicks().updateHighQuality(highQuality);
-        datePaint.setAntiAlias(highQuality);
+        backgroundPaint.updateWatchMode(watchModeHelper);
+        centrePaint.updateWatchMode(watchModeHelper);
+        datePaint.updateWatchMode(watchModeHelper);
+        hourHand.updateWatchMode(watchModeHelper);
+        minuteHand.updateWatchMode(watchModeHelper);
+        secondHand.updateWatchMode(watchModeHelper);
+        thirdHand.updateWatchMode(watchModeHelper);
+        watchStyle.getTicks().updateWatchMode(watchModeHelper);
     }
 
     @Override
@@ -185,7 +190,7 @@ public class DozenalWatchFace extends WatchFace {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
+        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint.getPaint());
 
         float centerX = canvas.getWidth() / 2;
         float centerY = canvas.getHeight() / 2;
@@ -193,7 +198,7 @@ public class DozenalWatchFace extends WatchFace {
         Time time = watchStyle.getTime();
         canvas.drawText(
                 watchStyle.getDateFormat().formatDate(time),
-                centerX, centerY * 9 / 16, datePaint);
+                centerX, centerY * 9 / 16, datePaint.getPaint());
 
         Ticks ticks = watchStyle.getTicks();
         ticks.draw(canvas);
@@ -226,6 +231,6 @@ public class DozenalWatchFace extends WatchFace {
             }
         }
 
-        canvas.drawCircle(centerX, centerY, centreRadius, centrePaint);
+        canvas.drawCircle(centerX, centerY, centreRadius, centrePaint.getPaint());
     }
 }
