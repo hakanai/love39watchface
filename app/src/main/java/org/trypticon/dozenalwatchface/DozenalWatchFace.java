@@ -1,23 +1,27 @@
 package org.trypticon.dozenalwatchface;
 
+import android.content.SharedPreferences;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
 import android.view.WindowInsets;
 
-import com.ustwo.clockwise.WatchFace;
 import com.ustwo.clockwise.WatchFaceTime;
 import com.ustwo.clockwise.WatchMode;
 import com.ustwo.clockwise.WatchShape;
 
+import org.trypticon.dozenalwatchface.config.ConfigKeys;
+import org.trypticon.dozenalwatchface.framework.ConfigurableWatchFace;
+
 /**
  * The main watch face.
  */
-public class DozenalWatchFace extends WatchFace {
+public class DozenalWatchFace extends ConfigurableWatchFace {
     // I originally determined 20 experimentally.
     // The ustwo examples use 33, so that might be better.
     // The correct value probably depends on screen resolution!
@@ -71,9 +75,6 @@ public class DozenalWatchFace extends WatchFace {
         heartGlowPaint = createGlowPaint(R.color.heart_fill);
         centreRadius = getResources().getDimension(R.dimen.analog_centre_radius);
 
-        watchStyle = new DozenalWatchStyle(this);
-//        watchStyle = new GregorianWatchStyle(this);
-
         datePaint = new PaintHolder(false) {
             @Override
             protected void configure(Paint paint) {
@@ -86,6 +87,8 @@ public class DozenalWatchFace extends WatchFace {
                 paint.setStyle(Paint.Style.FILL_AND_STROKE);
             }
         };
+
+        updateConfiguration(PreferenceManager.getDefaultSharedPreferences(this));
     }
 
     private Paint createGlowPaint(@ColorRes int baseColorKey) {
@@ -108,9 +111,16 @@ public class DozenalWatchFace extends WatchFace {
     protected void onLayout(WatchShape shape, Rect screenBounds, WindowInsets screenInsets) {
         super.onLayout(shape, screenBounds, screenInsets);
 
+        onWatchStyleChanged();
+    }
+
+    private void onWatchStyleChanged() {
+        Rect screenBounds = new Rect(0, 0, getWidth(), getHeight());
+
         Ticks ticks = watchStyle.getTicks();
-        ticks.updateShape(shape == WatchShape.CIRCLE);
+        ticks.updateShape(getWatchShape() == WatchShape.CIRCLE);
         ticks.setBounds(screenBounds);
+        ticks.updateWatchMode(new WatchModeHelper(getCurrentWatchMode()));
 
         int centerX = screenBounds.centerX();
         int centerY = screenBounds.centerY();
@@ -186,6 +196,21 @@ public class DozenalWatchFace extends WatchFace {
         super.onTimeChanged(oldTime, newTime);
 
         watchStyle.getTime().setTo(newTime);
+    }
+
+    @Override
+    protected void onWatchFaceConfigChanged(SharedPreferences sharedPreferences, String key) {
+        updateConfiguration(sharedPreferences);
+    }
+
+    private void updateConfiguration(SharedPreferences preferences) {
+        boolean dozenal = preferences.getBoolean(ConfigKeys.DOZENAL_KEY, false);
+        if (dozenal) {
+            watchStyle = new DozenalWatchStyle(this);
+        } else {
+            watchStyle = new GregorianWatchStyle(this);
+        }
+        onWatchStyleChanged();
     }
 
     @Override

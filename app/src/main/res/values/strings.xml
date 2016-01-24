@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Dozenal Watch Face</string>
     <string name="analog_dozenal_name">Analog Dozenal</string>
+
+    <string name="dozenal_config_title">Settings</string>
+    <string name="dozenal_toggle_name">Dozenal</string>
 </resources>
