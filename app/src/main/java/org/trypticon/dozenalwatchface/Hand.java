@@ -22,6 +22,8 @@ class Hand {
     private final Paint fillPaint;
     private final Paint clipPaint;
 
+    private final Matrix matrix = new Matrix();
+
     Hand(Context context,
          int widthId, int fillColorId, int strokeWidthId,
          float centerX, float centerY, float handLength, boolean pointy, boolean clip) {
@@ -92,7 +94,7 @@ class Hand {
     }
 
     void updateAngle(float angleDegrees) {
-        Matrix matrix = new Matrix();
+        matrix.reset();
         matrix.setRotate(angleDegrees, 0, 0);
         matrix.postTranslate(centerX, centerY);
 
