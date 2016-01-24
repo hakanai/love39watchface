@@ -15,9 +15,6 @@ public class Heart {
     private final Paint paint;
 
     Heart(Context context) {
-//        float width = context.getResources().getDimension(R.dimen.analog_heart_width);
-//        float height = context.getResources().getDimension(R.dimen.analog_heart_height);
-
         paint = new Paint();
         paint.setColor(Workarounds.getColor(context, R.color.heart_fill));
         paint.setStyle(Paint.Style.FILL);
@@ -37,8 +34,6 @@ public class Heart {
     }
 
     void updateBounds(float left, float top, float right, float bottom) {
-        System.out.println("updateBounds: " + left + ", " + top + ", " + right + ", " + bottom);
-
         Matrix matrix = new Matrix();
         matrix.setScale((right - left) / 32.0f, (bottom - top) / 32.0f);
         matrix.postTranslate(left, top);
