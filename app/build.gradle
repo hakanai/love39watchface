@@ -18,6 +18,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    testOptions {
+        // We use static methods on DateFormat which appear to screw up in tests.
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
