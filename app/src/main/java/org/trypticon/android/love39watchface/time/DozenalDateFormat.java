@@ -16,9 +16,8 @@ public class DozenalDateFormat extends DateFormat {
     private final CalendarAdapter calendar = new CalendarAdapter();
     private final Date dummyDate = new Date(0);
 
-    @SuppressLint("SimpleDateFormat")
-    public // We got the pattern in a localised way
-    DozenalDateFormat(Locale locale) {
+    @SuppressLint("SimpleDateFormat") // We got the pattern in a localised way
+    public DozenalDateFormat(Locale locale) {
         String pattern = android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEddMMM");
         if (pattern == null) { // when running tests. :(
             pattern = "EEE, dd MMM";

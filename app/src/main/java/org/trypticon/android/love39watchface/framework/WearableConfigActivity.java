@@ -20,7 +20,7 @@ public class WearableConfigActivity extends Activity implements WearableConfigLi
     private static final String DATA_KEY_CONFIG_TIMESTAMP = "timestamp";
 
     private static final String COMPONENT_NAME = "android.support.wearable.watchface.extra.WATCH_FACE_COMPONENT";
-    private static final String DOZENAL_CONFIG = "dozenal_config";
+    private static final String CONFIG = "config";
 
     /* TODO All TODO items in this class are about clockwise's jar not working due to an IncompatibleClassChangeError
     private WearableAPIHelper wearableAPIHelper;
@@ -34,7 +34,7 @@ public class WearableConfigActivity extends Activity implements WearableConfigLi
         // ComponentName -- it is the name of the watch face Service the user has requested to configure.
         ComponentName componentName = getIntent().getParcelableExtra(COMPONENT_NAME);
 
-        String resourceName = DOZENAL_CONFIG;
+        String resourceName = CONFIG;
         final int layoutId = getResources().getIdentifier(resourceName, "layout", componentName.getPackageName());
         if (layoutId <= 0) {
             Log.e(TAG, "Could not find resource id for: " + resourceName);

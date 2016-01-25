@@ -14,10 +14,10 @@ import org.trypticon.android.love39watchface.framework.WearableConfigListener;
 /**
  * Configuration screen.
  */
-public class DozenalConfigView extends LinearLayout {
+public class ConfigView extends LinearLayout {
     private WearableConfigListener listener;
 
-    public DozenalConfigView(Context context, AttributeSet attributes) {
+    public ConfigView(Context context, AttributeSet attributes) {
         super(context, attributes);
         try {
             listener = (WearableConfigListener) context;
@@ -32,15 +32,15 @@ public class DozenalConfigView extends LinearLayout {
 
         Context context = getContext();
 
-        ((TextView) findViewById(R.id.dozenal_config_textview_title)).setText(getContext().getString(R.string.dozenal_config_title));
+        ((TextView) findViewById(R.id.config_textview_title)).setText(getContext().getString(R.string.config_title));
 
-        CheckBox dozenalTimeCheckBox = (CheckBox) findViewById(R.id.dozenal_config_time_checkbox);
-        ((TextView) findViewById(R.id.dozenal_config_time_checkboxname))
-                .setText(context.getString(R.string.dozenal_time_toggle_name));
+        CheckBox dozenalTimeCheckBox = (CheckBox) findViewById(R.id.config_dozenal_time_checkbox);
+        ((TextView) findViewById(R.id.config_dozenal_time_label))
+                .setText(context.getString(R.string.config_dozenal_time_label_text));
 
-        CheckBox dozenalCalendarCheckBox = (CheckBox) findViewById(R.id.dozenal_config_calendar_checkbox);
-        ((TextView) findViewById(R.id.dozenal_config_calendar_checkboxname))
-                .setText(context.getString(R.string.dozenal_calendar_toggle_name));
+        CheckBox dozenalCalendarCheckBox = (CheckBox) findViewById(R.id.config_dozenal_calendar_checkbox);
+        ((TextView) findViewById(R.id.config_dozenal_calendar_label))
+                .setText(context.getString(R.string.config_dozenal_calendar_label_text));
 
         dozenalTimeCheckBox.setChecked(PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean(ConfigKeys.DOZENAL_TIME_KEY, false));

@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.trypticon.android.love39watchface.config.DozenalConfigView
+    <org.trypticon.android.love39watchface.config.ConfigView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_box="left|bottom|right">
 
         <TextView
-            android:id="@+id/dozenal_config_textview_title"
+            android:id="@+id/config_textview_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="13.33dp"
@@ -27,14 +27,14 @@
             android:layout_marginTop="12dp">
 
             <CheckBox
-                android:id="@+id/dozenal_config_time_checkbox"
+                android:id="@+id/config_dozenal_time_checkbox"
                 android:layout_height="32dp"
                 android:layout_width="40dp"
                 android:layout_marginStart="12dp"
                 android:button="@drawable/config_toggle_checkbox"/>
 
             <TextView
-                android:id="@+id/dozenal_config_time_checkboxname"
+                android:id="@+id/config_dozenal_time_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
@@ -49,14 +49,14 @@
             android:layout_marginTop="12dp">
 
             <CheckBox
-                android:id="@+id/dozenal_config_calendar_checkbox"
+                android:id="@+id/config_dozenal_calendar_checkbox"
                 android:layout_height="32dp"
                 android:layout_width="40dp"
                 android:layout_marginStart="12dp"
                 android:button="@drawable/config_toggle_checkbox"/>
 
             <TextView
-                android:id="@+id/dozenal_config_calendar_checkboxname"
+                android:id="@+id/config_dozenal_calendar_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
@@ -65,6 +65,6 @@
                 android:textSize="14sp"/>
         </LinearLayout>
 
-    </org.trypticon.android.love39watchface.config.DozenalConfigView>
+    </org.trypticon.android.love39watchface.config.ConfigView>
 
 </android.support.wearable.view.BoxInsetLayout>
