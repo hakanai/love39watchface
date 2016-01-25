@@ -1,4 +1,4 @@
-package org.trypticon.android.love39watchface;
+package org.trypticon.android.love39watchface.framework;
 
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,7 +11,7 @@ public abstract class PaintHolder {
     private final Paint modifiedPaint = new Paint();
     private final boolean usedForLargeFills;
 
-    PaintHolder(boolean usedForLargeFills) {
+    protected PaintHolder(boolean usedForLargeFills) {
         this.usedForLargeFills = usedForLargeFills;
         configure(originalPaint);
     }
@@ -21,11 +21,11 @@ public abstract class PaintHolder {
     protected void configureForPaintingOnBlack(Paint paint) {
     }
 
-    Paint getPaint() {
+    public Paint getPaint() {
         return modifiedPaint;
     }
 
-    void updateWatchMode(WatchModeHelper mode) {
+    public void updateWatchMode(WatchModeHelper mode) {
         modifiedPaint.set(originalPaint);
         if (!mode.canAntiAlias()) {
             modifiedPaint.setAntiAlias(false);

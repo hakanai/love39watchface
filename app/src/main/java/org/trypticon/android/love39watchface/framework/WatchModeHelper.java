@@ -1,4 +1,4 @@
-package org.trypticon.android.love39watchface;
+package org.trypticon.android.love39watchface.framework;
 
 import com.ustwo.clockwise.WatchMode;
 

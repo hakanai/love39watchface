@@ -9,8 +9,9 @@ import android.graphics.Path;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 
-import org.trypticon.android.love39watchface.PaintHolder;
-import org.trypticon.android.love39watchface.WatchModeHelper;
+import org.trypticon.android.love39watchface.framework.PaintHolder;
+import org.trypticon.android.love39watchface.framework.WatchModeHelper;
+import org.trypticon.android.love39watchface.framework.Workarounds;
 
 /**
  * Encapsulation of information about a single hand.

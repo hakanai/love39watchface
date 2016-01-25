@@ -15,14 +15,11 @@ import com.ustwo.clockwise.WatchFaceTime;
 import com.ustwo.clockwise.WatchMode;
 import com.ustwo.clockwise.WatchShape;
 
-import org.trypticon.android.love39watchface.ClassicTimeStyle;
-import org.trypticon.android.love39watchface.DateStyle;
-import org.trypticon.android.love39watchface.DozenalDateStyle;
-import org.trypticon.android.love39watchface.DozenalTimeStyle;
-import org.trypticon.android.love39watchface.Hand;
-import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.config.ConfigKeys;
 import org.trypticon.android.love39watchface.framework.ConfigurableWatchFace;
+import org.trypticon.android.love39watchface.framework.PaintHolder;
+import org.trypticon.android.love39watchface.framework.WatchModeHelper;
+import org.trypticon.android.love39watchface.framework.Workarounds;
 import org.trypticon.android.love39watchface.time.Time;
 
 /**

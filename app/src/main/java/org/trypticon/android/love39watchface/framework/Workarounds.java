@@ -1,4 +1,4 @@
-package org.trypticon.android.love39watchface;
+package org.trypticon.android.love39watchface.framework;
 
 import android.content.Context;
 import android.support.annotation.ColorRes;
@@ -6,7 +6,7 @@ import android.support.annotation.ColorRes;
 /**
  * Collection of Android SDK workarounds.
  */
-class Workarounds {
+public class Workarounds {
 
     /**
      * Prevents instantiation.
@@ -23,7 +23,7 @@ class Workarounds {
      * @return the colour.
      */
     @SuppressWarnings("deprecation")
-    static int getColor(Context context, @ColorRes int id) {
+    public static int getColor(Context context, @ColorRes int id) {
         return context.getResources().getColor(id);
     }
 

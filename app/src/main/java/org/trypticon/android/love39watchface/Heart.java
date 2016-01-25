@@ -6,7 +6,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 
-import org.trypticon.android.love39watchface.R;
+import org.trypticon.android.love39watchface.framework.Workarounds;
 
 /**
  * Rendering of the heart shape.

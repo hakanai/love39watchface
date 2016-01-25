@@ -11,7 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
 
-import org.trypticon.android.love39watchface.R;
+import org.trypticon.android.love39watchface.framework.PaintHolder;
+import org.trypticon.android.love39watchface.framework.WatchModeHelper;
+import org.trypticon.android.love39watchface.framework.Workarounds;
 
 /**
  * Draws the ticks on the watch face.
