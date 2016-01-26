@@ -19,5 +19,5 @@ public abstract class Time {
     public abstract float getThirdTurns();
     public abstract boolean hasThirds();
 
-    abstract long getEpochMillis();
+    public abstract void setToSample();
 }

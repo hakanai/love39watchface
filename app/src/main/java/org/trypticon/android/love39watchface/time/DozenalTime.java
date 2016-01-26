@@ -112,11 +112,6 @@ public class DozenalTime extends Time {
     }
 
     @Override
-    long getEpochMillis() {
-        return time.getEpochMillis();
-    }
-
-    @Override
     public void setTo(WatchFaceTime time) {
         this.time.setTo(time);
         recompute();
@@ -125,6 +120,19 @@ public class DozenalTime extends Time {
     void setTo(ClassicTime time) {
         this.time.setTo(time);
         recompute();
+    }
+
+    @Override
+    public void setToSample() {
+        ClassicTime time = new ClassicTime();
+        time.year = 2015;
+        time.month = 3;
+        time.dayOfMonth = 9;
+        time.hour = 16;
+        time.minute = 41;
+        time.second = 30;
+        time.millisecond = 667;
+        setTo(time);
     }
 
     private void recompute() {

@@ -35,8 +35,6 @@ public class ClassicTime extends Time {
     // 0..999
     int millisecond;
 
-    long epochMillis;
-
     private float hourTurns;
     private float minuteTurns;
     private float secondTurns;
@@ -51,8 +49,6 @@ public class ClassicTime extends Time {
         minute = time.minute;
         second = time.second;
         millisecond = time.millis;
-        // Workaround here for WatchFaceTime not including millis
-        epochMillis = time.toMillis(false) + time.millis;
         recompute();
     }
 
@@ -65,7 +61,19 @@ public class ClassicTime extends Time {
         minute = time.minute;
         second = time.second;
         millisecond = time.millisecond;
-        epochMillis = time.epochMillis;
+        recompute();
+    }
+
+    @Override
+    public void setToSample() {
+        year = 2015;
+        month = 3;
+        dayOfMonth = 9;
+        dayOfWeek = 3;
+        hour = 2;
+        minute = 50;
+        second = 20;
+        millisecond = 0;
         recompute();
     }
 
@@ -107,11 +115,6 @@ public class ClassicTime extends Time {
     @Override
     public float getThirdTurns() {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    long getEpochMillis() {
-        return epochMillis;
     }
 
     @Override
