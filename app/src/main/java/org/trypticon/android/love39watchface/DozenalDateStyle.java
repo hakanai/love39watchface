@@ -12,7 +12,7 @@ import java.util.Locale;
 /**
  * Dozenal date display.
  */
-class DozenalDateStyle extends DateStyle {
+public class DozenalDateStyle extends DateStyle {
     private final DateFormat dateFormat;
     private final Time time;
 

@@ -11,14 +11,17 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
 
+import com.ustwo.clockwise.WatchShape;
+
 import org.trypticon.android.love39watchface.framework.PaintHolder;
+import org.trypticon.android.love39watchface.framework.WatchModeAware;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
 import org.trypticon.android.love39watchface.framework.Workarounds;
 
 /**
  * Draws the ticks on the watch face.
  */
-abstract class Ticks extends Drawable {
+public abstract class Ticks extends Drawable implements WatchModeAware {
     private final int subdivisions;
     private final int count;
 
@@ -69,12 +72,13 @@ abstract class Ticks extends Drawable {
         updateGeometry();
     }
 
-    void updateShape(boolean round) {
-        this.round = round;
+    public void updateShape(WatchShape shape) {
+        this.round = shape == WatchShape.CIRCLE;
         updateGeometry();
     }
 
-    void updateWatchMode(WatchModeHelper mode) {
+    @Override
+    public void updateWatchMode(WatchModeHelper mode) {
         primaryTickPaint.updateWatchMode(mode);
         secondaryTickPaint.updateWatchMode(mode);
         updateGeometry();
@@ -89,6 +93,7 @@ abstract class Ticks extends Drawable {
         float centerX = getBounds().centerX();
         float centerY = getBounds().centerY();
         float baseTickDistance = getBounds().centerX() - 3;
+        float scale = width / 400.0f;
 
         int angleShift = isZeroAtTop() ? 180 : 0;
         for (int i = 0, degrees = 0; i < count; i++, degrees += 360 / count) {
@@ -116,11 +121,14 @@ abstract class Ticks extends Drawable {
                 float digitY = centerY + digitDistance * directionY;
 
                 Drawable digitDrawable = digits[i / subdivisions];
+                float digitWidth = digitDrawable.getIntrinsicWidth() * scale;
+                float digitHeight = digitDrawable.getIntrinsicHeight() * scale;
+
                 digitDrawable.setBounds(
-                        (int) (digitX - digitDrawable.getIntrinsicWidth() / 2.0f),
-                        (int) (digitY - digitDrawable.getIntrinsicHeight() / 2.0f),
-                        (int) (digitX + digitDrawable.getIntrinsicWidth() / 2.0f),
-                        (int) (digitY + digitDrawable.getIntrinsicHeight() / 2.0f));
+                        (int) (digitX - digitWidth / 2.0f),
+                        (int) (digitY - digitHeight / 2.0f),
+                        (int) (digitX + digitWidth / 2.0f),
+                        (int) (digitY + digitHeight / 2.0f));
 
             } else {
                 // secondary tick

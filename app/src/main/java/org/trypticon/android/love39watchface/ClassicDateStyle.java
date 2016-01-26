@@ -12,7 +12,7 @@ import java.util.Locale;
 /**
  * Classic date display.
  */
-class ClassicDateStyle extends DateStyle {
+public class ClassicDateStyle extends DateStyle {
     private final DateFormat dateFormat;
     private final Time time;
 

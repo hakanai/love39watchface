@@ -10,13 +10,14 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 
 import org.trypticon.android.love39watchface.framework.PaintHolder;
+import org.trypticon.android.love39watchface.framework.WatchModeAware;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
 import org.trypticon.android.love39watchface.framework.Workarounds;
 
 /**
  * Encapsulation of information about a single hand.
  */
-class Hand {
+class Hand implements WatchModeAware {
     private final float centerX;
     private final float centerY;
 
@@ -127,7 +128,8 @@ class Hand {
         }
     }
 
-    void updateWatchMode(WatchModeHelper mode) {
+    @Override
+    public void updateWatchMode(WatchModeHelper mode) {
         fillPaint.updateWatchMode(mode);
         strokePaint.updateWatchMode(mode);
         clipPaint.updateWatchMode(mode);

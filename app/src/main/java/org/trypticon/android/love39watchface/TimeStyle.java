@@ -5,7 +5,8 @@ import org.trypticon.android.love39watchface.time.Time;
 /**
  * Abstraction of how to display time.
  */
-abstract class TimeStyle {
-    abstract Ticks getTicks();
-    abstract Time getTime();
+public abstract class TimeStyle {
+    public abstract Ticks getTicks();
+    public abstract Hands getHands();
+    public abstract Time getTime();
 }

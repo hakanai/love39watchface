@@ -8,22 +8,29 @@ import org.trypticon.android.love39watchface.time.Time;
 /**
  * Dozenal time display.
  */
-class DozenalTimeStyle extends TimeStyle {
+public class DozenalTimeStyle extends TimeStyle {
     private final Ticks ticks;
+    private final Hands hands;
     private final Time time;
 
-    DozenalTimeStyle(Context context) {
+    public DozenalTimeStyle(Context context) {
         ticks = new DozenalTicks(context);
+        hands = new DozenalHands(context);
         time = new DozenalTime();
     }
 
     @Override
-    Ticks getTicks() {
+    public Ticks getTicks() {
         return ticks;
     }
 
     @Override
-    Time getTime() {
+    public Hands getHands() {
+        return hands;
+    }
+
+    @Override
+    public Time getTime() {
         return time;
     }
 

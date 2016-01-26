@@ -8,22 +8,29 @@ import org.trypticon.android.love39watchface.time.Time;
 /**
  * Classic time display.
  */
-class ClassicTimeStyle extends TimeStyle {
+public class ClassicTimeStyle extends TimeStyle {
     private final Ticks ticks;
+    private final Hands hands;
     private final Time time;
 
-    ClassicTimeStyle(Context context) {
+    public ClassicTimeStyle(Context context) {
         ticks = new ClassicTicks(context);
+        hands = new ClassicHands(context);
         time = new ClassicTime();
     }
 
     @Override
-    Ticks getTicks() {
+    public Ticks getTicks() {
         return ticks;
     }
 
     @Override
-    Time getTime() {
+    public Hands getHands() {
+        return hands;
+    }
+
+    @Override
+    public Time getTime() {
         return time;
     }
 }

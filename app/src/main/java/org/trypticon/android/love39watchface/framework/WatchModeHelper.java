@@ -12,6 +12,10 @@ public class WatchModeHelper {
         this.mode = mode;
     }
 
+    public boolean isInteractive() {
+        return mode == WatchMode.INTERACTIVE;
+    }
+
     boolean canUseColour() {
         switch (mode) {
             case INTERACTIVE:
