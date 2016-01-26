@@ -9,6 +9,8 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
+import android.support.wearable.watchface.WatchFaceStyle;
+import android.view.Gravity;
 import android.view.WindowInsets;
 
 import com.ustwo.clockwise.WatchFaceTime;
@@ -105,6 +107,13 @@ public class Love39WatchFace extends ConfigurableWatchFace {
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         return paint;
+    }
+
+    @Override
+    protected WatchFaceStyle getWatchFaceStyle() {
+        return new WatchFaceStyle.Builder(this)
+                .setStatusBarGravity(Gravity.CENTER)
+                .build();
     }
 
     @Override
@@ -235,7 +244,7 @@ public class Love39WatchFace extends ConfigurableWatchFace {
         Time time = dateStyle.getTime();
         canvas.drawText(
                 dateStyle.getDateFormat().formatDate(time),
-                centerX, centerY * 9 / 16, datePaint.getPaint());
+                centerX, centerY / 2, datePaint.getPaint());
 
         Ticks ticks = timeStyle.getTicks();
         ticks.draw(canvas);
