@@ -1,11 +1,9 @@
-package org.trypticon.android.love39watchface;
+package org.trypticon.android.love39watchface.layers;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -13,18 +11,19 @@ import android.graphics.drawable.shapes.PathShape;
 
 import com.ustwo.clockwise.WatchShape;
 
+import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
-import org.trypticon.android.love39watchface.framework.WatchModeAware;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
 import org.trypticon.android.love39watchface.framework.Workarounds;
 
 /**
- * Draws the ticks on the watch face.
+ * Layer which draws the ticks on the watch face.
  */
-public abstract class Ticks extends Drawable implements WatchModeAware {
+class TicksLayer extends Layer {
     private final int subdivisions;
     private final int count;
 
+    private final boolean zeroAtTop;
     private final Drawable[] digits;
     private final Drawable[] ticks;
     private final PaintHolder primaryTickPaint;
@@ -32,11 +31,12 @@ public abstract class Ticks extends Drawable implements WatchModeAware {
 
     private boolean round;
 
-    Ticks(final Context context, int subdivisions) {
+    TicksLayer(final Context context, int subdivisions, boolean zeroAtTop, Drawable[] digits) {
         this.subdivisions = subdivisions;
         count = 12 * subdivisions;
 
-        digits = getDigits(context);
+        this.zeroAtTop = zeroAtTop;
+        this.digits = digits;
         ticks = new Drawable[count];
 
         primaryTickPaint = new PaintHolder(false) {
@@ -62,16 +62,13 @@ public abstract class Ticks extends Drawable implements WatchModeAware {
         };
     }
 
-    abstract boolean isZeroAtTop();
-
-    abstract Drawable[] getDigits(Context context);
-
     @Override
     protected void onBoundsChange(Rect bounds) {
         super.onBoundsChange(bounds);
         updateGeometry();
     }
 
+    @Override
     public void updateShape(WatchShape shape) {
         this.round = shape == WatchShape.CIRCLE;
         updateGeometry();
@@ -95,7 +92,7 @@ public abstract class Ticks extends Drawable implements WatchModeAware {
         float baseTickDistance = getBounds().centerX() - 3;
         float scale = width / 400.0f;
 
-        int angleShift = isZeroAtTop() ? 180 : 0;
+        int angleShift = zeroAtTop ? 180 : 0;
         for (int i = 0, degrees = 0; i < count; i++, degrees += 360 / count) {
             float tickDistance = computeTickDistance(baseTickDistance, degrees);
             double radians = Math.toRadians(degrees + angleShift);
@@ -175,20 +172,5 @@ public abstract class Ticks extends Drawable implements WatchModeAware {
         for (Drawable tick : ticks) {
             tick.draw(canvas);
         }
-    }
-
-    @Override
-    public void setAlpha(int alpha) {
-        // Ignored for now.
-    }
-
-    @Override
-    public void setColorFilter(ColorFilter colorFilter) {
-        // Ignored for now.
-    }
-
-    @Override
-    public int getOpacity() {
-        return PixelFormat.TRANSLUCENT;
     }
 }

@@ -1,29 +1,31 @@
-package org.trypticon.android.love39watchface;
+package org.trypticon.android.love39watchface.layers;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PixelFormat;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 
 import com.ustwo.clockwise.WatchMode;
 
+import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
 import org.trypticon.android.love39watchface.framework.PaintUtils;
-import org.trypticon.android.love39watchface.framework.WatchModeAware;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
 import org.trypticon.android.love39watchface.framework.Workarounds;
+import org.trypticon.android.love39watchface.time.MultiTime;
 import org.trypticon.android.love39watchface.time.Time;
+import org.trypticon.android.love39watchface.time.TimeSystem;
 
 /**
  * Drawable to draw the hands.
  */
-public abstract class Hands extends Drawable implements WatchModeAware {
+class HandsLayer extends Layer {
 
     private final Context context;
+    private final TimeSystem timeSystem;
+    private final boolean zeroAtTop;
+    private final boolean hasThirds;
 
     private Hand hourHand;
     private Hand minuteHand;
@@ -39,8 +41,11 @@ public abstract class Hands extends Drawable implements WatchModeAware {
     // Default to interactive for rendering in other places, like the config screen.
     private WatchModeHelper watchMode = new WatchModeHelper(WatchMode.INTERACTIVE);
 
-    public Hands(final Context context) {
+    HandsLayer(final Context context, TimeSystem timeSystem, boolean zeroAtTop, boolean hasThirds) {
         this.context = context;
+        this.timeSystem = timeSystem;
+        this.zeroAtTop = zeroAtTop;
+        this.hasThirds = hasThirds;
 
         centrePaint = new PaintHolder(true) {
             @Override
@@ -60,10 +65,6 @@ public abstract class Hands extends Drawable implements WatchModeAware {
 
         createHands();
     }
-
-    abstract boolean isZeroAtTop();
-
-    abstract boolean hasThirds();
 
     @Override
     protected void onBoundsChange(Rect bounds) {
@@ -99,7 +100,7 @@ public abstract class Hands extends Drawable implements WatchModeAware {
         secondHand = new Hand(
                 context,
                 R.dimen.analog_second_hand_width,
-                hasThirds() ? R.color.analog_second_hand_fill
+                hasThirds ? R.color.analog_second_hand_fill
                         : R.color.analog_third_hand_fill,
                 R.dimen.analog_second_hand_stroke_width,
                 centerX, centerY, secondLength, false, false);
@@ -111,8 +112,11 @@ public abstract class Hands extends Drawable implements WatchModeAware {
                 centerX, centerY, thirdLength, false, false);
     }
 
-    public void updateTime(Time time) {
-        int angleShift = isZeroAtTop() ? 180 : 0;
+    @Override
+    public void updateTime(MultiTime multiTime) {
+        Time time = multiTime.getTime(timeSystem);
+
+        int angleShift = zeroAtTop ? 180 : 0;
         hourHand.updateAngle(time.getHourTurns() * 360 + angleShift);
         minuteHand.updateAngle(time.getMinuteTurns() * 360 + angleShift);
 
@@ -154,7 +158,7 @@ public abstract class Hands extends Drawable implements WatchModeAware {
 
         if (watchMode.isInteractive()) {
             secondHand.draw(canvas);
-            if (hasThirds()) {
+            if (hasThirds) {
                 thirdHand.draw(canvas);
             }
         }
@@ -162,18 +166,4 @@ public abstract class Hands extends Drawable implements WatchModeAware {
         canvas.drawCircle(centerX, centerY, centreRadius, centrePaint.getPaint());
     }
 
-    @Override
-    public void setAlpha(int alpha) {
-        // Ignored for now.
-    }
-
-    @Override
-    public void setColorFilter(ColorFilter colorFilter) {
-        // Ignored for now.
-    }
-
-    @Override
-    public int getOpacity() {
-        return PixelFormat.TRANSLUCENT;
-    }
 }

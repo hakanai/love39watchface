@@ -2,9 +2,7 @@ package org.trypticon.android.love39watchface;
 
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.view.Gravity;
@@ -16,11 +14,11 @@ import com.ustwo.clockwise.WatchShape;
 
 import org.trypticon.android.love39watchface.config.ConfigKeys;
 import org.trypticon.android.love39watchface.framework.ConfigurableWatchFace;
-import org.trypticon.android.love39watchface.framework.PaintHolder;
-import org.trypticon.android.love39watchface.framework.PaintUtils;
 import org.trypticon.android.love39watchface.framework.WatchModeAware;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
-import org.trypticon.android.love39watchface.framework.Workarounds;
+import org.trypticon.android.love39watchface.layers.Layer;
+import org.trypticon.android.love39watchface.layers.LayerFactory;
+import org.trypticon.android.love39watchface.time.MultiTime;
 
 /**
  * The main watch face.
@@ -31,14 +29,9 @@ public class Love39WatchFace extends ConfigurableWatchFace implements WatchModeA
     // The correct value probably depends on screen resolution!
     private static final long INTERACTIVE_UPDATE_RATE_MS = 33;
 
-    private Background background;
+    private Layer layer;
 
-    private Heart heart;
-    private Paint heartGlowPaint;
-
-
-    private PaintHolder datePaint;
-
+    private MultiTime time;
     private TimeStyle timeStyle;
     private DateStyle dateStyle;
 
@@ -46,22 +39,8 @@ public class Love39WatchFace extends ConfigurableWatchFace implements WatchModeA
     public void onCreate() {
         super.onCreate();
 
-        background = new Background(this);
-
-        heartGlowPaint = PaintUtils.createGlowPaint(this, R.color.heart_fill);
-
-        datePaint = new PaintHolder(false) {
-            @Override
-            protected void configure(Paint paint) {
-                Typeface roboto = Typeface.createFromAsset(getAssets(), "fonts/RobotoCondensed-Regular.ttf");
-                paint.setTypeface(roboto);
-                paint.setColor(Workarounds.getColor(Love39WatchFace.this, R.color.date_fill));
-                paint.setTextAlign(Paint.Align.CENTER);
-                paint.setTextSize(getResources().getDimension(R.dimen.date_size));
-                paint.setAntiAlias(true);
-                paint.setStyle(Paint.Style.FILL_AND_STROKE);
-            }
-        };
+        time = new MultiTime();
+        time.setTo(getTime());
 
         updateConfiguration(PreferenceManager.getDefaultSharedPreferences(this));
     }
@@ -82,31 +61,15 @@ public class Love39WatchFace extends ConfigurableWatchFace implements WatchModeA
     protected void onLayout(WatchShape shape, Rect screenBounds, WindowInsets screenInsets) {
         super.onLayout(shape, screenBounds, screenInsets);
 
-        onWatchStyleChanged();
+        createLayers();
     }
 
-    private void onWatchStyleChanged() {
+    private void createLayers() {
         Rect screenBounds = new Rect(0, 0, getWidth(), getHeight());
 
-        background.setBounds(screenBounds);
-
-        Ticks ticks = timeStyle.getTicks();
-        ticks.updateShape(getWatchShape());
-        ticks.setBounds(screenBounds);
-
-        Hands hands = timeStyle.getHands();
-        hands.setBounds(screenBounds);
-
-        heart = new Heart(this);
-        int heartX = screenBounds.centerX();
-        int heartY = screenBounds.height() * 45 / 64;
-        float heartWidth = getResources().getDimension(R.dimen.analog_heart_width);
-        float heartHeight = getResources().getDimension(R.dimen.analog_heart_height);
-        heart.updateBounds(
-                heartX - heartWidth / 2,
-                heartY - heartHeight / 2,
-                heartX + heartWidth / 2,
-                heartY + heartHeight / 2);
+        layer = LayerFactory.createWatchFaceLayers(this, timeStyle, dateStyle);
+        layer.updateShape(getWatchShape());
+        layer.setBounds(screenBounds);
 
         //TODO Insets, for the chin I guess.
 
@@ -121,18 +84,15 @@ public class Love39WatchFace extends ConfigurableWatchFace implements WatchModeA
 
     @Override
     public void updateWatchMode(WatchModeHelper mode) {
-        background.updateWatchMode(mode);
-        datePaint.updateWatchMode(mode);
-        timeStyle.getTicks().updateWatchMode(mode);
-        timeStyle.getHands().updateWatchMode(mode);
+        layer.updateWatchMode(mode);
     }
 
     @Override
     protected void onTimeChanged(WatchFaceTime oldTime, WatchFaceTime newTime) {
         super.onTimeChanged(oldTime, newTime);
 
-        timeStyle.getTime().setTo(newTime);
-        dateStyle.getTime().setTo(newTime);
+        time.setTo(newTime);
+        layer.updateTime(time);
     }
 
     @Override
@@ -142,42 +102,22 @@ public class Love39WatchFace extends ConfigurableWatchFace implements WatchModeA
 
     private void updateConfiguration(SharedPreferences preferences) {
         if (preferences.getBoolean(ConfigKeys.DOZENAL_TIME_KEY, false)) {
-            timeStyle = new DozenalTimeStyle(this);
+            timeStyle = TimeStyle.DOZENAL;
         } else {
-            timeStyle = new ClassicTimeStyle(this);
+            timeStyle = TimeStyle.CLASSIC;
         }
 
         if (preferences.getBoolean(ConfigKeys.DOZENAL_CALENDAR_KEY, false)) {
-            dateStyle = new DozenalDateStyle(this);
+            dateStyle = DateStyle.DOZENAL;
         } else {
-            dateStyle = new ClassicDateStyle(this);
+            dateStyle = DateStyle.CLASSIC;
         }
 
-        onWatchStyleChanged();
+        createLayers();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        background.draw(canvas);
-
-        float centerX = canvas.getWidth() / 2;
-        float centerY = canvas.getHeight() / 2;
-
-        canvas.drawText(
-                dateStyle.getDateFormat().formatDate(dateStyle.getTime()),
-                centerX, centerY / 2, datePaint.getPaint());
-
-        Ticks ticks = timeStyle.getTicks();
-        ticks.draw(canvas);
-
-        WatchMode watchMode = getCurrentWatchMode();
-        if (watchMode == WatchMode.INTERACTIVE) {
-            canvas.drawPath(heart.getPath(), heartGlowPaint);
-            heart.draw(canvas);
-        }
-
-        Hands hands = timeStyle.getHands();
-        hands.updateTime(timeStyle.getTime());
-        hands.draw(canvas);
+        layer.draw(canvas);
     }
 }

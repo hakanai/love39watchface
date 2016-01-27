@@ -1,4 +1,4 @@
-package org.trypticon.android.love39watchface;
+package org.trypticon.android.love39watchface.layers;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,6 +9,7 @@ import android.graphics.Path;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 
+import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
 import org.trypticon.android.love39watchface.framework.WatchModeAware;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;

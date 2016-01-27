@@ -1,4 +1,4 @@
-package org.trypticon.android.love39watchface;
+package org.trypticon.android.love39watchface.layers;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,6 +6,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 
+import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.Workarounds;
 
 /**
