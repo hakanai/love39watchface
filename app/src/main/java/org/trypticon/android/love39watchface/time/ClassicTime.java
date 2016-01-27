@@ -6,10 +6,13 @@ import com.ustwo.clockwise.WatchFaceTime;
  * Stand-in utility for holding a gregorian time to avoid using any of Java's built-in horrors.
  */
 public class ClassicTime extends Time {
-    private static final int GREGORIAN_MILLIS_PER_HALF_DAY = 1000 * 60 * 60 * 12;
-
-    private static final int MINUTE_TURNS_PER_HOUR_TURN = 12;
-    private static final int SECONDS_TURNS_PER_MINUTE_TURN = 60;
+    private static final int MILLIS_PER_SECOND = 1000;
+    private static final int SECONDS_PER_MINUTE = 60;
+    private static final int MILLIS_PER_MINUTE = SECONDS_PER_MINUTE * MILLIS_PER_SECOND;
+    private static final int MINUTES_PER_HOUR = 60;
+    private static final int MILLIS_PER_HOUR = MINUTES_PER_HOUR * MILLIS_PER_MINUTE;
+    private static final int HOURS_PER_HALF_DAY = 12;
+    private static final int MILLIS_PER_HALF_DAY = HOURS_PER_HALF_DAY * MILLIS_PER_HOUR;
 
     // AD year
     int year;
@@ -38,6 +41,23 @@ public class ClassicTime extends Time {
     private float hourTurns;
     private float minuteTurns;
     private float secondTurns;
+
+    public ClassicTime() {
+    }
+
+    public ClassicTime(int year, int month, int dayOfMonth, int hour, int minute) {
+        this(year, month, dayOfMonth, hour, minute, 0);
+    }
+
+    public ClassicTime(int year, int month, int dayOfMonth, int hour, int minute, int second) {
+        this.second = second;
+        this.minute = minute;
+        this.hour = hour;
+        this.dayOfMonth = dayOfMonth;
+        this.month = month;
+        this.year = year;
+        recompute();
+    }
 
     @Override
     public void setTo(WatchFaceTime time) {
@@ -123,19 +143,13 @@ public class ClassicTime extends Time {
     }
 
     private void recompute() {
-        // We do recompute this from the calendar, because sometimes an hour in the day
-        // is missing. So this gives us the effect of getting free daylight savings support.
-        int dayMillis = computeDayMillis();
+        int minuteMillis = millisecond + second * MILLIS_PER_SECOND;
+        secondTurns = minuteMillis / (float) MILLIS_PER_MINUTE;
 
-        hourTurns = dayMillis / (float) GREGORIAN_MILLIS_PER_HALF_DAY;
-        minuteTurns = hourTurns * MINUTE_TURNS_PER_HOUR_TURN;
-        secondTurns = minuteTurns * SECONDS_TURNS_PER_MINUTE_TURN;
-    }
+        int hourMillis = minuteMillis + minute * MILLIS_PER_MINUTE;
+        minuteTurns = hourMillis / (float) MILLIS_PER_HOUR;
 
-    public int computeDayMillis() {
-        return hour * 60 * 60 * 1000 +
-                minute * 60 * 1000 +
-                second * 1000 +
-                millisecond;
+        int halfDayMillis = hourMillis + (hour % HOURS_PER_HALF_DAY) * MILLIS_PER_HOUR;
+        hourTurns = halfDayMillis / (float) MILLIS_PER_HALF_DAY;
     }
 }

@@ -21,7 +21,6 @@ import org.trypticon.android.love39watchface.framework.PaintUtils;
 import org.trypticon.android.love39watchface.framework.WatchModeAware;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
 import org.trypticon.android.love39watchface.framework.Workarounds;
-import org.trypticon.android.love39watchface.time.Time;
 
 /**
  * The main watch face.
@@ -164,9 +163,8 @@ public class Love39WatchFace extends ConfigurableWatchFace implements WatchModeA
         float centerX = canvas.getWidth() / 2;
         float centerY = canvas.getHeight() / 2;
 
-        Time time = dateStyle.getTime();
         canvas.drawText(
-                dateStyle.getDateFormat().formatDate(time),
+                dateStyle.getDateFormat().formatDate(dateStyle.getTime()),
                 centerX, centerY / 2, datePaint.getPaint());
 
         Ticks ticks = timeStyle.getTicks();
@@ -179,7 +177,7 @@ public class Love39WatchFace extends ConfigurableWatchFace implements WatchModeA
         }
 
         Hands hands = timeStyle.getHands();
-        hands.updateTime(time);
+        hands.updateTime(timeStyle.getTime());
         hands.draw(canvas);
     }
 }

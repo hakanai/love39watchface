@@ -19,10 +19,10 @@ public class DozenalTime extends Time {
 
     private static final int GREGORIAN_MILLIS_PER_DAY = 1000 * 60 * 60 * 24;
 
-    private static final int GREGORIAN_MILLIS_PER_DOZENAL_HOUR = GREGORIAN_MILLIS_PER_DAY / 12;
-    private static final int GREGORIAN_MILLIS_PER_DOZENAL_MINUTE = GREGORIAN_MILLIS_PER_DOZENAL_HOUR / 12;
-    private static final int GREGORIAN_MILLIS_PER_DOZENAL_SECOND = GREGORIAN_MILLIS_PER_DOZENAL_MINUTE / 12;
-    private static final float GREGORIAN_MILLIS_PER_DOZENAL_THIRD = (float) GREGORIAN_MILLIS_PER_DOZENAL_SECOND / 12;
+    private static final int MILLIS_PER_DOZENAL_HOUR = GREGORIAN_MILLIS_PER_DAY / 12;
+    private static final int MILLIS_PER_DOZENAL_MINUTE = MILLIS_PER_DOZENAL_HOUR / 12;
+    private static final int MILLIS_PER_DOZENAL_SECOND = MILLIS_PER_DOZENAL_MINUTE / 12;
+    private static final float MILLIS_PER_DOZENAL_THIRD = (float) MILLIS_PER_DOZENAL_SECOND / 12;
 
     private static final int MINUTE_TURNS_PER_HOUR_TURN = 12;
     private static final int SECOND_TURNS_PER_MINUTE_TURN = 12;
@@ -146,17 +146,15 @@ public class DozenalTime extends Time {
         dayOfMonth = (dayOfYear % DAYS_PER_MONTH) + 1;
         dayOfWeek = dayOfYear % DAYS_PER_WEEK;
 
-        // We do recompute this from the calendar, because sometimes an hour in the day
-        // is missing. So this gives us the effect of getting free daylight savings support.
-        int dayMillis = time.computeDayMillis();
+        int dayMillis = ((time.hour * 60 + time.minute) * 60 + time.second) * 1000 + time.millisecond;
 
-        hourOfDay = dayMillis / GREGORIAN_MILLIS_PER_DOZENAL_HOUR;
-        int tmp = dayMillis % GREGORIAN_MILLIS_PER_DOZENAL_HOUR;
-        minuteOfHour = tmp / GREGORIAN_MILLIS_PER_DOZENAL_MINUTE;
-        tmp %= GREGORIAN_MILLIS_PER_DOZENAL_MINUTE;
-        secondOfMinute = tmp / GREGORIAN_MILLIS_PER_DOZENAL_SECOND;
-        tmp %= GREGORIAN_MILLIS_PER_DOZENAL_SECOND;
-        thirdOfSecond = (int) (tmp / GREGORIAN_MILLIS_PER_DOZENAL_THIRD);
+        hourOfDay = dayMillis / MILLIS_PER_DOZENAL_HOUR;
+        int tmp = dayMillis % MILLIS_PER_DOZENAL_HOUR;
+        minuteOfHour = tmp / MILLIS_PER_DOZENAL_MINUTE;
+        tmp %= MILLIS_PER_DOZENAL_MINUTE;
+        secondOfMinute = tmp / MILLIS_PER_DOZENAL_SECOND;
+        tmp %= MILLIS_PER_DOZENAL_SECOND;
+        thirdOfSecond = (int) (tmp / MILLIS_PER_DOZENAL_THIRD);
 
         hourTurns = dayMillis / (float) GREGORIAN_MILLIS_PER_DAY;
         minuteTurns = hourTurns * MINUTE_TURNS_PER_HOUR_TURN;
