@@ -13,6 +13,12 @@ public class ClassicTimeTest {
     private static final float EPSILON = 0.0000001f;
 
     @Test
+    public void testDayOfWeek() {
+        ClassicTime time = new ClassicTime(2016, 1, 27, 0, 0, 0);
+        assertThat(time.getDayOfWeek(), is(3));
+    }
+
+    @Test
     public void testAngles_Midnight() {
         ClassicTime time = new ClassicTime(2016, 1, 1, 0, 0, 0);
         assertThat(time.getHourTurns() % 1.0f, is(0.0f));

@@ -18,12 +18,17 @@ public class ClassicDateFormat extends DateFormat {
     @SuppressLint("SimpleDateFormat") // We got the pattern using a legit method.
     public ClassicDateFormat(Locale locale) {
         String pattern = android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEddMMM");
+        if (pattern == null) { // when running tests. :(
+            pattern = "EEE, dd MMM";
+        }
+
         delegate = new SimpleDateFormat(pattern);
+        delegate.setCalendar(calendar);
     }
 
     @Override
     public String formatDate(Time time) {
-        calendar.set(Calendar.DAY_OF_WEEK, time.getDayOfWeek());
+        calendar.set(Calendar.DAY_OF_WEEK, time.getDayOfWeek() + 1);
         calendar.set(Calendar.DAY_OF_MONTH, time.getDayOfMonth());
         // Android hard-codes in a + 1 when formatting as a number.
         calendar.set(Calendar.MONTH, time.getMonth() - 1);

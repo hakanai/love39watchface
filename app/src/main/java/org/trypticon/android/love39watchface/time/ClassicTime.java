@@ -2,6 +2,9 @@ package org.trypticon.android.love39watchface.time;
 
 import com.ustwo.clockwise.WatchFaceTime;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 /**
  * Stand-in utility for holding a gregorian time to avoid using any of Java's built-in horrors.
  */
@@ -42,11 +45,9 @@ public class ClassicTime extends Time {
     private float minuteTurns;
     private float secondTurns;
 
-    public ClassicTime() {
-    }
+    private final Calendar temp = new GregorianCalendar();
 
-    public ClassicTime(int year, int month, int dayOfMonth, int hour, int minute) {
-        this(year, month, dayOfMonth, hour, minute, 0);
+    public ClassicTime() {
     }
 
     public ClassicTime(int year, int month, int dayOfMonth, int hour, int minute, int second) {
@@ -143,6 +144,11 @@ public class ClassicTime extends Time {
     }
 
     private void recompute() {
+        temp.set(Calendar.YEAR, year);
+        temp.set(Calendar.MONTH, month - 1);
+        temp.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        dayOfWeek = temp.get(Calendar.DAY_OF_WEEK) - 1;
+
         int minuteMillis = millisecond + second * MILLIS_PER_SECOND;
         secondTurns = minuteMillis / (float) MILLIS_PER_MINUTE;
 
