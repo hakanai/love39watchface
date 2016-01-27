@@ -62,7 +62,7 @@ public class LayerFactory {
         switch (timeStyle) {
             case CLASSIC: {
                 Drawable[] digits = {
-                        context.getDrawable(R.drawable.digit0),
+                        context.getDrawable(R.drawable.digit12),
                         context.getDrawable(R.drawable.digit1),
                         context.getDrawable(R.drawable.digit2),
                         context.getDrawable(R.drawable.digit3),
