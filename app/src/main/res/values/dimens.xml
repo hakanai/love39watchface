@@ -25,4 +25,6 @@
     <dimen name="analog_primary_tick_digit_size_10">8.25pt</dimen>
     <dimen name="analog_primary_tick_stroke">1.5pt</dimen>
     <dimen name="analog_secondary_tick_stroke">0.75pt</dimen>
+
+    <dimen name="config_list_item_border">2dp</dimen>
 </resources>

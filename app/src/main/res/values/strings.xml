@@ -5,4 +5,8 @@
     <string name="config_title">Settings</string>
     <string name="config_dozenal_time_label_text">Dozenal Time</string>
     <string name="config_dozenal_calendar_label_text">Dozenal Calendar</string>
+    <string name="config_time_dozenal">Time: Dozenal</string>
+    <string name="config_time_classic">Time: Classic</string>
+    <string name="config_calendar_dozenal">Calendar: Dozenal</string>
+    <string name="config_calendar_classic">Calendar: Classic</string>
 </resources>

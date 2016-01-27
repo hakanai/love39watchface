@@ -14,4 +14,9 @@
     <color name="analog_primary_tick_digit_stroke">#66ffffff</color>
     <color name="analog_primary_tick_stroke">#44ffffff</color>
     <color name="analog_secondary_tick_stroke">#44ffffff</color>
+
+    <color name="config_list_item_border">#A0A0A0</color>
+    <color name="config_list_item_border_checked">#22faba</color>
+    <color name="circular_button">#22faba</color>
+    <color name="circular_button_ripple">#44ffe5</color>
 </resources>

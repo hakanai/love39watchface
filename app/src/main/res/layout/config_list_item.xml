@@ -1,0 +1,24 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <!-- Has to be software layer type for glow effect to paint correctly. -->
+    <ImageView
+        android:id="@+id/drawable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layerType="software"/>
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/config_time_dozenal"
+        android:textSize="18sp"
+        android:gravity="center_horizontal|bottom"
+        android:paddingBottom="40dp"/>
+
+</FrameLayout>
