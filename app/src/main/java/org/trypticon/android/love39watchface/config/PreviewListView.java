@@ -30,7 +30,6 @@ public class PreviewListView extends ListView {
         super(context, attributes);
 
         setChoiceMode(CHOICE_MODE_SINGLE);
-        setClickable(false);
         setHorizontalScrollBarEnabled(false);
         setVerticalScrollBarEnabled(false);
 
