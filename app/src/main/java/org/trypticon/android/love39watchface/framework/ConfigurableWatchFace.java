@@ -3,12 +3,12 @@ package org.trypticon.android.love39watchface.framework;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.ustwo.clockwise.WatchFace;
+import com.ustwo.clockwise.ConnectedWatchFace;
 
 /**
  * A watch face with additional configuration capabilities.
  */
-public abstract class ConfigurableWatchFace extends WatchFace /* TODO extends ConnectedWatchFace */ {
+public abstract class ConfigurableWatchFace extends ConnectedWatchFace {
     private final SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener =
             new SharedPreferences.OnSharedPreferenceChangeListener() {
                 @Override

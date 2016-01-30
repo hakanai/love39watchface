@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.DataMap;
+import com.ustwo.clockwise.WearableAPIHelper;
 
 /**
  * Activity which handles config requests on the wearable.
@@ -22,9 +25,7 @@ public class WearableConfigActivity extends Activity implements WearableConfigLi
     private static final String COMPONENT_NAME = "android.support.wearable.watchface.extra.WATCH_FACE_COMPONENT";
     private static final String CONFIG = "config";
 
-    /* TODO All TODO items in this class are about clockwise's jar not working due to an IncompatibleClassChangeError
     private WearableAPIHelper wearableAPIHelper;
-    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,6 @@ public class WearableConfigActivity extends Activity implements WearableConfigLi
 
         setContentView(layoutId);
 
-        /* TODO
         wearableAPIHelper = new WearableAPIHelper(this, new WearableAPIHelper.WearableAPIHelperListener() {
             @Override
             public void onWearableAPIConnected(GoogleApiClient apiClient) {
@@ -58,7 +58,6 @@ public class WearableConfigActivity extends Activity implements WearableConfigLi
             public void onWearableAPIConnectionFailed(ConnectionResult result) {
             }
         });
-        */
     }
 
 
@@ -67,7 +66,7 @@ public class WearableConfigActivity extends Activity implements WearableConfigLi
         // Store the value locally.
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
         putObject(editor, key, value);
-        editor.commit();
+        editor.apply();
 
         // Send the changed preference to the companion. The path indicates the source of the change.
         DataMap prefsDataMap = new DataMap();
@@ -80,9 +79,7 @@ public class WearableConfigActivity extends Activity implements WearableConfigLi
         dataMap.putDataMap(DATA_KEY_CONFIG_PREFS, prefsDataMap);
         dataMap.putLong(DATA_KEY_CONFIG_TIMESTAMP, System.currentTimeMillis());
 
-        /*TODO
         wearableAPIHelper.putDataMap(DATA_PATH_CONFIG_UPDATE_WEARABLE, dataMap, null);
-        */
 
         if (finish) {
             finish();
