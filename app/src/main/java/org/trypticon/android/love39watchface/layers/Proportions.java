@@ -14,13 +14,13 @@ class Proportions {
     static final float MINUTE_HAND_FROM_EDGE =  40 / 400f;
     static final float SECOND_HAND_FROM_EDGE =  35 / 400f;
     static final float THIRD_HAND_FROM_EDGE  =  30 / 400f;
-    static final float HAND_GLOW_WIDTH =  22 / 400f;
+    static final float HAND_GLOW_WIDTH       =  22 / 400f;
 
     static final float HEART_X               = 200 / 400f;
     static final float HEART_Y               = 280 / 400f;
     static final float HEART_WIDTH           = 192 / 400f;
     static final float HEART_HEIGHT          = 144 / 400f;
-    static final float HEART_GLOW_WIDTH = HAND_GLOW_WIDTH;
+    static final float HEART_GLOW_WIDTH      = HAND_GLOW_WIDTH;
 
     static final float MAJOR_TICK_FROM_EDGE  =   2 / 400f;
     static final float MINOR_TICK_FROM_EDGE  =  10 / 400f;
