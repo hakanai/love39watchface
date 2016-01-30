@@ -22,6 +22,22 @@ public class DozenalDateFormatTest {
     }
 
     @Test
+    public void testDigit10() {
+        DozenalDateFormat dateFormat = new DozenalDateFormat(Locale.ENGLISH);
+        DozenalTime time = new DozenalTime();
+        time.setTo(new ClassicTime(2015, 3, 10, 0, 0, 0));
+        assertThat(dateFormat.formatDate(time), is(equalTo("Thu, 0\u218A Mar")));
+    }
+
+    @Test
+    public void testDigit11() {
+        DozenalDateFormat dateFormat = new DozenalDateFormat(Locale.ENGLISH);
+        DozenalTime time = new DozenalTime();
+        time.setTo(new ClassicTime(2015, 3, 11, 0, 0, 0));
+        assertThat(dateFormat.formatDate(time), is(equalTo("Fri, 0\u218B Mar")));
+    }
+
+    @Test
     public void testSkipMonday() {
         DozenalDateFormat dateFormat = new DozenalDateFormat(Locale.ENGLISH);
         DozenalTime time = new DozenalTime();

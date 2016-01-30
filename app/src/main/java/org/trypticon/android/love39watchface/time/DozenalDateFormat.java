@@ -23,7 +23,10 @@ public class DozenalDateFormat extends DateFormat {
             pattern = "EEE, dd MMM";
         }
 
-        delegate = new SimpleDateFormat(pattern, new DateFormatSymbolsAdapter(locale));
+        delegate = new SimpleDateFormat(pattern, new DateFormatSymbolsAdapter(locale)) {{
+            numberFormat = new DozenalNumberFormat();
+        }};
+
         delegate.setCalendar(calendar);
     }
 
