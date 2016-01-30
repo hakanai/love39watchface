@@ -7,9 +7,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.ColorRes;
-import android.support.annotation.DimenRes;
 
-import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
 import org.trypticon.android.love39watchface.framework.WatchModeAware;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
@@ -34,14 +32,14 @@ class Hand implements WatchModeAware {
     private final Matrix matrix = new Matrix();
 
     Hand(final Context context,
-         @DimenRes int widthId, @ColorRes int fillColorId,
-         @DimenRes final int strokeWidthId,
-         float centerX, float centerY, float handLength, boolean pointy, boolean clip) {
+         float handWidth, float handStartRadius, float handLength, final float handStrokeWidth,
+         @ColorRes int fillColorId,
+         float centerX, float centerY, boolean pointy, boolean clip) {
 
         this.centerX = centerX;
         this.centerY = centerY;
 
-        float halfHandWidth = context.getResources().getDimension(widthId) / 2;
+        float halfHandWidth = handWidth / 2;
 
         final int fillColor = Workarounds.getColor(context, fillColorId);
 
@@ -58,7 +56,7 @@ class Hand implements WatchModeAware {
             @Override
             protected void configure(Paint paint) {
                 paint.setColor(fillColor);
-                paint.setStrokeWidth(context.getResources().getDimension(strokeWidthId));
+                paint.setStrokeWidth(handStrokeWidth);
                 paint.setStrokeCap(Paint.Cap.BUTT);
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setAntiAlias(true);
@@ -87,9 +85,8 @@ class Hand implements WatchModeAware {
 
         untransformedPath = new Path();
 
-        float centreRadius = context.getResources().getDimension(R.dimen.analog_centre_hand_start_radius);
-        float centreDegrees = (float) Math.toDegrees(Math.asin(halfHandWidth / centreRadius));
-        float startOffset = (float) Math.sqrt(centreRadius * centreRadius - halfHandWidth * halfHandWidth);
+        float centreDegrees = (float) Math.toDegrees(Math.asin(halfHandWidth / handStartRadius));
+        float startOffset = (float) Math.sqrt(handStartRadius * handStartRadius - halfHandWidth * halfHandWidth);
         float centreStartDegrees = 90.0f - centreDegrees;
         float centreSweepDegrees = 2.0f * centreDegrees;
 
@@ -104,7 +101,7 @@ class Hand implements WatchModeAware {
         }
         untransformedPath.lineTo(halfHandWidth, startOffset);
         untransformedPath.arcTo(
-                -centreRadius, -centreRadius, centreRadius, centreRadius,
+                -handStartRadius, -handStartRadius, handStartRadius, handStartRadius,
                 centreStartDegrees, centreSweepDegrees, false);
         untransformedPath.close();
 

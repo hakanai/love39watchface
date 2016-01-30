@@ -89,37 +89,39 @@ class TicksLayer extends Layer {
         float height = getBounds().height();
         float centerX = getBounds().centerX();
         float centerY = getBounds().centerY();
-        float baseTickDistance = getBounds().centerX() - 3;
-        float scale = width / 400.0f;
+        float majorTickDistance = getBounds().centerX() - width * Proportions.MAJOR_TICK_FROM_EDGE;
+        float minorTickDistance = getBounds().centerX() - width * Proportions.MINOR_TICK_FROM_EDGE;
 
         int angleShift = zeroAtTop ? 180 : 0;
         for (int i = 0, degrees = 0; i < count; i++, degrees += 360 / count) {
-            float tickDistance = computeTickDistance(baseTickDistance, degrees);
             double radians = Math.toRadians(degrees + angleShift);
             float directionX = - (float) Math.sin(radians);
             float directionY = + (float) Math.cos(radians);
 
             if (i % subdivisions == 0) {
-                // primary tick
+                // major tick
+                float actualTickDistance = computeTickDistance(majorTickDistance, degrees);
                 Path path = new Path();
                 path.moveTo(
-                        centerX + directionX * (tickDistance + 2),
-                        centerY + directionY * (tickDistance + 2));
+                        centerX + directionX * actualTickDistance,
+                        centerY + directionY * actualTickDistance);
                 path.lineTo(
-                        centerX + directionX * (tickDistance * 2),
-                        centerY + directionY * (tickDistance * 2));
+                        centerX + directionX * (actualTickDistance * 2),
+                        centerY + directionY * (actualTickDistance * 2));
                 ShapeDrawable tick = new ShapeDrawable(new PathShape(path, width, height));
                 tick.getPaint().set(primaryTickPaint.getPaint());
                 tick.setBounds(getBounds());
                 ticks[i] = tick;
 
-                float digitDistance = tickDistance - digits[0].getIntrinsicHeight();
+                Drawable digitDrawable = digits[i / subdivisions];
+                float digitRatio = (float) digitDrawable.getIntrinsicWidth() /
+                        (float) digitDrawable.getIntrinsicHeight();
+                float digitWidth = width * Proportions.DIGIT_WIDTH * digitRatio;
+                float digitHeight = width * Proportions.DIGIT_HEIGHT;
+
+                float digitDistance = actualTickDistance - digitHeight;
                 float digitX = centerX + digitDistance * directionX;
                 float digitY = centerY + digitDistance * directionY;
-
-                Drawable digitDrawable = digits[i / subdivisions];
-                float digitWidth = digitDrawable.getIntrinsicWidth() * scale;
-                float digitHeight = digitDrawable.getIntrinsicHeight() * scale;
 
                 digitDrawable.setBounds(
                         (int) (digitX - digitWidth / 2.0f),
@@ -128,14 +130,15 @@ class TicksLayer extends Layer {
                         (int) (digitY + digitHeight / 2.0f));
 
             } else {
-                // secondary tick
+                // minor tick
+                float actualTickDistance = computeTickDistance(minorTickDistance, degrees);
                 Path path = new Path();
                 path.moveTo(
-                        centerX + directionX * (tickDistance - 8),
-                        centerY + directionY * (tickDistance - 8));
+                        centerX + directionX * actualTickDistance,
+                        centerY + directionY * actualTickDistance);
                 path.lineTo(
-                        centerX + directionX * (tickDistance * 2),
-                        centerY + directionY * (tickDistance * 2));
+                        centerX + directionX * (actualTickDistance * 2),
+                        centerY + directionY * (actualTickDistance * 2));
                 ShapeDrawable tick = new ShapeDrawable(new PathShape(path, width, height));
                 tick.getPaint().set(secondaryTickPaint.getPaint());
                 tick.setBounds(getBounds());

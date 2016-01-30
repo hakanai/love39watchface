@@ -17,27 +17,29 @@ import org.trypticon.android.love39watchface.framework.WatchModeHelper;
 class HeartLayer extends Layer {
     private final Heart heart;
     private final Paint heartGlowPaint;
-    private final float heartWidth;
-    private final float heartHeight;
 
     // Default to interactive for rendering in other places, like the config screen.
     private WatchModeHelper watchMode = new WatchModeHelper(WatchMode.INTERACTIVE);
 
     HeartLayer(Context context) {
-        heartGlowPaint = PaintUtils.createGlowPaint(context, R.color.heart_fill);
+        heartGlowPaint = PaintUtils.createGlowPaint(context, R.color.heart_fill, 400 * Proportions.HEART_GLOW_WIDTH);
 
         heart = new Heart(context);
-
-        heartWidth = context.getResources().getDimension(R.dimen.analog_heart_width);
-        heartHeight = context.getResources().getDimension(R.dimen.analog_heart_height);
     }
 
     @Override
     protected void onBoundsChange(Rect bounds) {
         super.onBoundsChange(bounds);
 
-        int heartX = bounds.centerX();
-        int heartY = bounds.height() * 45 / 64;
+        int width = bounds.width();
+        float heartX = width * Proportions.HEART_X;
+        float heartY = width * Proportions.HEART_Y;
+        float heartWidth = width * Proportions.HEART_WIDTH;
+        float heartHeight = width * Proportions.HEART_HEIGHT;
+
+        float glowWidth = width * Proportions.HAND_GLOW_WIDTH;
+        heartGlowPaint.setStrokeWidth(glowWidth);
+
         heart.updateBounds(
                 heartX - heartWidth / 2,
                 heartY - heartHeight / 2,

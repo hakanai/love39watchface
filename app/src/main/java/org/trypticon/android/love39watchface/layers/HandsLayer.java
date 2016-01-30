@@ -33,8 +33,8 @@ class HandsLayer extends Layer {
     private Hand thirdHand;
 
     private final PaintHolder centrePaint;
-    private final float centreRadius;
 
+    private final Path centrePath = new Path();
     private final Path handGlowPath;
     private final Paint handGlowPaint;
 
@@ -52,15 +52,13 @@ class HandsLayer extends Layer {
             protected void configure(Paint paint) {
                 paint.setColor(Workarounds.getColor(context, R.color.analog_centre_fill));
                 paint.setAntiAlias(true);
-                paint.setStrokeWidth(context.getResources().getDimension(R.dimen.analog_centre_stroke));
+                paint.setStrokeWidth(context.getResources().getDimension(R.dimen.hand_stroke_width));
                 paint.setStrokeCap(Paint.Cap.ROUND);
                 paint.setStyle(Paint.Style.FILL_AND_STROKE);
             }
         };
 
-        centreRadius = context.getResources().getDimension(R.dimen.analog_centre_radius);
-
-        handGlowPaint = PaintUtils.createGlowPaint(context, R.color.analog_centre_fill);
+        handGlowPaint = PaintUtils.createGlowPaint(context, R.color.analog_centre_fill, 400 * Proportions.HAND_GLOW_WIDTH);
         handGlowPath = new Path();
 
         createHands();
@@ -76,40 +74,46 @@ class HandsLayer extends Layer {
         Rect bounds = getBounds();
         int centerX = bounds.centerX();
         int centerY = bounds.centerY();
-        float scale = bounds.width() / 400.0f;
+        float width = bounds.width();
 
-        //todo should change these to % at some point
-        float thirdLength = centerX - 30 * scale;
-        float secondLength = centerX - 35 * scale;
-        float minuteLength = centerX - 40 * scale;
-        float hourLength = centerX - 60 * scale;
+        float hourLength   = centerX - width * Proportions.HOUR_HAND_FROM_EDGE;
+        float minuteLength = centerX - width * Proportions.MINUTE_HAND_FROM_EDGE;
+        float secondLength = centerX - width * Proportions.SECOND_HAND_FROM_EDGE;
+        float thirdLength  = centerX - width * Proportions.THIRD_HAND_FROM_EDGE;
 
-        //todo scale hand widths too :(
+        float centreRadius = width * Proportions.CENTRE_RADIUS;
+        centrePath.reset();
+        centrePath.addCircle(centerX, centerY, centreRadius, Path.Direction.CCW);
+
+        float largeHandWidth = bounds.width() * Proportions.LARGE_HAND_WIDTH;
+        float smallHandWidth = bounds.width() * Proportions.SMALL_HAND_WIDTH;
+
+        float handStrokeWidth = context.getResources().getDimension(R.dimen.hand_stroke_width);
+        float handStartRadius = width * Proportions.HAND_START_RADIUS;
+
+        float glowWidth = width * Proportions.HAND_GLOW_WIDTH;
+        handGlowPaint.setStrokeWidth(glowWidth);
+
         hourHand = new Hand(
                 context,
-                R.dimen.analog_hand_width,
+                largeHandWidth, handStartRadius, hourLength, handStrokeWidth,
                 R.color.analog_hands_fill,
-                R.dimen.analog_hand_stroke_width,
-                centerX, centerY, hourLength, true, false);
+                centerX, centerY, true, false);
         minuteHand = new Hand(
                 context,
-                R.dimen.analog_hand_width,
+                largeHandWidth, handStartRadius, minuteLength, handStrokeWidth,
                 R.color.analog_hands_fill,
-                R.dimen.analog_hand_stroke_width,
-                centerX, centerY, minuteLength, true, true);
+                centerX, centerY, true, true);
         secondHand = new Hand(
                 context,
-                R.dimen.analog_second_hand_width,
-                hasThirds ? R.color.analog_second_hand_fill
-                        : R.color.analog_third_hand_fill,
-                R.dimen.analog_second_hand_stroke_width,
-                centerX, centerY, secondLength, false, false);
+                smallHandWidth, handStartRadius, secondLength, handStrokeWidth,
+                hasThirds ? R.color.analog_second_hand_fill : R.color.analog_third_hand_fill,
+                centerX, centerY, false, false);
         thirdHand = new Hand(
                 context,
-                R.dimen.analog_third_hand_width,
+                smallHandWidth, handStartRadius, thirdLength, handStrokeWidth,
                 R.color.analog_third_hand_fill,
-                R.dimen.analog_third_hand_stroke_width,
-                centerX, centerY, thirdLength, false, false);
+                centerX, centerY, false, false);
     }
 
     @Override
@@ -140,16 +144,11 @@ class HandsLayer extends Layer {
 
     @Override
     public void draw(Canvas canvas) {
-        //todo could probably precompute more in onBoundsChange
-        Rect bounds = getBounds();
-        int centerX = bounds.centerX();
-        int centerY = bounds.centerY();
-
         if (watchMode.isInteractive()) {
             handGlowPath.reset();
             handGlowPath.addPath(hourHand.getPath());
             handGlowPath.addPath(minuteHand.getPath());
-            handGlowPath.addCircle(centerX, centerY, centreRadius, Path.Direction.CCW);
+            handGlowPath.addPath(centrePath);
             canvas.drawPath(handGlowPath, handGlowPaint);
         }
 
@@ -163,7 +162,7 @@ class HandsLayer extends Layer {
             }
         }
 
-        canvas.drawCircle(centerX, centerY, centreRadius, centrePaint.getPaint());
+        canvas.drawPath(centrePath, centrePaint.getPaint());
     }
 
 }
