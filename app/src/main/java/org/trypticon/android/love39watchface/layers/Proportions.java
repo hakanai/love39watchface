@@ -4,7 +4,10 @@ package org.trypticon.android.love39watchface.layers;
  * Holder for dimensions which are done as a percentage of screen size.
  */
 class Proportions {
+    static final float DATE_X                = 200 / 400f;
+    static final float DATE_Y                = 100 / 400f;
     static final float DATE_SIZE             =  40 / 400f;
+
     static final float LARGE_HAND_WIDTH      =  24 / 400f;
     static final float SMALL_HAND_WIDTH      =   4 / 400f;
     static final float CENTRE_RADIUS         = LARGE_HAND_WIDTH / 2;

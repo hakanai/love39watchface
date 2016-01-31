@@ -31,7 +31,7 @@ class BackgroundLayer extends Layer {
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint.getPaint());
+        canvas.drawRect(canvas.getClipBounds(), backgroundPaint.getPaint());
     }
 
 }

@@ -10,11 +10,11 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
 import com.ustwo.clockwise.WatchFaceTime;
-import com.ustwo.clockwise.WatchShape;
 
 import org.trypticon.android.love39watchface.DateStyle;
 import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.TimeStyle;
+import org.trypticon.android.love39watchface.framework.WatchShape;
 import org.trypticon.android.love39watchface.framework.Workarounds;
 import org.trypticon.android.love39watchface.layers.Layer;
 import org.trypticon.android.love39watchface.layers.LayerFactory;
@@ -48,6 +48,16 @@ class SampleDrawable extends Drawable {
         borderPaintChecked = new Paint(borderPaint);
         borderPaintChecked.setColor(Workarounds.getColor(context, R.color.config_list_item_border_checked));
 
+    }
+
+    @Override
+    public int getIntrinsicWidth() {
+        return 400;
+    }
+
+    @Override
+    public int getIntrinsicHeight() {
+        return (int) (400 * (1 - shape.getChinRatio()));
     }
 
     static SampleDrawable createForTime(Context context, WatchShape shape, TimeStyle timeStyle) {
@@ -85,20 +95,47 @@ class SampleDrawable extends Drawable {
     protected void onBoundsChange(Rect bounds) {
         super.onBoundsChange(bounds);
 
+        System.out.println("Our bounds: " + bounds);
+
+        // Parent sets our size to match the ratio declared in getIntrinsic*,
+        // but when drawing, we want to know the size of the full circle and the children
+        // will paint themselves as if these insets do not exist, just like what happens
+        // on the actual watch face.
+        Rect fullBounds = new Rect(bounds);
+        fullBounds.bottom = (int) (fullBounds.top + (fullBounds.height() / (1 - shape.getChinRatio())));
+
+        System.out.println("Painting border using bounds: " + fullBounds);
+
         float borderWidth = borderPaint.getStrokeWidth();
         borderPath.reset();
-        if (shape == WatchShape.CIRCLE) {
-            borderPath.addCircle(bounds.centerX(), bounds.centerY(),
-                    bounds.centerX() - borderWidth / 2.0f,
-                    Path.Direction.CCW);
+        if (shape.isRound()) {
+            float chinRatio = shape.getChinRatio();
+            if (chinRatio > 0.0f) {
+                // Angle from the horizontal to the line from centre to the right of the chin.
+                // Android angles are backwards so this all reads like it draws the mirror image,
+                // but it doesn't...
+                float startAngle = (float) Math.toDegrees(Math.asin(
+                        (fullBounds.centerY() - (fullBounds.height() * chinRatio)) / fullBounds.centerX()));
+                borderPath.addArc(
+                        fullBounds.left + borderWidth / 2.0f, fullBounds.top + borderWidth / 2.0f,
+                        fullBounds.right - borderWidth / 2.0f, fullBounds.bottom - borderWidth / 2.0f,
+                        startAngle, -startAngle * 2 - 180);
+                borderPath.close();
+            } else {
+                borderPath.addCircle(fullBounds.centerX(), fullBounds.centerY(),
+                        fullBounds.centerX() - borderWidth / 2.0f,
+                        Path.Direction.CCW);
+            }
         } else {
             borderPath.addRect(borderWidth / 2.0f, borderWidth / 2.0f,
-                    bounds.width() - borderWidth / 2.0f, bounds.height() - borderWidth / 2.0f,
+                    fullBounds.width() - borderWidth / 2.0f, fullBounds.height() - borderWidth / 2.0f,
                     Path.Direction.CCW);
         }
 
-        layer.setBounds((int) (bounds.left + borderWidth), (int) (bounds.top + borderWidth),
-                (int) (bounds.right - borderWidth), (int) (bounds.bottom - borderWidth));
+        layer.setBounds((int) (fullBounds.left + borderWidth), (int) (fullBounds.top + borderWidth),
+                (int) (fullBounds.right - borderWidth), (int) (fullBounds.bottom - borderWidth));
+
+        System.out.println("Painting layers at: " + layer.getBounds());
 
         MultiTime time = new MultiTime();
         WatchFaceTime watchFaceTime = new WatchFaceTime();

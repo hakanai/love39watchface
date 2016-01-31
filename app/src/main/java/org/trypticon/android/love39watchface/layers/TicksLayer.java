@@ -9,11 +9,10 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
 
-import com.ustwo.clockwise.WatchShape;
-
 import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
+import org.trypticon.android.love39watchface.framework.WatchShape;
 import org.trypticon.android.love39watchface.framework.Workarounds;
 
 /**
@@ -29,7 +28,7 @@ class TicksLayer extends Layer {
     private final PaintHolder primaryTickPaint;
     private final PaintHolder secondaryTickPaint;
 
-    private boolean round;
+    private WatchShape shape;
 
     TicksLayer(final Context context, int subdivisions, boolean zeroAtTop, Drawable[] digits) {
         this.subdivisions = subdivisions;
@@ -70,7 +69,7 @@ class TicksLayer extends Layer {
 
     @Override
     public void updateShape(WatchShape shape) {
-        this.round = shape == WatchShape.CIRCLE;
+        this.shape = shape;
         updateGeometry();
     }
 
@@ -129,6 +128,12 @@ class TicksLayer extends Layer {
                         (int) (digitX + digitWidth / 2.0f),
                         (int) (digitY + digitHeight / 2.0f));
 
+                // Hide digits which would overlap with the chin.
+                float maxY = height * (1.0f - shape.getChinRatio());
+                if (digitDrawable.getBounds().bottom > maxY) {
+                    digitDrawable.setAlpha(0);
+                }
+
             } else {
                 // minor tick
                 float actualTickDistance = computeTickDistance(minorTickDistance, degrees);
@@ -155,7 +160,7 @@ class TicksLayer extends Layer {
      * @return the tick distance.
      */
     private float computeTickDistance(float baseTickDistance, float degrees) {
-        if (round) {
+        if (shape.isRound()) {
             return baseTickDistance;
         } else {
             double radians = Math.toRadians(degrees % 90);

@@ -4,10 +4,9 @@ import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 
-import com.ustwo.clockwise.WatchShape;
-
 import org.trypticon.android.love39watchface.framework.WatchModeAware;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
+import org.trypticon.android.love39watchface.framework.WatchShape;
 import org.trypticon.android.love39watchface.time.MultiTime;
 
 /**

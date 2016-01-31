@@ -10,12 +10,12 @@ import android.view.WindowInsets;
 
 import com.ustwo.clockwise.WatchFaceTime;
 import com.ustwo.clockwise.WatchMode;
-import com.ustwo.clockwise.WatchShape;
 
 import org.trypticon.android.love39watchface.config.ConfigKeys;
 import org.trypticon.android.love39watchface.framework.ConfigurableWatchFace;
 import org.trypticon.android.love39watchface.framework.WatchModeAware;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
+import org.trypticon.android.love39watchface.framework.WatchShape;
 import org.trypticon.android.love39watchface.layers.Layer;
 import org.trypticon.android.love39watchface.layers.LayerFactory;
 import org.trypticon.android.love39watchface.time.MultiTime;
@@ -29,6 +29,7 @@ public class Love39WatchFace extends ConfigurableWatchFace implements WatchModeA
     // The correct value probably depends on screen resolution!
     private static final long INTERACTIVE_UPDATE_RATE_MS = 33;
 
+    private WindowInsets lastScreenInsets;
     private Layer layer;
 
     private MultiTime time;
@@ -58,22 +59,19 @@ public class Love39WatchFace extends ConfigurableWatchFace implements WatchModeA
     }
 
     @Override
-    protected void onLayout(WatchShape shape, Rect screenBounds, WindowInsets screenInsets) {
+    protected void onLayout(com.ustwo.clockwise.WatchShape shape, Rect screenBounds, WindowInsets screenInsets) {
         super.onLayout(shape, screenBounds, screenInsets);
 
-        createLayers();
-    }
+        // null on update configuration on startup, delay creation until we get layout info.
+        if (screenInsets != null) {
+            lastScreenInsets = screenInsets;
 
-    private void createLayers() {
-        Rect screenBounds = new Rect(0, 0, getWidth(), getHeight());
+            layer = LayerFactory.createWatchFaceLayers(this, timeStyle, dateStyle);
+            layer.updateShape(WatchShape.forScreen(screenBounds, screenInsets));
+            layer.setBounds(screenBounds);
 
-        layer = LayerFactory.createWatchFaceLayers(this, timeStyle, dateStyle);
-        layer.updateShape(getWatchShape());
-        layer.setBounds(screenBounds);
-
-        //TODO Insets, for the chin I guess.
-
-        updateWatchMode(new WatchModeHelper(getCurrentWatchMode()));
+            updateWatchMode(new WatchModeHelper(getCurrentWatchMode()));
+        }
     }
 
     @Override
@@ -113,7 +111,7 @@ public class Love39WatchFace extends ConfigurableWatchFace implements WatchModeA
             dateStyle = DateStyle.CLASSIC;
         }
 
-        createLayers();
+        onLayout(getWatchShape(), new Rect(0, 0, getWidth(), getHeight()), lastScreenInsets);
     }
 
     @Override

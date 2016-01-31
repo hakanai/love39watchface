@@ -3,6 +3,7 @@ package org.trypticon.android.love39watchface.config;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.wearable.view.BoxInsetLayout;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,9 +44,7 @@ public class PreviewListView extends ListView {
                     }
 
                     if (position >= 0) {
-                        smoothScrollToPosition(position);
-                        View view = getChildAt(position - getFirstVisiblePosition());
-                        performItemClick(view, position, getItemIdAtPosition(position));
+                        scrollToItemAndSetChecked(position);
                     }
                 }
             }
@@ -54,6 +53,20 @@ public class PreviewListView extends ListView {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             }
         });
+    }
+
+    public void scrollToItemAndSetChecked(int position) {
+        View view = getChildAt(position - getFirstVisiblePosition());
+
+        // Indirectly sets the item to checked
+        performItemClick(view, position, getItemIdAtPosition(position));
+
+        int margin = ((BoxInsetLayout.LayoutParams) getLayoutParams()).leftMargin;
+        if (isAttachedToWindow()) {
+            smoothScrollToPositionFromTop(position, margin);
+        } else {
+            setSelectionFromTop(position, margin);
+        }
     }
 
     public ListItem[] getItems() {
@@ -109,11 +122,14 @@ public class PreviewListView extends ListView {
                 holder = new ViewHolder(getContext(), inflater.inflate(R.layout.config_list_item, parent, false));
             }
 
-            // Deliberately making this a square.
+            Drawable drawable = items[position].drawable;
+            int layoutWidth = parent.getWidth();
+            int layoutHeight = (int) (layoutWidth * (float) drawable.getIntrinsicHeight() /
+                    (float) drawable.getIntrinsicWidth());
             LinearLayout.LayoutParams holderLayoutParams =
-                    new LinearLayout.LayoutParams(parent.getWidth(), parent.getWidth());
+                    new LinearLayout.LayoutParams(layoutWidth, layoutHeight);
             LinearLayout.LayoutParams viewLayoutParams =
-                    new LinearLayout.LayoutParams(parent.getWidth(), parent.getWidth());
+                    new LinearLayout.LayoutParams(layoutWidth, layoutHeight);
             if (position == 0) {
                 holderLayoutParams.height += 20 * getResources().getDisplayMetrics().density;
                 viewLayoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
@@ -126,7 +142,7 @@ public class PreviewListView extends ListView {
             holder.setLayoutParams(holderLayoutParams);
             holder.view.setLayoutParams(viewLayoutParams);
 
-            holder.image.setImageDrawable(items[position].drawable);
+            holder.image.setImageDrawable(drawable);
             holder.text.setText(items[position].labelText);
             return holder;
         }

@@ -68,11 +68,11 @@ public class DateLayer extends Layer {
 
     @Override
     public void draw(Canvas canvas) {
-        float centerX = canvas.getWidth() / 2;
-        float centerY = canvas.getHeight() / 2;
+        float width = getBounds().width();
 
         canvas.drawText(
                 dateFormat.formatDate(time),
-                centerX, centerY / 2, datePaint.getPaint());
+                width * Proportions.DATE_X,
+                width * Proportions.DATE_Y, datePaint.getPaint());
     }
 }
