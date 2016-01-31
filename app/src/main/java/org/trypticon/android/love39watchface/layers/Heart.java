@@ -12,7 +12,7 @@ import org.trypticon.android.love39watchface.framework.Workarounds;
 /**
  * Rendering of the heart shape.
  */
-public class Heart {
+class Heart {
     private final Path untransformedPath;
     private final Path path;
     private final Paint paint;

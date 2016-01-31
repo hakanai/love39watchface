@@ -18,7 +18,7 @@ import org.trypticon.android.love39watchface.time.TimeSystem;
 /**
  * Layer which draws the date.
  */
-public class DateLayer extends Layer {
+class DateLayer extends Layer {
     private final Context context;
     private final TimeSystem timeSystem;
     private final DateFormat dateFormat;
@@ -26,7 +26,7 @@ public class DateLayer extends Layer {
 
     private Time time;
 
-    public DateLayer(final Context context, TimeSystem timeSystem, DateFormat dateFormat) {
+    DateLayer(final Context context, TimeSystem timeSystem, DateFormat dateFormat) {
         this.context = context;
         this.timeSystem = timeSystem;
         this.dateFormat = dateFormat;
