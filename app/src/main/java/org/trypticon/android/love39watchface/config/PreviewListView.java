@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Checkable;
 import android.widget.ImageView;
@@ -20,12 +21,18 @@ import android.widget.TextView;
 
 import org.trypticon.android.love39watchface.R;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Custom list view holding labeled previews to choose from, with some usability hacks
  * for wearable support.
  */
-public class PreviewListView extends ListView {
-    private ListItem[] items = new ListItem[0];
+public class PreviewListView<S> extends ListView {
+    private List<ListItem<S>> items = new ArrayList<>();
+
+    private OnSettingChangedListener<S> onSettingChangedListener;
 
     public PreviewListView(Context context, AttributeSet attributes) {
         super(context, attributes);
@@ -53,6 +60,36 @@ public class PreviewListView extends ListView {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             }
         });
+
+        setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                @SuppressWarnings("unchecked")
+                PreviewListView.ListItem<S> item = (PreviewListView.ListItem<S>) getItemAtPosition(position);
+                if (onSettingChangedListener != null) {
+                    onSettingChangedListener.onSettingChanged(item.getSetting());
+                }
+            }
+        });
+    }
+
+    public OnSettingChangedListener<S> getOnSettingChangedListener() {
+        return onSettingChangedListener;
+    }
+
+    public void setOnSettingChangedListener(OnSettingChangedListener<S> onSettingChangedListener) {
+        this.onSettingChangedListener = onSettingChangedListener;
+    }
+
+    public void scrollToItemAndSetChecked(S setting) {
+        int size = items.size();
+        for (int position = 0; position < size; position++) {
+            ListItem item = items.get(position);
+            if (item.getSetting().equals(setting)) {
+                scrollToItemAndSetChecked(position);
+                break;
+            }
+        }
     }
 
     public void scrollToItemAndSetChecked(int position) {
@@ -69,38 +106,45 @@ public class PreviewListView extends ListView {
         }
     }
 
-    public ListItem[] getItems() {
-        return items.clone();
+    public List<ListItem<S>> getItems() {
+        return items;
     }
 
-    public void setItems(ListItem[] items) {
-        this.items = items.clone();
+    public void setItems(List<ListItem<S>> items) {
+        this.items = Collections.unmodifiableList(new ArrayList<>(items));
         setAdapter(new PreviewListViewAdapter(getContext(), items));
     }
 
 
-    public static class ListItem {
+    public static class ListItem<S> {
+        private final S setting;
         private final Drawable drawable;
         private final String labelText;
-        public ListItem(Drawable drawable, String labelText) {
+
+        public ListItem(S setting, Drawable drawable, String labelText) {
+            this.setting = setting;
             this.drawable = drawable;
             this.labelText = labelText;
+        }
+
+        public S getSetting() {
+            return setting;
         }
     }
 
     private class PreviewListViewAdapter extends BaseAdapter implements ListAdapter {
         private final LayoutInflater inflater;
 
-        private final ListItem[] items;
+        private final List<ListItem<S>> items;
 
-        private PreviewListViewAdapter(Context context, ListItem[] items) {
+        private PreviewListViewAdapter(Context context, List<ListItem<S>> items) {
             inflater = LayoutInflater.from(context);
             this.items = items;
         }
 
         @Override
         public int getCount() {
-            return items.length;
+            return items.size();
         }
 
         @Override
@@ -110,7 +154,7 @@ public class PreviewListView extends ListView {
 
         @Override
         public Object getItem(int position) {
-            return items[position];
+            return items.get(position);
         }
 
         @Override
@@ -122,7 +166,7 @@ public class PreviewListView extends ListView {
                 holder = new ViewHolder(getContext(), inflater.inflate(R.layout.config_list_item, parent, false));
             }
 
-            Drawable drawable = items[position].drawable;
+            Drawable drawable = items.get(position).drawable;
             int layoutWidth = parent.getWidth();
             int layoutHeight = (int) (layoutWidth * (float) drawable.getIntrinsicHeight() /
                     (float) drawable.getIntrinsicWidth());
@@ -143,7 +187,7 @@ public class PreviewListView extends ListView {
             holder.view.setLayoutParams(viewLayoutParams);
 
             holder.image.setImageDrawable(drawable);
-            holder.text.setText(items[position].labelText);
+            holder.text.setText(items.get(position).labelText);
             return holder;
         }
     }
@@ -178,5 +222,9 @@ public class PreviewListView extends ListView {
         public void toggle() {
             setChecked(!isChecked());
         }
+    }
+
+    public interface OnSettingChangedListener<S> {
+        void onSettingChanged(S setting);
     }
 }

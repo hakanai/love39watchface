@@ -15,13 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
-import android.widget.AdapterView;
 
-import org.trypticon.android.love39watchface.DateStyle;
 import org.trypticon.android.love39watchface.R;
-import org.trypticon.android.love39watchface.TimeStyle;
+import org.trypticon.android.love39watchface.framework.PreferencesUtils;
 import org.trypticon.android.love39watchface.framework.WatchShape;
 import org.trypticon.android.love39watchface.framework.WearableConfigListener;
+
+import java.util.Arrays;
 
 /**
  * Configuration screen.
@@ -33,8 +33,8 @@ public class ConfigView extends BoxInsetLayout {
     private Rect lastBounds = new Rect();
     private WindowInsets lastWindowInsets;
 
-    private boolean dozenalTime;
-    private boolean dozenalCalendar;
+    private TimeStyle timeStyle = TimeStyle.CLASSIC;
+    private DateStyle dateStyle = DateStyle.CLASSIC;
 
     public ConfigView(Context context, AttributeSet attributes) {
         super(context, attributes);
@@ -53,9 +53,11 @@ public class ConfigView extends BoxInsetLayout {
 
         requestApplyInsets();
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        dozenalTime = sharedPreferences.getBoolean(ConfigKeys.DOZENAL_TIME_KEY, false);
-        dozenalCalendar = sharedPreferences.getBoolean(ConfigKeys.DOZENAL_CALENDAR_KEY, false);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        timeStyle = PreferencesUtils.getEnum(
+                preferences, ConfigKeys.TIME_STYLE_KEY, TimeStyle.class, TimeStyle.CLASSIC);
+        dateStyle = PreferencesUtils.getEnum(
+                preferences, ConfigKeys.DATE_STYLE_KEY, DateStyle.class, DateStyle.CLASSIC);
 
         GridViewPager pager = (GridViewPager) findViewById(R.id.pager);
         DotsPageIndicator dotsPageIndicator = (DotsPageIndicator) findViewById(R.id.page_indicator);
@@ -113,38 +115,33 @@ public class ConfigView extends BoxInsetLayout {
             if (column < 2) {
                 Context context = getContext();
                 View pageView = LayoutInflater.from(getContext()).inflate(R.layout.config_list_page, container, false);
-                PreviewListView list = (PreviewListView) pageView.findViewById(R.id.list);
 
                 if (column == 0) {
-                    list.setItems(new PreviewListView.ListItem[]{
-                            new PreviewListView.ListItem(
-                                    SampleDrawable.createForTime(context, watchShape, TimeStyle.CLASSIC),
-                                    getContext().getString(R.string.config_time_classic)),
-                            new PreviewListView.ListItem(
-                                    SampleDrawable.createForTime(context, watchShape, TimeStyle.DOZENAL),
-                                    getContext().getString(R.string.config_time_dozenal))
-                    });
-                    list.scrollToItemAndSetChecked(dozenalTime ? 1 : 0);
-                    list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @SuppressWarnings("unchecked")
+                    final PreviewListView<TimeStyle> list =
+                            (PreviewListView<TimeStyle>) pageView.findViewById(R.id.list);
+                    list.setItems(Arrays.asList(
+                            TimeStyle.CLASSIC.createListItem(context, watchShape),
+                            TimeStyle.DOZENAL.createListItem(context, watchShape)));
+                    list.scrollToItemAndSetChecked(timeStyle);
+                    list.setOnSettingChangedListener(new PreviewListView.OnSettingChangedListener<TimeStyle>() {
                         @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            dozenalTime = position == 1;
+                        public void onSettingChanged(TimeStyle setting) {
+                            timeStyle = setting;
                         }
                     });
                 } else {
-                    list.setItems(new PreviewListView.ListItem[] {
-                            new PreviewListView.ListItem(
-                                    SampleDrawable.createForDate(context, watchShape, DateStyle.CLASSIC),
-                                    getContext().getString(R.string.config_calendar_classic)),
-                            new PreviewListView.ListItem(
-                                    SampleDrawable.createForDate(context, watchShape, DateStyle.DOZENAL),
-                                    getContext().getString(R.string.config_calendar_dozenal))
-                    });
-                    list.scrollToItemAndSetChecked(dozenalCalendar ? 1 : 0);
-                    list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @SuppressWarnings("unchecked")
+                    final PreviewListView<DateStyle> list =
+                            (PreviewListView<DateStyle>) pageView.findViewById(R.id.list);
+                    list.setItems(Arrays.asList(
+                            DateStyle.CLASSIC.createListItem(context, watchShape),
+                            DateStyle.DOZENAL.createListItem(context, watchShape)));
+                    list.scrollToItemAndSetChecked(dateStyle);
+                    list.setOnSettingChangedListener(new PreviewListView.OnSettingChangedListener<DateStyle>() {
                         @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            dozenalCalendar = position == 1;
+                        public void onSettingChanged(DateStyle setting) {
+                            dateStyle = setting;
                         }
                     });
                 }
@@ -155,8 +152,8 @@ public class ConfigView extends BoxInsetLayout {
                 actionPage.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        listener.onConfigCompleted(ConfigKeys.DOZENAL_TIME_KEY, dozenalTime, false);
-                        listener.onConfigCompleted(ConfigKeys.DOZENAL_CALENDAR_KEY, dozenalCalendar, false);
+                        listener.onConfigCompleted(ConfigKeys.TIME_STYLE_KEY, timeStyle, false);
+                        listener.onConfigCompleted(ConfigKeys.DATE_STYLE_KEY, dateStyle, false);
 
                         Context context = getContext();
                         if (context instanceof Activity) {

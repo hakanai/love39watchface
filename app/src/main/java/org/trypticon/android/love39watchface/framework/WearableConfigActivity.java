@@ -60,17 +60,16 @@ public class WearableConfigActivity extends Activity implements WearableConfigLi
         });
     }
 
-
     @Override
     public void onConfigCompleted(String key, Object value, boolean finish) {
         // Store the value locally.
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        putObject(editor, key, value);
+        PreferencesUtils.putObject(editor, key, value);
         editor.apply();
 
         // Send the changed preference to the companion. The path indicates the source of the change.
         DataMap prefsDataMap = new DataMap();
-        putObject(prefsDataMap, key, value);
+        PreferencesUtils.putObject(prefsDataMap, key, value);
 
         // We have to make the data map unique to ensure Wear API sends it to the wearable. This is required because
         // it is valid for the companion app to send the same config change multiple times if the wearable was
@@ -83,22 +82,6 @@ public class WearableConfigActivity extends Activity implements WearableConfigLi
 
         if (finish) {
             finish();
-        }
-    }
-
-    private static void putObject(SharedPreferences.Editor editor, String key, Object value) {
-        if (value instanceof Boolean) {
-            editor.putBoolean(key, (Boolean) value);
-        } else {
-            throw new IllegalArgumentException("Argument type not supported yet: " + value);
-        }
-    }
-
-    private static void putObject(DataMap dataMap, String key, Object value) {
-        if (value instanceof Boolean) {
-            dataMap.putBoolean(key, (Boolean) value);
-        } else {
-            throw new IllegalArgumentException("Argument type not supported yet: " + value);
         }
     }
 }

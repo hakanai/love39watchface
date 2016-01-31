@@ -12,7 +12,10 @@ import com.ustwo.clockwise.WatchFaceTime;
 import com.ustwo.clockwise.WatchMode;
 
 import org.trypticon.android.love39watchface.config.ConfigKeys;
+import org.trypticon.android.love39watchface.config.DateStyle;
+import org.trypticon.android.love39watchface.config.TimeStyle;
 import org.trypticon.android.love39watchface.framework.ConfigurableWatchFace;
+import org.trypticon.android.love39watchface.framework.PreferencesUtils;
 import org.trypticon.android.love39watchface.framework.WatchModeAware;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
 import org.trypticon.android.love39watchface.framework.WatchShape;
@@ -99,17 +102,10 @@ public class Love39WatchFace extends ConfigurableWatchFace implements WatchModeA
     }
 
     private void updateConfiguration(SharedPreferences preferences) {
-        if (preferences.getBoolean(ConfigKeys.DOZENAL_TIME_KEY, false)) {
-            timeStyle = TimeStyle.DOZENAL;
-        } else {
-            timeStyle = TimeStyle.CLASSIC;
-        }
-
-        if (preferences.getBoolean(ConfigKeys.DOZENAL_CALENDAR_KEY, false)) {
-            dateStyle = DateStyle.DOZENAL;
-        } else {
-            dateStyle = DateStyle.CLASSIC;
-        }
+        timeStyle = PreferencesUtils.getEnum(
+                preferences, ConfigKeys.TIME_STYLE_KEY, TimeStyle.class, TimeStyle.CLASSIC);
+        dateStyle = PreferencesUtils.getEnum(
+                preferences, ConfigKeys.DATE_STYLE_KEY, DateStyle.class, DateStyle.CLASSIC);
 
         onLayout(getWatchShape(), new Rect(0, 0, getWidth(), getHeight()), lastScreenInsets);
     }

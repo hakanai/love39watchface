@@ -3,9 +3,9 @@ package org.trypticon.android.love39watchface.layers;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
-import org.trypticon.android.love39watchface.DateStyle;
+import org.trypticon.android.love39watchface.config.DateStyle;
 import org.trypticon.android.love39watchface.R;
-import org.trypticon.android.love39watchface.TimeStyle;
+import org.trypticon.android.love39watchface.config.TimeStyle;
 import org.trypticon.android.love39watchface.time.ClassicDateFormat;
 import org.trypticon.android.love39watchface.time.DozenalDateFormat;
 import org.trypticon.android.love39watchface.time.TimeSystem;

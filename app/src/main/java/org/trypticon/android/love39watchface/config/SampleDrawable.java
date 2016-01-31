@@ -11,9 +11,7 @@ import android.graphics.drawable.Drawable;
 
 import com.ustwo.clockwise.WatchFaceTime;
 
-import org.trypticon.android.love39watchface.DateStyle;
 import org.trypticon.android.love39watchface.R;
-import org.trypticon.android.love39watchface.TimeStyle;
 import org.trypticon.android.love39watchface.framework.WatchShape;
 import org.trypticon.android.love39watchface.framework.Workarounds;
 import org.trypticon.android.love39watchface.layers.Layer;
