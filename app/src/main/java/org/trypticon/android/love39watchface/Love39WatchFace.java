@@ -27,10 +27,9 @@ import org.trypticon.android.love39watchface.time.MultiTime;
  * The main watch face.
  */
 public class Love39WatchFace extends ConfigurableWatchFace implements WatchModeAware {
-    // I originally determined 20 experimentally.
-    // The ustwo examples use 33, so that might be better.
+    // 20 appears to be smoother than ustwo's example of 33.
     // The correct value probably depends on screen resolution!
-    private static final long INTERACTIVE_UPDATE_RATE_MS = 33;
+    private static final long INTERACTIVE_UPDATE_RATE_MS = 20;
 
     private WindowInsets lastScreenInsets;
     private Layer layer;
