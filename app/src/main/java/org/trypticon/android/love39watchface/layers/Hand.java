@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.ColorRes;
 
+import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
 import org.trypticon.android.love39watchface.framework.WatchModeAware;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
@@ -32,13 +33,15 @@ class Hand implements WatchModeAware {
     private final Matrix matrix = new Matrix();
 
     Hand(final Context context,
-         float handWidth, float handStartRadius, float handLength, final float handStrokeWidth,
+         float handWidth, float handStartRadius, float handLength,
          @ColorRes int fillColorId,
          float centerX, float centerY, boolean pointy, boolean clip) {
 
         this.centerX = centerX;
         this.centerY = centerY;
 
+        final float handStrokeWidth = context.getResources().getDimension(R.dimen.hand_stroke_width);
+        final float clipStrokeWidth = context.getResources().getDimension(R.dimen.clip_stroke_width);
         float halfHandWidth = handWidth / 2;
 
         final int fillColor = Workarounds.getColor(context, fillColorId);
@@ -67,7 +70,7 @@ class Hand implements WatchModeAware {
             @Override
             protected void configure(Paint paint) {
                 paint.setColor(Color.BLACK);
-                paint.setStrokeWidth(2.0f);
+                paint.setStrokeWidth(clipStrokeWidth);
                 paint.setStrokeCap(Paint.Cap.SQUARE);
                 paint.setStyle(Paint.Style.FILL_AND_STROKE);
                 paint.setAntiAlias(true);

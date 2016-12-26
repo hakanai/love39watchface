@@ -7,6 +7,7 @@
          Other sizes are in Proportions.java. -->
 
     <dimen name="hand_stroke_width">0.5pt</dimen>
+    <dimen name="clip_stroke_width">1.0pt</dimen>
     <dimen name="analog_primary_tick_digit_stroke">0.25pt</dimen>
     <dimen name="analog_primary_tick_stroke">1.5pt</dimen>
     <dimen name="analog_secondary_tick_stroke">0.75pt</dimen>

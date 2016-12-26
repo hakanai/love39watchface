@@ -88,7 +88,6 @@ class HandsLayer extends Layer {
         float largeHandWidth = bounds.width() * Proportions.LARGE_HAND_WIDTH;
         float smallHandWidth = bounds.width() * Proportions.SMALL_HAND_WIDTH;
 
-        float handStrokeWidth = context.getResources().getDimension(R.dimen.hand_stroke_width);
         float handStartRadius = width * Proportions.HAND_START_RADIUS;
 
         float glowWidth = width * Proportions.HAND_GLOW_WIDTH;
@@ -96,22 +95,22 @@ class HandsLayer extends Layer {
 
         hourHand = new Hand(
                 context,
-                largeHandWidth, handStartRadius, hourLength, handStrokeWidth,
+                largeHandWidth, handStartRadius, hourLength,
                 R.color.analog_hands_fill,
                 centerX, centerY, true, false);
         minuteHand = new Hand(
                 context,
-                largeHandWidth, handStartRadius, minuteLength, handStrokeWidth,
+                largeHandWidth, handStartRadius, minuteLength,
                 R.color.analog_hands_fill,
                 centerX, centerY, true, true);
         secondHand = new Hand(
                 context,
-                smallHandWidth, handStartRadius, secondLength, handStrokeWidth,
+                smallHandWidth, handStartRadius, secondLength,
                 hasThirds ? R.color.analog_second_hand_fill : R.color.analog_third_hand_fill,
                 centerX, centerY, false, false);
         thirdHand = new Hand(
                 context,
-                smallHandWidth, handStartRadius, thirdLength, handStrokeWidth,
+                smallHandWidth, handStartRadius, thirdLength,
                 R.color.analog_third_hand_fill,
                 centerX, centerY, false, false);
     }
