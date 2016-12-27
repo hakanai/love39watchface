@@ -89,7 +89,10 @@ public class Love39WatchFace extends ConfigurableWatchFace implements WatchModeA
 
     @Override
     protected void onTimeChanged(WatchFaceTime oldTime, WatchFaceTime newTime) {
-        super.onTimeChanged(oldTime, newTime);
+        // Deliberately omitting call to onTimeChanged because it performs expensive
+        // date formatting even if debug is off.
+        // https://github.com/ustwo/clockwise/issues/33
+        //super.onTimeChanged(oldTime, newTime);
 
         time.setTo(newTime);
         layer.updateTime(time);

@@ -3,6 +3,7 @@ package org.trypticon.android.love39watchface.time;
 import android.annotation.SuppressLint;
 
 import java.text.DateFormatSymbols;
+import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,12 +32,12 @@ public class DozenalDateFormat extends DateFormat {
     }
 
     @Override
-    public String formatDate(Time time) {
+    public void formatDate(Time time, StringBuffer buffer, FieldPosition fieldPosition) {
         calendar.set(Calendar.DAY_OF_WEEK, time.getDayOfWeek());
         calendar.set(Calendar.DAY_OF_MONTH, time.getDayOfMonth());
         // Android hard-codes in a + 1 when formatting as a number.
         calendar.set(Calendar.MONTH, time.getMonth() - 1);
-        return delegate.format(dummyDate);
+        delegate.format(dummyDate, buffer, fieldPosition);
     }
 
     private class DateFormatSymbolsAdapter extends DateFormatSymbols {
