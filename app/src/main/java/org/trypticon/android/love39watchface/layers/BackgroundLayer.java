@@ -3,6 +3,8 @@ package org.trypticon.android.love39watchface.layers;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.support.annotation.NonNull;
 
 import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
@@ -14,6 +16,8 @@ import org.trypticon.android.love39watchface.framework.Workarounds;
  */
 class BackgroundLayer extends Layer {
     private final PaintHolder backgroundPaint;
+
+    private final Rect tempRect = new Rect();
 
     BackgroundLayer(final Context context) {
         backgroundPaint = new PaintHolder(true) {
@@ -30,8 +34,10 @@ class BackgroundLayer extends Layer {
     }
 
     @Override
-    public void draw(Canvas canvas) {
-        canvas.drawRect(canvas.getClipBounds(), backgroundPaint.getPaint());
+    public void draw(@NonNull Canvas canvas) {
+        if (canvas.getClipBounds(tempRect)) {
+            canvas.drawRect(tempRect, backgroundPaint.getPaint());
+        }
     }
 
 }

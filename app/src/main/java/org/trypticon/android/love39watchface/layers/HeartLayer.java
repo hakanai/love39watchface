@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 
 import com.ustwo.clockwise.WatchMode;
 
@@ -53,7 +54,7 @@ class HeartLayer extends Layer {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         if (watchMode.isInteractive()) {
             canvas.drawPath(heart.getPath(), heartGlowPaint);
             heart.draw(canvas);

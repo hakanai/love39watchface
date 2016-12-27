@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
+import android.support.annotation.NonNull;
 
 import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
@@ -173,7 +174,7 @@ class TicksLayer extends Layer {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         for (Drawable digit : digits) {
             digit.draw(canvas);
         }

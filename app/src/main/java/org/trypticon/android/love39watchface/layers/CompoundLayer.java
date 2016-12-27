@@ -2,6 +2,7 @@ package org.trypticon.android.love39watchface.layers;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
 import org.trypticon.android.love39watchface.framework.WatchShape;
@@ -47,7 +48,7 @@ class CompoundLayer extends Layer {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         for (Layer layer : layers) {
             layer.draw(canvas);
         }

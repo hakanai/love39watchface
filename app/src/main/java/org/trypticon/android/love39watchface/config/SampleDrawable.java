@@ -8,6 +8,7 @@ import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import com.ustwo.clockwise.WatchFaceTime;
 
@@ -143,7 +144,7 @@ class SampleDrawable extends Drawable {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         canvas.save();
         try {
             canvas.clipPath(borderPath);

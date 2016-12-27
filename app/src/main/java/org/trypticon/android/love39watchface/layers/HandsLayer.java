@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 
 import com.ustwo.clockwise.WatchMode;
 
@@ -142,7 +143,7 @@ class HandsLayer extends Layer {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         if (watchMode.isInteractive()) {
             handGlowPath.reset();
             handGlowPath.addPath(hourHand.getPath());

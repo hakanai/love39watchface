@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 
 import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
@@ -27,8 +28,8 @@ class DateLayer extends Layer {
     private PaintHolder datePaint;
 
     private Time time;
-    private StringBuffer formattedDate = new StringBuffer(64);
-    private FieldPosition fieldPosition = new FieldPosition(java.text.DateFormat.MONTH_FIELD);
+    private final StringBuffer formattedDate = new StringBuffer(64);
+    private final FieldPosition fieldPosition = new FieldPosition(0);
 
     DateLayer(final Context context, TimeSystem timeSystem, DateFormat dateFormat) {
         this.context = context;
@@ -73,7 +74,7 @@ class DateLayer extends Layer {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         float width = getBounds().width();
 
         canvas.drawText(
