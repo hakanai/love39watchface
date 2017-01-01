@@ -8,6 +8,17 @@ import java.text.ParsePosition;
  * Formatter for dozenal numbers.
  */
 class DozenalNumberFormat extends NumberFormat {
+    private static final char[] DIGITS = {
+            '0', '1', '2', '3', '4', '5',
+            '6', '7', '8', '9', '\u218A', '\u218B'
+    };
+    private static final int MAX_LENGTH = 23; // Max chars in result (conservative)
+
+    private final StringBuilder tempBuilder = new StringBuilder(MAX_LENGTH);
+
+    DozenalNumberFormat() {
+        tempBuilder.setLength(MAX_LENGTH);
+    }
 
     @Override
     public StringBuffer format(double number, StringBuffer buffer, FieldPosition field) {
@@ -21,26 +32,37 @@ class DozenalNumberFormat extends NumberFormat {
             throw new UnsupportedOperationException("Unsupported value: " + number);
         }
 
-        String noPadding = Long.toString(number, 12);
-        int startOffset = result.length();
+        long value = number;
 
-        int padSize = Math.max(0, getMinimumIntegerDigits() - noPadding.length());
+        boolean negative = false;
+        if (value < 0) {
+            negative = true;
+        } else {
+            value = -value;
+        }
+
+        int cursor = MAX_LENGTH;
+
+        do {
+            long q = value / 12;
+            --cursor;
+            tempBuilder.setCharAt(cursor, DIGITS[(int) (12 * q - value)]);
+            value = q;
+        } while (value != 0);
+
+        if (negative) {
+            --cursor;
+            tempBuilder.setCharAt(cursor, '-');
+        }
+
+        int resultOffset = cursor;
+        int resultLength = MAX_LENGTH - cursor;
+
+        int padSize = Math.max(0, getMinimumIntegerDigits() - resultLength);
         for (int i = 0; i < padSize; i++) {
             result.append('0');
         }
-        result.append(noPadding);
-
-        int length = result.length();
-        for (int i = startOffset; i < length; i++) {
-            switch (result.charAt(i)) {
-                case 'a':
-                    result.setCharAt(i, '\u218A');
-                    break;
-                case 'b':
-                    result.setCharAt(i, '\u218B');
-                    break;
-            }
-        }
+        result.append(tempBuilder, resultOffset, MAX_LENGTH);
 
         return result;
     }
