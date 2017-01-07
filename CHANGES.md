@@ -14,3 +14,7 @@ v1.0.2
 v1.0.3
 
 * Format and recompute dates only when the day has changed.
+
+v1.0.4
+
+* Removed call to API v21 method which had crept in. Compatibility is now API v20+.

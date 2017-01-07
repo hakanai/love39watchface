@@ -15,8 +15,8 @@ android {
         applicationId "org.trypticon.android.love39watchface"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 7
-        versionName "1.0.3"
+        versionCode 8
+        versionName "1.0.4"
     }
     buildTypes {
         release {
