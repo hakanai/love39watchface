@@ -1,3 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="" />
+  <settings default="code">
+    <module2copyright>
+      <element module="Code potentially containing art" copyright="code-art" />
+    </module2copyright>
+  </settings>
 </component>
