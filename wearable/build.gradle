@@ -13,8 +13,7 @@ android {
 
     defaultConfig {
         applicationId "org.trypticon.android.love39watchface"
-        //minSdkVersion 20 // 20 is the earlier release of Android Wear
-        minSdkVersion 21 // TODO: Is it possible to avoid Path#addArc ?
+        minSdkVersion 20 // 20 is the earlier release of Android Wear
         targetSdkVersion 25
         versionCode 7
         versionName "1.0.3"

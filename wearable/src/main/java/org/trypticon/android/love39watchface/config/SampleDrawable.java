@@ -14,6 +14,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
@@ -122,10 +123,12 @@ class SampleDrawable extends Drawable {
                 // but it doesn't...
                 float startAngle = (float) Math.toDegrees(Math.asin(
                         (fullBounds.centerY() - (fullBounds.height() * chinRatio)) / fullBounds.centerX()));
-                borderPath.addArc(
-                        fullBounds.left + borderWidth / 2.0f, fullBounds.top + borderWidth / 2.0f,
-                        fullBounds.right - borderWidth / 2.0f, fullBounds.bottom - borderWidth / 2.0f,
-                        startAngle, -startAngle * 2 - 180);
+                RectF arcRect = new RectF(
+                        fullBounds.left + borderWidth / 2.0f,
+                        fullBounds.top + borderWidth / 2.0f,
+                        fullBounds.right - borderWidth / 2.0f,
+                        fullBounds.bottom - borderWidth / 2.0f);
+                borderPath.addArc(arcRect, startAngle, -startAngle * 2 - 180);
                 borderPath.close();
             } else {
                 borderPath.addCircle(fullBounds.centerX(), fullBounds.centerY(),
