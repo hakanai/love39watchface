@@ -5,7 +5,7 @@ It's something I made for Miku Expo 2016. A lot of people seemed to show interes
 so I had said I would release by the end of the year, but I guess I didn't quite make it.
 Sorry about that. ^^;
 
-https://github.com/trejkaz/love39watchface/blob/master/artwork/hi-res-icon.png
+![Screenshot](artwork/hi-res-icon.png)
 
 
 Installing
@@ -14,6 +14,9 @@ Installing
 If you are only looking to install it, it's available for free on the
 [Play Store].
 
+[![Play Store link][Play Store Badge]][Play Store]
+
+[Play Store Badge]: https://play.google.com/intl/en_us/badges/images/badge_new.png
 [Play Store]: https://play.google.com/store/apps/details?id=org.trypticon.android.love39watchface
 
 
