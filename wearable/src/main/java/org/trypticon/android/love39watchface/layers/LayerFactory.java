@@ -6,11 +6,7 @@ import android.graphics.drawable.Drawable;
 import org.trypticon.android.love39watchface.config.DateStyle;
 import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.config.TimeStyle;
-import org.trypticon.android.love39watchface.time.ClassicDateFormat;
-import org.trypticon.android.love39watchface.time.DozenalDateFormat;
 import org.trypticon.android.love39watchface.time.TimeSystem;
-
-import java.util.Locale;
 
 /**
  * Factory for creating layers.
@@ -50,9 +46,9 @@ public class LayerFactory {
     private static Layer createDate(Context context, DateStyle dateStyle) {
         switch (dateStyle) {
             case CLASSIC:
-                return new DateLayer(context, TimeSystem.CLASSIC, new ClassicDateFormat(Locale.getDefault()));
+                return new DateLayer(context, TimeSystem.CLASSIC);
             case DOZENAL:
-                return new DateLayer(context, TimeSystem.DOZENAL, new DozenalDateFormat(Locale.getDefault()));
+                return new DateLayer(context, TimeSystem.DOZENAL);
             default:
                 throw new IllegalStateException("Unimplemented date style: " + dateStyle);
         }

@@ -11,12 +11,8 @@ import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
 import org.trypticon.android.love39watchface.framework.Workarounds;
-import org.trypticon.android.love39watchface.time.DateFormat;
 import org.trypticon.android.love39watchface.time.MultiTime;
-import org.trypticon.android.love39watchface.time.Time;
 import org.trypticon.android.love39watchface.time.TimeSystem;
-
-import java.text.FieldPosition;
 
 /**
  * Layer which draws the date.
@@ -24,17 +20,13 @@ import java.text.FieldPosition;
 class DateLayer extends Layer {
     private final Context context;
     private final TimeSystem timeSystem;
-    private final DateFormat dateFormat;
     private PaintHolder datePaint;
 
-    private Time time;
-    private final StringBuffer formattedDate = new StringBuffer(64);
-    private final FieldPosition fieldPosition = new FieldPosition(0);
+    private String formattedDate;
 
-    DateLayer(final Context context, TimeSystem timeSystem, DateFormat dateFormat) {
+    DateLayer(final Context context, TimeSystem timeSystem) {
         this.context = context;
         this.timeSystem = timeSystem;
-        this.dateFormat = dateFormat;
 
         updateDatePaint(400);
     }
@@ -68,9 +60,7 @@ class DateLayer extends Layer {
 
     @Override
     public void updateTime(MultiTime time) {
-        this.time = time.getTime(timeSystem);
-        formattedDate.setLength(0);
-        dateFormat.formatDate(this.time, formattedDate, fieldPosition);
+        formattedDate = time.getTime(timeSystem).getFormattedDate();
     }
 
     @Override

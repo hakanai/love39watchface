@@ -15,7 +15,7 @@ public class DozenalTimeTest {
         DozenalTime time = new DozenalTime();
         time.setTo(new ClassicTime(2015, 3, 1, 0, 0, 0));
         assertThat(time.getYear(), is(2015));
-        assertThat(time.getMonth(), is(1));
+        assertThat(time.getMonthOfYear(), is(1));
         assertThat(time.getDayOfMonth(), is(1));
         assertThat(time.getDayOfWeek(), is(0));
         assertThat(time.getHourOfDay(), is(0));
@@ -29,7 +29,7 @@ public class DozenalTimeTest {
         DozenalTime time = new DozenalTime();
         time.setTo(new ClassicTime(2015, 2, 28, 0, 0, 0));
         assertThat(time.getYear(), is(2014));
-        assertThat(time.getMonth(), is(13));
+        assertThat(time.getMonthOfYear(), is(13));
         assertThat(time.getDayOfMonth(), is(5));
         assertThat(time.getDayOfWeek(), is(4));
         assertThat(time.getHourOfDay(), is(0));
@@ -43,7 +43,7 @@ public class DozenalTimeTest {
         DozenalTime time = new DozenalTime();
         time.setTo(new ClassicTime(2016, 2, 29, 0, 0, 0));
         assertThat(time.getYear(), is(2015));
-        assertThat(time.getMonth(), is(13));
+        assertThat(time.getMonthOfYear(), is(13));
         assertThat(time.getDayOfMonth(), is(6));
         assertThat(time.getDayOfWeek(), is(5));
         assertThat(time.getHourOfDay(), is(0));

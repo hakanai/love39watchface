@@ -2,6 +2,8 @@ package org.trypticon.android.love39watchface.time;
 
 import com.ustwo.clockwise.WatchFaceTime;
 
+import java.util.Locale;
+
 /**
  * Encapsulates dozenal time calculation.
  */
@@ -30,10 +32,6 @@ public class DozenalTime extends Time {
 
     private ClassicTime time = new ClassicTime();
 
-    private int year;
-    private int month;
-    private int dayOfMonth;
-    private int dayOfWeek;
     private int hourOfDay;
     private int minuteOfHour;
     private int secondOfMinute;
@@ -44,26 +42,8 @@ public class DozenalTime extends Time {
     private float thirdTurns;
 
     @Override
-    int getYear() {
-        return year;
-    }
-
-    //1..13
-    @Override
-    int getMonth() {
-        return month;
-    }
-
-    //1..30
-    @Override
-    int getDayOfMonth() {
-        return dayOfMonth;
-    }
-
-    //0..5
-    @Override
-    int getDayOfWeek() {
-        return dayOfWeek;
+    DateFormat createDateFormat(Locale locale) {
+        return new DozenalDateFormat(locale);
     }
 
     //0..11
@@ -113,21 +93,43 @@ public class DozenalTime extends Time {
 
     @Override
     public void setTo(WatchFaceTime time) {
+        int oldYear = this.time.getYear();
+        int oldMonthOfYear = this.time.getMonthOfYear();
+        int oldDayOfMonth = this.time.getDayOfMonth();
+
         this.time.setTo(time);
-        recompute();
+
+        if (oldYear != this.time.getYear() &&
+                oldMonthOfYear != this.time.getMonthOfYear() &&
+                oldDayOfMonth != this.time.getDayOfMonth()) {
+            recomputeDate();
+        }
+
+        recomputeTime();
     }
 
     void setTo(ClassicTime time) {
+        int oldYear = this.time.getYear();
+        int oldMonthOfYear = this.time.getMonthOfYear();
+        int oldDayOfMonth = this.time.getDayOfMonth();
+
         this.time.setTo(time);
-        recompute();
+
+        if (oldYear != this.time.getYear() &&
+                oldMonthOfYear != this.time.getMonthOfYear() &&
+                oldDayOfMonth != this.time.getDayOfMonth()) {
+            recomputeDate();
+        }
+
+        recomputeTime();
     }
 
     @Override
     public void setToSample() {
         ClassicTime time = new ClassicTime();
-        time.year = 2015;
-        time.month = 3;
-        time.dayOfMonth = 9;
+        time.setYear(2015);
+        time.setMonthOfYear(3);
+        time.setDayOfMonth(9);
         time.hour = 16;
         time.minute = 41;
         time.second = 30;
@@ -135,17 +137,20 @@ public class DozenalTime extends Time {
         setTo(time);
     }
 
-    private void recompute() {
-        int gregorianYear = time.year;
-        int gregorianMonthOfYear = time.month;
-        int gregorianDayOfMonth = time.dayOfMonth;
+    private void recomputeDate() {
+        int gregorianYear = time.getYear();
+        int gregorianMonthOfYear = time.getMonthOfYear();
+        int gregorianDayOfMonth = time.getDayOfMonth();
 
-        year = gregorianYear + YEAR_OFFSETS[gregorianMonthOfYear];
+        setYear(gregorianYear + YEAR_OFFSETS[gregorianMonthOfYear]);
         int dayOfYear = DAY_OFFSETS[gregorianMonthOfYear] + gregorianDayOfMonth - 1;
-        month = (dayOfYear / DAYS_PER_MONTH) + 1;
-        dayOfMonth = (dayOfYear % DAYS_PER_MONTH) + 1;
-        dayOfWeek = dayOfYear % DAYS_PER_WEEK;
 
+        setMonthOfYear((dayOfYear / DAYS_PER_MONTH) + 1);
+        setDayOfMonth((dayOfYear % DAYS_PER_MONTH) + 1);
+        setDayOfWeek(dayOfYear % DAYS_PER_WEEK);
+    }
+
+    private void recomputeTime() {
         int dayMillis = ((time.hour * 60 + time.minute) * 60 + time.second) * 1000 + time.millisecond;
 
         hourOfDay = dayMillis / MILLIS_PER_DOZENAL_HOUR;

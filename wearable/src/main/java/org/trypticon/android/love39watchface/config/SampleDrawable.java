@@ -32,7 +32,7 @@ class SampleDrawable extends Drawable {
 
     private boolean checked;
 
-    SampleDrawable(Context context, WatchShape shape, Layer layer) {
+    private SampleDrawable(Context context, WatchShape shape, Layer layer) {
         this.shape = shape;
         this.layer = layer;
         layer.updateShape(shape);

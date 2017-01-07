@@ -4,11 +4,12 @@ import com.ustwo.clockwise.WatchFaceTime;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  * Stand-in utility for holding a gregorian time to avoid using any of Java's built-in horrors.
  */
-public class ClassicTime extends Time {
+class ClassicTime extends Time {
     private static final int MILLIS_PER_SECOND = 1000;
     private static final int SECONDS_PER_MINUTE = 60;
     private static final int MILLIS_PER_MINUTE = SECONDS_PER_MINUTE * MILLIS_PER_SECOND;
@@ -16,18 +17,6 @@ public class ClassicTime extends Time {
     private static final int MILLIS_PER_HOUR = MINUTES_PER_HOUR * MILLIS_PER_MINUTE;
     private static final int HOURS_PER_HALF_DAY = 12;
     private static final int MILLIS_PER_HALF_DAY = HOURS_PER_HALF_DAY * MILLIS_PER_HOUR;
-
-    // AD year
-    int year;
-
-    // 1..12
-    int month;
-
-    // 1..31
-    int dayOfMonth;
-
-    // 0..6
-    int dayOfWeek;
 
     // 0..23
     int hour;
@@ -47,75 +36,76 @@ public class ClassicTime extends Time {
 
     private final Calendar temp = new GregorianCalendar();
 
-    public ClassicTime() {
+    ClassicTime() {
     }
 
-    public ClassicTime(int year, int month, int dayOfMonth, int hour, int minute, int second) {
+    ClassicTime(int year, int monthOfYear, int dayOfMonth, int hour, int minute, int second) {
         this.second = second;
         this.minute = minute;
         this.hour = hour;
-        this.dayOfMonth = dayOfMonth;
-        this.month = month;
-        this.year = year;
-        recompute();
+        setDayOfMonth(dayOfMonth);
+        setMonthOfYear(monthOfYear);
+        setYear(year);
+        recomputeDate();
+        recomputeTime();
+    }
+
+    @Override
+    DateFormat createDateFormat(Locale locale) {
+        return new ClassicDateFormat(locale);
     }
 
     @Override
     public void setTo(WatchFaceTime time) {
-        year = time.year;
-        month = time.month + 1; // WatchFaceTime inherits this weirdness
-        dayOfMonth = time.monthDay;
-        dayOfWeek = time.weekDay;
+        setYear(time.year);
+        setMonthOfYear(time.month + 1); // WatchFaceTime inherits this weirdness
+        setDayOfMonth(time.monthDay);
+        setDayOfWeek(time.weekDay);
         hour = time.hour;
         minute = time.minute;
         second = time.second;
         millisecond = time.millis;
-        recompute();
+        recomputeTime();
     }
 
     void setTo(ClassicTime time) {
-        year = time.year;
-        month = time.month;
-        dayOfMonth = time.dayOfMonth;
-        dayOfWeek = time.dayOfWeek;
+        setYear(time.getYear());
+        setMonthOfYear(time.getMonthOfYear());
+        setDayOfMonth(time.getDayOfMonth());
+        setDayOfWeek(time.getDayOfWeek());
         hour = time.hour;
         minute = time.minute;
         second = time.second;
         millisecond = time.millisecond;
-        recompute();
+        recomputeTime();
     }
 
     @Override
     public void setToSample() {
-        year = 2015;
-        month = 3;
-        dayOfMonth = 9;
-        dayOfWeek = 3;
+        setYear(2015);
+        setMonthOfYear(3);
+        setDayOfMonth(9);
         hour = 2;
         minute = 50;
         second = 20;
         millisecond = 0;
-        recompute();
+        recomputeDate();
+        recomputeTime();
     }
 
     @Override
-    int getYear() {
-        return year;
+    public void setYear(int year) {
+        super.setYear(year);
     }
 
     @Override
-    int getMonth() {
-        return month;
+    public void setMonthOfYear(int monthOfYear) {
+        super.setMonthOfYear(monthOfYear);
     }
 
     @Override
-    int getDayOfMonth() {
-        return dayOfMonth;
-    }
-
-    @Override
-    int getDayOfWeek() {
-        return dayOfWeek;
+    public void setDayOfMonth(int dayOfMonth) {
+        super.setDayOfMonth(dayOfMonth);
     }
 
     @Override
@@ -143,12 +133,14 @@ public class ClassicTime extends Time {
         return false;
     }
 
-    private void recompute() {
-        temp.set(Calendar.YEAR, year);
-        temp.set(Calendar.MONTH, month - 1);
-        temp.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        dayOfWeek = temp.get(Calendar.DAY_OF_WEEK) - 1;
+    private void recomputeDate() {
+        temp.set(Calendar.YEAR, getYear());
+        temp.set(Calendar.MONTH, getMonthOfYear() - 1);
+        temp.set(Calendar.DAY_OF_MONTH, getDayOfMonth());
+        setDayOfWeek(temp.get(Calendar.DAY_OF_WEEK) - 1);
+    }
 
+    private void recomputeTime() {
         int minuteMillis = millisecond + second * MILLIS_PER_SECOND;
         secondTurns = minuteMillis / (float) MILLIS_PER_MINUTE;
 
