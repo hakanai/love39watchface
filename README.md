@@ -1,5 +1,27 @@
 
+This is a simple but elegant watch face styled after Hatsune Miku.
 
+It's something I made for Miku Expo 2016. A lot of people seemed to show interest in it,
+so I had said I would release by the end of the year, but I guess I didn't quite make it.
+Sorry about that. ^^;
+
+https://github.com/trejkaz/love39watchface/blob/master/artwork/hi-res-icon.png
+
+
+Installing
+==========
+
+If you are only looking to install it, it's available for free on the
+[Play Store].
+
+[Play Store]: https://play.google.com/store/apps/details?id=org.trypticon.android.love39watchface
+
+
+Building
+========
+
+I have been using Android Studio to build and test, so I know that at
+least that works.
 
 
 Copying
