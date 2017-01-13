@@ -27,7 +27,6 @@ import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
 import org.trypticon.android.love39watchface.framework.WatchShape;
-import org.trypticon.android.love39watchface.framework.Workarounds;
 
 /**
  * Layer which draws the ticks on the watch face.
@@ -55,7 +54,7 @@ class TicksLayer extends Layer {
         primaryTickPaint = new PaintHolder(false) {
             @Override
             protected void configure(Paint paint) {
-                paint.setColor(Workarounds.getColor(context, R.color.analog_primary_tick_stroke));
+                paint.setColor(context.getColor(R.color.analog_primary_tick_stroke));
                 paint.setStrokeWidth(context.getResources().getDimension(R.dimen.analog_primary_tick_stroke));
                 paint.setAntiAlias(true);
                 paint.setStrokeCap(Paint.Cap.SQUARE);
@@ -66,7 +65,7 @@ class TicksLayer extends Layer {
         secondaryTickPaint = new PaintHolder(false) {
             @Override
             protected void configure(Paint paint) {
-                paint.setColor(Workarounds.getColor(context, R.color.analog_secondary_tick_stroke));
+                paint.setColor(context.getColor(R.color.analog_secondary_tick_stroke));
                 paint.setStrokeWidth(context.getResources().getDimension(R.dimen.analog_secondary_tick_stroke));
                 paint.setAntiAlias(true);
                 paint.setStrokeCap(Paint.Cap.SQUARE);

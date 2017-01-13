@@ -20,7 +20,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 
 import org.trypticon.android.love39watchface.R;
-import org.trypticon.android.love39watchface.framework.Workarounds;
 
 /**
  * Rendering of the heart shape.
@@ -32,7 +31,7 @@ class Heart {
 
     Heart(Context context) {
         paint = new Paint();
-        paint.setColor(Workarounds.getColor(context, R.color.heart_fill));
+        paint.setColor(context.getColor(R.color.heart_fill));
         paint.setStyle(Paint.Style.FILL);
         paint.setAntiAlias(true);
 

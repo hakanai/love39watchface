@@ -25,7 +25,6 @@ import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
 import org.trypticon.android.love39watchface.framework.WatchModeAware;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
-import org.trypticon.android.love39watchface.framework.Workarounds;
 
 /**
  * Encapsulation of information about a single hand.
@@ -57,7 +56,7 @@ class Hand implements WatchModeAware {
         final float clipStrokeWidth = context.getResources().getDimension(R.dimen.clip_stroke_width);
         float halfHandWidth = handWidth / 2;
 
-        final int fillColor = Workarounds.getColor(context, fillColorId);
+        final int fillColor = context.getColor(fillColorId);
 
         fillPaint = new PaintHolder(true) {
             @Override

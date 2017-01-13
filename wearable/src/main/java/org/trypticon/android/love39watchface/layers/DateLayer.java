@@ -23,7 +23,6 @@ import android.support.annotation.NonNull;
 import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
-import org.trypticon.android.love39watchface.framework.Workarounds;
 import org.trypticon.android.love39watchface.time.MultiTime;
 import org.trypticon.android.love39watchface.time.TimeSystem;
 
@@ -57,7 +56,7 @@ class DateLayer extends Layer {
             protected void configure(Paint paint) {
                 Typeface roboto = Typeface.createFromAsset(context.getAssets(), "fonts/RobotoCondensed-Regular.ttf");
                 paint.setTypeface(roboto);
-                paint.setColor(Workarounds.getColor(context, R.color.date_fill));
+                paint.setColor(context.getColor(R.color.date_fill));
                 paint.setTextAlign(Paint.Align.CENTER);
                 paint.setTextSize(width * Proportions.DATE_SIZE);
                 paint.setAntiAlias(true);

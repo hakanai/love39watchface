@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
-import org.trypticon.android.love39watchface.framework.Workarounds;
 
 /**
  * Layer which draws the background.
@@ -36,7 +35,7 @@ class BackgroundLayer extends Layer {
         backgroundPaint = new PaintHolder(true) {
             @Override
             protected void configure(Paint paint) {
-                paint.setColor(Workarounds.getColor(context, R.color.analog_background));
+                paint.setColor(context.getColor(R.color.analog_background));
             }
         };
     }

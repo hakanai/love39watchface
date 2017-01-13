@@ -22,7 +22,6 @@ import com.ustwo.clockwise.WatchFaceTime;
 
 import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.WatchShape;
-import org.trypticon.android.love39watchface.framework.Workarounds;
 import org.trypticon.android.love39watchface.layers.Layer;
 import org.trypticon.android.love39watchface.layers.LayerFactory;
 import org.trypticon.android.love39watchface.time.MultiTime;
@@ -47,13 +46,13 @@ class SampleDrawable extends Drawable {
 
         borderPath = new Path();
         borderPaint = new Paint();
-        borderPaint.setColor(Workarounds.getColor(context, R.color.config_list_item_border));
+        borderPaint.setColor(context.getColor(R.color.config_list_item_border));
         borderPaint.setStrokeWidth(context.getResources().getDimension(R.dimen.config_list_item_border));
         borderPaint.setStyle(Paint.Style.STROKE);
         borderPaint.setAntiAlias(true);
 
         borderPaintChecked = new Paint(borderPaint);
-        borderPaintChecked.setColor(Workarounds.getColor(context, R.color.config_list_item_border_checked));
+        borderPaintChecked.setColor(context.getColor(R.color.config_list_item_border_checked));
 
     }
 

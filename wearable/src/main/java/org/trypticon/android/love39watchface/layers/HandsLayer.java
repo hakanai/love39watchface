@@ -26,7 +26,6 @@ import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.framework.PaintHolder;
 import org.trypticon.android.love39watchface.framework.PaintUtils;
 import org.trypticon.android.love39watchface.framework.WatchModeHelper;
-import org.trypticon.android.love39watchface.framework.Workarounds;
 import org.trypticon.android.love39watchface.time.MultiTime;
 import org.trypticon.android.love39watchface.time.Time;
 import org.trypticon.android.love39watchface.time.TimeSystem;
@@ -64,7 +63,7 @@ class HandsLayer extends Layer {
         centrePaint = new PaintHolder(true) {
             @Override
             protected void configure(Paint paint) {
-                paint.setColor(Workarounds.getColor(context, R.color.analog_centre_fill));
+                paint.setColor(context.getColor(R.color.analog_centre_fill));
                 paint.setAntiAlias(true);
                 paint.setStrokeWidth(context.getResources().getDimension(R.dimen.hand_stroke_width));
                 paint.setStrokeCap(Paint.Cap.ROUND);

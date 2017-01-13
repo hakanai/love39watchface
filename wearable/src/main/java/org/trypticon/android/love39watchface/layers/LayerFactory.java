@@ -19,7 +19,6 @@ import android.graphics.drawable.Drawable;
 import org.trypticon.android.love39watchface.R;
 import org.trypticon.android.love39watchface.config.DateStyle;
 import org.trypticon.android.love39watchface.config.TimeStyle;
-import org.trypticon.android.love39watchface.framework.Workarounds;
 import org.trypticon.android.love39watchface.time.TimeSystem;
 
 /**
@@ -72,36 +71,36 @@ public class LayerFactory {
         switch (timeStyle) {
             case CLASSIC: {
                 Drawable[] digits = {
-                        Workarounds.getDrawable(context, R.drawable.digit12),
-                        Workarounds.getDrawable(context, R.drawable.digit1),
-                        Workarounds.getDrawable(context, R.drawable.digit2),
-                        Workarounds.getDrawable(context, R.drawable.digit3),
-                        Workarounds.getDrawable(context, R.drawable.digit4),
-                        Workarounds.getDrawable(context, R.drawable.digit5),
-                        Workarounds.getDrawable(context, R.drawable.digit6),
-                        Workarounds.getDrawable(context, R.drawable.digit7),
-                        Workarounds.getDrawable(context, R.drawable.digit8),
-                        Workarounds.getDrawable(context, R.drawable.digit9),
-                        Workarounds.getDrawable(context, R.drawable.digit10),
-                        Workarounds.getDrawable(context, R.drawable.digit11),
+                        context.getDrawable(R.drawable.digit12),
+                        context.getDrawable(R.drawable.digit1),
+                        context.getDrawable(R.drawable.digit2),
+                        context.getDrawable(R.drawable.digit3),
+                        context.getDrawable(R.drawable.digit4),
+                        context.getDrawable(R.drawable.digit5),
+                        context.getDrawable(R.drawable.digit6),
+                        context.getDrawable(R.drawable.digit7),
+                        context.getDrawable(R.drawable.digit8),
+                        context.getDrawable(R.drawable.digit9),
+                        context.getDrawable(R.drawable.digit10),
+                        context.getDrawable(R.drawable.digit11),
                 };
                 return new TicksLayer(context, 5, true, digits);
             }
 
             case DOZENAL: {
                 Drawable[] digits = {
-                        Workarounds.getDrawable(context, R.drawable.digit0),
-                        Workarounds.getDrawable(context, R.drawable.digit1),
-                        Workarounds.getDrawable(context, R.drawable.digit2),
-                        Workarounds.getDrawable(context, R.drawable.digit3),
-                        Workarounds.getDrawable(context, R.drawable.digit4),
-                        Workarounds.getDrawable(context, R.drawable.digit5),
-                        Workarounds.getDrawable(context, R.drawable.digit6),
-                        Workarounds.getDrawable(context, R.drawable.digit7),
-                        Workarounds.getDrawable(context, R.drawable.digit8),
-                        Workarounds.getDrawable(context, R.drawable.digit9),
-                        Workarounds.getDrawable(context, R.drawable.digitdec),
-                        Workarounds.getDrawable(context, R.drawable.digitel),
+                        context.getDrawable(R.drawable.digit0),
+                        context.getDrawable(R.drawable.digit1),
+                        context.getDrawable(R.drawable.digit2),
+                        context.getDrawable(R.drawable.digit3),
+                        context.getDrawable(R.drawable.digit4),
+                        context.getDrawable(R.drawable.digit5),
+                        context.getDrawable(R.drawable.digit6),
+                        context.getDrawable(R.drawable.digit7),
+                        context.getDrawable(R.drawable.digit8),
+                        context.getDrawable(R.drawable.digit9),
+                        context.getDrawable(R.drawable.digitdec),
+                        context.getDrawable(R.drawable.digitel),
                 };
 
                 return new TicksLayer(context, 6, false, digits);

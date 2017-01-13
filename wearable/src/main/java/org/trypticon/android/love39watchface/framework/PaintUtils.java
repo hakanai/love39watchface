@@ -21,7 +21,7 @@ public class PaintUtils {
 
     public static Paint createGlowPaint(Context context, @ColorRes int baseColorKey, float glowWidth) {
         Paint paint = new Paint();
-        paint.setColor((Workarounds.getColor(context, baseColorKey) & 0xFFFFFF) | 0x40000000);
+        paint.setColor((context.getColor(baseColorKey) & 0xFFFFFF) | 0x40000000);
         paint.setMaskFilter(new BlurMaskFilter(glowWidth, BlurMaskFilter.Blur.NORMAL));
         paint.setStrokeWidth(glowWidth);
         paint.setStrokeCap(Paint.Cap.ROUND);
