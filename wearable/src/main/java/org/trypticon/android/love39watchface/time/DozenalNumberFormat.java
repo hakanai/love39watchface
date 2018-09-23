@@ -17,6 +17,8 @@ import java.text.ParsePosition;
 /**
  * Formatter for dozenal numbers.
  */
+// Never serialised.
+@SuppressWarnings("serial")
 class DozenalNumberFormat extends NumberFormat {
     private static final char[] DIGITS = {
             '0', '1', '2', '3', '4', '5',

@@ -44,6 +44,8 @@ public class DozenalDateFormat extends DateFormat {
                 .toString();
     }
 
+    // Never serialised.
+    @SuppressWarnings("serial")
     private class DateFormatSymbolsAdapter extends DateFormatSymbols {
         private DateFormatSymbolsAdapter(Locale locale) {
             super(locale);
@@ -67,6 +69,8 @@ public class DozenalDateFormat extends DateFormat {
         }
     }
 
+    // Never serialised.
+    @SuppressWarnings("serial")
     private class CalendarAdapter extends Calendar {
         @Override
         public void add(int field, int value) {

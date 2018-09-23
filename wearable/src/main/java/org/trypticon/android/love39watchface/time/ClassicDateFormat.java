@@ -42,7 +42,11 @@ public class ClassicDateFormat extends DateFormat {
                 .toString();
     }
 
+    // Never serialised.
+    @SuppressWarnings("serial")
     private class CalendarAdapter extends Calendar {
+        private static final long serialVersionUID = 1;
+
         @Override
         public void add(int field, int value) {
             throw new UnsupportedOperationException();
