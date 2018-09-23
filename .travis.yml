@@ -18,6 +18,6 @@ android:
   - sys-img-armeabi-v7a-android-26
 
 addons:
-  artifacts: true
+  artifacts:
     paths:
     - $(find -type f build/reports | tr "\n" ":")
