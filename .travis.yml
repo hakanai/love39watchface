@@ -15,6 +15,7 @@ android:
   - extra-android-m2repository
   - addon-google_apis-google-26
 
+  - android-26
   - sys-img-armeabi-v7a-android-26
 
 before_script:
