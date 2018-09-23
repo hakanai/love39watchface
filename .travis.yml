@@ -1,0 +1,18 @@
+language: android
+
+android:
+  components:
+  # Uncomment the lines below if you want to
+  # use the latest revision of Android SDK Tools
+  # - tools
+  # - platform-tools
+
+  - build-tools-27.0.3
+  - android-28
+
+  - extra-google-google_play_services
+  - extra-google-m2repository
+  - extra-android-m2repository
+  - addon-google_apis-google-26
+
+  - sys-img-armeabi-v7a-android-26
