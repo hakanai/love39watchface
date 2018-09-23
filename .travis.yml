@@ -20,4 +20,4 @@ android:
 addons:
   artifacts:
     paths:
-    - $(find -type f build/reports | tr "\n" ":")
+    - $(find -type f */build/reports | tr "\n" ":")
