@@ -1,6 +1,5 @@
-
 /*
- * Copyright © 2016-2017 Trejkaz <trejkaz@trypticon.org>
+ * Copyright © 2016-2018 Trejkaz <trejkaz@trypticon.org>
  * This work is free. You can redistribute it and/or modify it under the
  * terms of the Do What The Fuck You Want To Public License, Version 2,
  * as published by Sam Hocevar. See the COPYING.WTFPL file for more details.
@@ -8,10 +7,11 @@
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:3.1.4'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -21,6 +21,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        google()
     }
 }
 

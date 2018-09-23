@@ -1,3 +1,0 @@
-<component name="DependencyValidationManager">
-  <scope name="Code potentially containing art" pattern="file[wearable]:src/main/res//*||file[companion]:src/main/res//*||file[wearable]:src/main/java/org/trypticon/android/love39watchface/layers//*" />
-</component>
