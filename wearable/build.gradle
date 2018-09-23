@@ -35,8 +35,9 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation('com.google.android.support:wearable:1.4.0')
+    implementation 'com.google.android.support:wearable:2.3.0'
+    compileOnly 'com.google.android.wearable:wearable:2.3.0'
+
     // Clockwise framework was built against 7.8.0 and 8.1.0 broke binary compatibility.
     //noinspection GradleDependency
     implementation 'com.google.android.gms:play-services-wearable:7.8.0'
