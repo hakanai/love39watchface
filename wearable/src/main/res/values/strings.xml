@@ -22,4 +22,5 @@
     <string name="config_time_classic">Time: Classic</string>
     <string name="config_calendar_dozenal">Calendar: Dozenal</string>
     <string name="config_calendar_classic">Calendar: Classic</string>
+    <string name="config_sample_screenshot">(Sample screenshot)</string>
 </resources>
