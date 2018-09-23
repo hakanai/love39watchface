@@ -23,6 +23,10 @@ allprojects {
         jcenter()
         google()
     }
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:all"
+    }
 }
 
 task clean(type: Delete) {
