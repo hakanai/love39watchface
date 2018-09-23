@@ -21,10 +21,18 @@ import static org.junit.Assert.assertThat;
 public class ClassicDateFormatTest {
 
     @Test
-    public void test() {
+    public void testAbbreviated() {
         ClassicDateFormat dateFormat = new ClassicDateFormat(LocaleTestUtils.AUSTRALIA);
         ClassicTime time = new ClassicTime();
         time.setTo(new ClassicTime(2016, 1, 27, 0, 0, 0));
         assertThat(dateFormat.formatDate(time), is(equalTo("Wed., 27 Jan.")));
+    }
+
+    @Test
+    public void testNotAbbreviated() {
+        ClassicDateFormat dateFormat = new ClassicDateFormat(LocaleTestUtils.AUSTRALIA);
+        ClassicTime time = new ClassicTime();
+        time.setTo(new ClassicTime(2016, 5, 9, 0, 0, 0));
+        assertThat(dateFormat.formatDate(time), is(equalTo("Mon., 9 May")));
     }
 }

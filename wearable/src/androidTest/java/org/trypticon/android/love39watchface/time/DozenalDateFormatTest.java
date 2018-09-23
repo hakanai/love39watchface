@@ -25,7 +25,7 @@ public class DozenalDateFormatTest {
         DozenalDateFormat dateFormat = new DozenalDateFormat(LocaleTestUtils.AUSTRALIA);
         DozenalTime time = new DozenalTime();
         time.setTo(new ClassicTime(2015, 3, 1, 0, 0, 0));
-        assertThat(dateFormat.formatDate(time), is(equalTo("Sun., 01 Mar.")));
+        assertThat(dateFormat.formatDate(time), is(equalTo("Sun., 1 Mar.")));
     }
 
     @Test
@@ -33,7 +33,7 @@ public class DozenalDateFormatTest {
         DozenalDateFormat dateFormat = new DozenalDateFormat(LocaleTestUtils.AUSTRALIA);
         DozenalTime time = new DozenalTime();
         time.setTo(new ClassicTime(2015, 3, 10, 0, 0, 0));
-        assertThat(dateFormat.formatDate(time), is(equalTo("Thu., 0\u218A Mar.")));
+        assertThat(dateFormat.formatDate(time), is(equalTo("Thu., \u218A Mar.")));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class DozenalDateFormatTest {
         DozenalDateFormat dateFormat = new DozenalDateFormat(LocaleTestUtils.AUSTRALIA);
         DozenalTime time = new DozenalTime();
         time.setTo(new ClassicTime(2015, 3, 11, 0, 0, 0));
-        assertThat(dateFormat.formatDate(time), is(equalTo("Fri., 0\u218B Mar.")));
+        assertThat(dateFormat.formatDate(time), is(equalTo("Fri., \u218B Mar.")));
     }
 
     @Test
@@ -49,7 +49,7 @@ public class DozenalDateFormatTest {
         DozenalDateFormat dateFormat = new DozenalDateFormat(LocaleTestUtils.AUSTRALIA);
         DozenalTime time = new DozenalTime();
         time.setTo(new ClassicTime(2015, 3, 2, 0, 0, 0));
-        assertThat(dateFormat.formatDate(time), is(equalTo("Tue., 02 Mar.")));
+        assertThat(dateFormat.formatDate(time), is(equalTo("Tue., 2 Mar.")));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class DozenalDateFormatTest {
         DozenalDateFormat dateFormat = new DozenalDateFormat(LocaleTestUtils.AUSTRALIA);
         DozenalTime time = new DozenalTime();
         time.setTo(new ClassicTime(2015, 2, 28, 0, 0, 0));
-        assertThat(dateFormat.formatDate(time), is(equalTo("Fri., 05 Int.")));
+        assertThat(dateFormat.formatDate(time), is(equalTo("Fri., 5 Int.")));
     }
 
     @Test
@@ -65,6 +65,6 @@ public class DozenalDateFormatTest {
         DozenalDateFormat dateFormat = new DozenalDateFormat(LocaleTestUtils.AUSTRALIA);
         DozenalTime time = new DozenalTime();
         time.setTo(new ClassicTime(2016, 2, 29, 0, 0, 0));
-        assertThat(dateFormat.formatDate(time), is(equalTo("Sat., 06 Int.")));
+        assertThat(dateFormat.formatDate(time), is(equalTo("Sat., 6 Int.")));
     }
 }

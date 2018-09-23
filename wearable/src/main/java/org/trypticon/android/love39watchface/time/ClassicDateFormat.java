@@ -23,9 +23,9 @@ public class ClassicDateFormat extends DateFormat {
 
     @SuppressLint("SimpleDateFormat") // We got the pattern using a legit method.
     ClassicDateFormat(Locale locale) {
-        String pattern = android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEddMMM");
+        String pattern = android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEdMMM");
         if (pattern == null) { // when running tests. :(
-            pattern = "EEE, dd MMM";
+            pattern = "EEE, d MMM";
         }
 
         delegate = new SimpleDateFormat(pattern, locale);

@@ -24,9 +24,9 @@ public class DozenalDateFormat extends DateFormat {
 
     @SuppressLint("SimpleDateFormat") // We got the pattern in a localised way
     DozenalDateFormat(Locale locale) {
-        String pattern = android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEddMMM");
+        String pattern = android.text.format.DateFormat.getBestDateTimePattern(locale, "EEEdMMM");
         if (pattern == null) { // when running tests. :(
-            pattern = "EEE, dd MMM";
+            pattern = "EEE, d MMM";
         }
 
         delegate = new SimpleDateFormat(pattern, new DateFormatSymbolsAdapter(locale));
