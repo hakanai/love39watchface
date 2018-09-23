@@ -16,3 +16,8 @@ android:
   - addon-google_apis-google-26
 
   - sys-img-armeabi-v7a-android-26
+
+addons:
+  artifacts: true
+    paths:
+    - $(find -type f build/reports | tr "\n" ":")
