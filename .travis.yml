@@ -5,13 +5,13 @@ android:
   - tools
   - platform-tools
   - build-tools-27.0.3
-  - android-26
+  - android-25
   - android-28
   - extra-google-google_play_services
   - extra-google-m2repository
   - extra-android-m2repository
-  - addon-google_apis-google-26
-  - armeabi-v7a-android-26
+  #- addon-google_apis-google-26
+  - sys-img-armeabi-v7a-android-25
 
 before_script:
   - echo no | android create avd --force -n test -t android-26 --abi armeabi-v7a
